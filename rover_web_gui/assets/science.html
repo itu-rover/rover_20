@@ -1,240 +1,89 @@
-<!DOCTYPE html>
-<html lang="en">
-
+<!DOCTYPE HTML>
+<html>
 <head>
-    <title>ROVER UI V1</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.41.0/mapbox-gl.css' rel='stylesheet' />
-    <link rel="shortcut icon" type="image/x-icon" href="./images/favicon.ico" />
-    <link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css" />
-    <link rel="stylesheet" type="text/css" href="./css/source-sans-pro.css" />
-    <link rel="stylesheet" type="text/css" href="./css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="./css/ionicons.min.css">
-    <link rel="stylesheet" type="text/css" href="./css/AdminLTE.min.css" />
-    <link rel="stylesheet" type="text/css" href="./css/_all-skins.css" />
-    <link rel="stylesheet" type="text/css" href="./css/animate.css" />
-    <link rel="stylesheet" type="text/css" href="./css/style.css" />
-    <link rel="stylesheet" type="text/css" href="./css/mapstyle.css" />
-    <script type="text/javascript" src="./js/external/mapbox-gl.js"></script>
-    <script type="text/javascript" src="./js/external/jquery-2.2.4.min.js"></script>
-    <script type="text/javascript" src="./js/external/bootstrap.min.js"></script>
-    <script type="text/javascript" src="./js/external/eventemitter2.min.js"></script>
-    <script type="text/javascript" src="./js/external/roslib.min.js"></script>
-    <script type="text/javascript" src="./js/external/app.min.js"></script>
-    <script type="text/javascript" src="./js/ui-customizations.js"></script>
-    <script type="text/javascript" src="./js/external/gamepad.js"></script>
-    <script type="text/javascript" src="./js/external/canvasjs.min.js"></script>
-    <script type="text/javascript" src="./js/external/geopoint.js"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<script src="js/external/jquery.min.js"></script>
+	<script src="js/external/popper.min.js"></script>
+	<script src="js/external/bootstrap.min.js"></script>
+	<script src="js/external/canvasjs.min.js"></script>
+	<script src="js/science.js"></script>
+	<style>
+		#vr{
+			width : 1px ;
+			height : 100px ;
+		}
+	</style>
+</head>
+<body>
+	<nav class="navbar navbar-static-top">
+			<div class="container">
+					<div class="navbar-header">
+							<a class="navbar-brand" href="#"><img src="./images/itu_rover_white.png" alt="ITU Rover Team" style="box-sizing: border-box; width: 60px;"></a>
+							<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+									<i class="fa fa-bars"></i>
+							</button>
+					</div>
+					<div class="collapse navbar-collapse pull-left" id="navbar-collapse">
+							<ul class="nav navbar-nav">
+									<li><a href="index.html">Dashboard</a></li>
+									<li><a href="mission-planning.html">Plan</a></li>
+									<li><a href="science.html">ISRL</a></li>
+							</ul>
+							<ul class="nav navbar-nav bg-red">
+									<li><a href="science_ecph.html">BIO-EC-PH</a></li>
+									<li><a href="science_raman.html">RAMAN</a></li>
+									<li><a href="science_nir.html">VIS-NIR</a></li>
+									<li><a href="science_sensor.html">SENSOR</a></li>
+							</ul>
+					</div>
 
-    <script type="text/javascript" src="./js/science.js"></script>
+			</div>
+	</nav>
+	<div class="container">
 
-    <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+		<div class="row" style="margin-bottom: 10px;">
+			<div class="col-sm" id="chartContainer_1" style="height: 300px; width: 45%; float:left;"></div>
+			<div class="col-sm" id="chartContainer_2" style="height: 300px; width: 45%; float:right;"></div>
+		</div>
 
-    <body class="hold-transition skin-real-dark layout-top-nav">
-        <div class="wrapper">
-            <header class="main-header">
-                <nav class="navbar navbar-static-top">
-                    <div class="container">
-                        <div class="navbar-header">
-                            <a class="navbar-brand" href="#"><img src="./images/itu_rover_white.png" alt="ITU Rover Team" style="box-sizing: border-box; 
-                                                                                                                         width: 60px"></a>
-                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
-                            <i class="fa fa-bars"></i>
-                        </button>
-                        </div>
-                        <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
-                            <ul class="nav navbar-nav">
-                                <li><a href="index.html">Dashboard</a></li>
-                                <li><a href="mission-planning.html">Plan</a></li>
-                                <li class="active"><a>ISRL<span class="sr-only">(current)</span></a></li>
+		<div class="row" style="margin-bottom: 40px;">
+			<div class="col-sm-6"><button id="exportChart_1" style="float:left;">Export Chart</button></div>
+			<div class="col-sm-6" style="padding-left: 73px"><button id="exportChart_2" style="float:left;">Export Chart</button></div>
+		</div>
 
+		<div class="row" style="margin-bottom: 10px;">
+			<div class="col-sm" id="chartContainer_3" style="height: 300px; width: 45%; float:left;"></div>
+			<div class="col-sm" id="chartContainer_4" style="height: 300px; width: 45%; float:right;"></div>
+		</div>
 
-                            </ul>
-                            <ul class="nav navbar-nav bg-red">
-                                <li><a href="science_ecph.html">EC-PH</a></li>
-                                <li><a href="science_raman.html">RAMAN</a></li>
-                                <li><a href="science_nir.html">VIS-NIR</a></li>
-                                <li><a href="science_sensor.html">SENSOR</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </nav>
-            </header>
-            <div class="content-wrapper">
-                <div class="container-fluid">
-                    <section class="content-header">
-                        <h1 style="color:white">ITU ROVER TEAM</h1>
-                    </section>
-                    <section class="content">
-                        <div class="row">
-                            <div class="col-md-5 col-sm-12 col-xs-12">
-                                <div class="row">
-                                    <!-- SYSTEM CONTROL PANEL -->
-                                    <!-- Sensor graphic section -->
-                                    <div class="col-md-24 col-md-24 col-md-24 split left" style="padding-top: 105px;">
-                                        <div id="boxState" class="info-box bg-gray collapsed-box">
-                                            <span class="info-box-icon">
-                                            <i class="fa fa-fw fa-gears"></i>
-                                        </span>
-                                            <div class="info-box-content bg-gray">
-                                                <span class="info-box-text">state</span>
-                                                <span class="info-box-number" id="txtState">System Control Panel</span>
-                                                <div class="pull-right">
-                                                    <button type="button" class="btn btn-sm btn-info-box" data-widget="collapse-detail">Details: <i class="fa fa-plus"></i></button>
-                                                </div>
-                                            </div>
-                                            <div class="info-box-detail no-padding bg-gray">
-                                                <div>
-                                                    <h4><b><i>SLEDGE</i></b></h4>
-                                                    <button type="button" onclick="alert('Hello World!')">Click Me!</button>
-                                                    <input type="range" id="myInput" oninput="myFunction()">
-                                                    <p id="demo"></p>
+		<div class="row" style="margin-bottom: 40px;">
+			<div class="col-sm-6"><button id="exportChart_3" style="float:left;">Export Chart</button></div>
+			<div class="col-sm-6" style="padding-left: 73px;"><button id="exportChart_4" style="float:left;">Export Chart</button></div>
+		</div>
 
-                                                    <h4><b><i>AUGER CONTROL PANEL</i></b></h4>
-                                                    <div style="text-align: center">
-                                                        <button type="button" id="auger_run" style="background-color: #198a51; width: 350px;"><b style=" font-family: Comic Sans MS;">RUN</b></button>
-                                                        <button type="button" id="auger_stop" style="background-color: #ba1a1a; width: 350px;"><b style="font-family: Comic Sans MS;">STOP</b></button>
-                                                    </div>
-                                                    <br />
-                                                    <div style="padding-left: 9px;">
-                                                        <div style="float: left;">
-                                                            <button id="aug_blup_yown" type="button" style="width: 175px; border-radius: 20px;background-color: dimgrey; border: 2px solid black; " onclick="renkdegis();">
-                                                            <div>
-                                                                <h4><b><span style="color: skyblue; font-family: Comic Sans MS;">Blue</span> <span style="color: #ff8d00; font-family: Comic Sans MS;"> Up</span></b></h4>
-                                                                <h4><b><span style="color: yellow; font-family: Comic Sans MS;">Yellow</span> <span style="color: #ffa2df; font-family: Comic Sans MS;">Down</span></b></h4>
-                                                            </div>
-                                                        </button>
-                                                        </div>
-                                                        <div style="float: left;">
-                                                            <button id="aug_yup_bdown" type="button" style="width: 175px; border-radius: 20px;background-color: dimgrey; border: 2px solid black;">
-                                                            <div>
-                                                                <h4><b><span style="color: yellow; font-family: Comic Sans MS;">Yellow </span> <span style="color: #ff8d00; font-family: Comic Sans MS;"> Up</span></b></h4>
-                                                                <h4><b><span style="color: skyblue; font-family: Comic Sans MS;">Blue</span> <span style="color: #ffa2df; font-family: Comic Sans MS;">Down</span></b></h4>
-                                                            </div>
-                                                        </button>
-                                                        </div>
-                                                        <div style="float: left;">
-                                                            <button id="aug_gup_rdown" type="button" style="width: 175px; border-radius: 20px;background-color: dimgrey; border: 2px solid black;">
-                                                            <div>
-                                                                <h4><b><span style="color: limegreen; font-family: Comic Sans MS;">Green</span> <span style="color: #ff8d00; font-family: Comic Sans MS;">Up</span></b></h4>
-                                                                <h4><b><span style="color: #f94242; font-family: Comic Sans MS;">Red</span> <span style="color: #ffa2df; font-family: Comic Sans MS;">Down</span></b></h4>
-                                                            </div>
-                                                        </button>
-                                                        </div>
-                                                        <div>
-                                                            <button id="aug_rup_gdown" type="button" style="width: 175px; border-radius: 20px;background-color: dimgrey; border: 2px solid black;">
-                                                            <div>
-                                                                <h4><b><span style="color: #f94242; font-family: Comic Sans MS;">Red </span> <span style="color: #ff8d00; font-family: Comic Sans MS;"> Up</span></b></h4>
-                                                                <h4><b><span style="color: limegreen; font-family: Comic Sans MS;">Green </span> <span style="color: #ffa2df; font-family: Comic Sans MS;">Down</span></b></h4>
-                                                            </div>
-                                                        </button>
-                                                        </div>
-                                                    </div>
-                                                    <br />
-                                                    <h4><b><i>PROB CONTROL PANEL</i></b></h4>
+		<div class="row" style="margin-bottom: 10px;">
+			<div class="col-sm-8" id="chartContainer_5" style="height: 300px; width: 65%; float:left;"></div>
+			<div class="col-sm-4" style="height: 300px;">
+				<input id="xValue" type="number" step="any" placeholder="Enter X-Value">
+				<input id="yValue" type="number" step="any" placeholder="Enter Y-Value">
+				<button id="renderButton1">Add Data to Chart</button>
+				<button id="deleteButton1">Delete Last Data</button>
+			</div>
+		</div>
 
-                                                    <div style="padding-left:7px; ">
-                                                        <div style="float: left;">
-                                                            <button id="b_prob" type="button" style="width: 100px; border-radius: 20px;background-color: dimgrey; border: 2px solid black; " onclick="">
-                                                            <!-- Yazılar buraya -->
-                                                            <h4><b><span style="color: skyblue; font-family: Comic Sans MS;">Blue PROB</span></b></h4>
-                                                        </button>
-                                                        </div>
-                                                        <div style="float: left;">
-                                                            <button id="y_prob" type="button" style="width: 100px; border-radius: 20px;background-color: dimgrey; border: 2px solid black;">
+		<div class="row" style="padding-left: 30px; margin-bottom: 40px;"><button id="exportChart_5" style="float:left;">Export Chart</button></div>
 
-                                                            <h4><b><span style="color: yellow; font-family: Comic Sans MS;">Yellow PROB</span></b></h4>
+		<div class="row" style="margin-bottom: 10px;">
+			<div class="col-sm-8" id="chartContainer_6" style="height: 300px; width: 65%; float:left;"></div>
+			<div class="col-sm-4" style="height: 300px;">
+				<input id="yValue2" type="number" step="any" placeholder="Enter Y-Value">
+				<button id="renderButton2">Add Data to Chart</button>
+				<button id="deleteButton2">Delete Last Data</button>
+			</div>
+		</div>
 
-                                                        </button>
-                                                        </div>
-                                                        <div id style="float: left;">
-                                                            <button id="g_prob" type="button" style="width: 100px; border-radius: 20px;background-color: dimgrey; border: 2px solid black;">
-
-                                                            <h4><b><span style="color: limegreen; font-family: Comic Sans MS;">Green PROB</span></b></h4>
-
-                                                        </button>
-                                                        </div>
-                                                        <div style="float: left;">
-                                                            <button id="r_prob" type="button" style="width: 100px; border-radius: 20px;background-color: dimgrey; border: 2px solid black;">
-
-                                                            <h4><b><span style="color: #f94242; font-family: Comic Sans MS;">Red<br/>PROB</span></b></h4>
-
-                                                        </button>
-                                                        </div>
-                                                        <div style="float: left;">
-                                                            <button id="bio_prob" type="button" style="width: 100px; border-radius: 20px;background-color: dimgrey; border: 2px solid black; " onclick="renkdegis();">
-                                                            <h4><b><span style="color: #ab82ff; font-family: Comic Sans MS; font-size: 14px;">BIOSENSOR <br/> PROB</span></b></h4>
-                                                        </button>
-                                                        </div>
-                                                        <div style="float: left;">
-                                                            <button id="ec_prob" type="button" style="width: 100px; border-radius: 20px;background-color: dimgrey; border: 2px solid black;">
-                                                            <h4><b><span style="color: #ab82ff; font-family: Comic Sans MS;">EC<br/>PROB</span></b></h4>
-                                                        </button>
-                                                        </div>
-                                                        <div>
-                                                            <button id="ph_prob" type="button" style="width: 100px; border-radius: 20px;background-color: dimgrey; border: 2px solid black;">
-                                                            <h4><b><span style="color: #ab82ff; font-family: Comic Sans MS;">pH<br/>PROB</span></b></h4>
-                                                        </button>
-                                                        </div>
-                                                    </div>
-                                                    <br />
-                                                    <div>
-                                                        <!-- BOŞLUK -->
-                                                    </div>
-                                                    <h4><b><i>PERISTALTIC PUMP</i></b></h4>
-                                                    <div style="text-align: center">
-                                                        <button id="per_run" style="background-color: #198a51; width: 350px;"><b style=" font-family: Comic Sans MS;">RUN</b></button>
-                                                        <button id="per_stop" style="background-color: #ba1a1a; width: 350px;"><b style="font-family: Comic Sans MS;">STOP</b></button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-5 col-sm-12 col-xs-12">
-                                <div class="row">
-                                    <!--Control panel section -->
-                                    <div class="col-md-24 col-md-24 col-md-24 split right" style="padding-top: 105px;">
-                                        <div id="boxState" class="info-box bg-gray collapsed-box">
-                                            <span class="info-box-icon">
-                                            <i class="fa  fa-line-chart"></i>
-                                        </span>
-                                            <div class="info-box-content bg-gray">
-                                                <span class="info-box-text">state</span>
-                                                <span class="info-box-number" id="txtState">Sensor Monitor</span>
-                                                <div class="pull-right">
-                                                    <button type="button" class="btn btn-sm btn-info-box" data-widget="collapse-detail">Details: <i class="fa fa-plus"></i></button>
-                                                </div>
-                                            </div>
-                                            <div class="info-box-detail no-padding bg-gray">
-                                                <table class="table table-striped table-hover bg-gray no-margin">
-                                                    Region(left):
-                                                    <input id="xValue" type="number" step="any" placeholder="Enter X-Value"> Data(left):
-                                                    <input id="yValue" type="number" step="any" placeholder="Enter Y-Value">
-
-                                                    <button id="renderButton1">Add DataPoint & Render DataSeries 1</button><br /> -----------------------------------------------------------------------------------------------------------------------------------------------------
-                                                    <!-- --><br /> Region(right):
-                                                    <input id="x2Value" type="number" step="any" placeholder="Enter X-Value"> Data(right):
-                                                    <input id="y2Value" type="number" step="any" placeholder="Enter Y-Value">
-                                                    <button id="renderButton2">Add DataPoint & Render DataSeries 2</button>
-                                                    <div id="chartContainer" style="height: 400px; width: 100%; " width="514" height="251"></div>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="map" class="map-sm" style="height: 0px; width: 0%; " width="0" height="0"></div>
-                    </section>
-                </div>
-            </div>
-        </div>
-        <script src="./js/science.js" type="application/javascript"></script>
-    </body>
-
+		<div class="row" style="padding-left: 30px; margin-bottom: 40px;"><button id="exportChart_6" style="float:left;">Export Chart</button></div>
+	</div>
+</body>
 </html>

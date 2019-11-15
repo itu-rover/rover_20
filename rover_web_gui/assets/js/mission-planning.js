@@ -15,10 +15,10 @@ var itu_map = {
         "itu_map_tile": {
             "type": "raster",
             // "url": "mapbox://map-id"
-            //"url": location.origin+location.pathname+"itu-ayazaga" 
+            //"url": location.origin+location.pathname+"itu-ayazaga"
             "tiles": [location.origin + "/maps/itu-ayazaga/{z}/{x}/{y}.pbf"],
             //"maxzoom": 19,
-            //"minzoom": 14,        
+            //"minzoom": 14,
 
         }
     },
@@ -31,80 +31,96 @@ var itu_map = {
         }]
 };
 
-var home_map_bound = new mapboxgl.LngLatBounds([-111.51117087116326, 
-        40.510128442073558], [-111.49370993168023, 
-        40.521399058894318]);
-var home_map = {
+var itu_GM_map_bound = new mapboxgl.LngLatBounds([29.014913, 41.099879], [29.030737, 41.108071]);
+var itu_GM_map = {
     "version": 8,
     "sources": {
-        "home_map_tile": {
+        "itu_GM_map_tile": {
             "type": "raster",
             // "url": "mapbox://map-id"
-            //"url": location.origin+location.pathname+"itu-ayazaga" 
-            "tiles": [location.origin + "/maps/home/{z}/{x}/{y}.png"],
+            //"url": location.origin+location.pathname+"itu-ayazaga"
+            "tiles": [location.origin + "/maps/itu_ayazaga_GM/{z}/{x}/{y}.png.tile"],
             //"maxzoom": 19,
-            //"minzoom": 14,        
+            //"minzoom": 14,
 
         }
     },
     "layers": [{
-        "id": "home_map_tile",
+        "id": "itu_GM_map_tile",
         "type": "raster",
-        "source": "home_map_tile",
-        "minzoom": 12,
-        "maxzoom": 16
-        }]
-};
-
-
-var midway_home_map_bound = new mapboxgl.LngLatBounds([ -111.50937905944953, 
-        40.5102765321257], [-111.48599963850066, 
-        40.525713298379813]);
-var midway_home_map = {
-    "version": 8,
-    "sources": {
-        "midway_home_map_tile": {
-            "type": "raster",
-            // "url": "mapbox://map-id"
-            //"url": location.origin+location.pathname+"itu-ayazaga" 
-            "tiles": [location.origin + "/maps/midway_home/{z}/{x}/{y}.png"],
-            //"maxzoom": 19,
-            //"minzoom": 14,        
-
-        }
-    },
-    "layers": [{
-        "id": "midway_home_map_tile",
-        "type": "raster",
-        "source": "midway_home_map_tile",
+        "source": "itu_GM_map_tile",
         "minzoom": 0,
-        "maxzoom": 22
+        "maxzoom": 19
         }]
 };
-var home2_map_bound = new mapboxgl.LngLatBounds([ -111.50937905944953, 
-        40.5102765321257], [  -111.48599963850066, 
-        40.525713298379813]);
-var home2_map = {
+
+var itu_GM_sat_map_bound = new mapboxgl.LngLatBounds([29.014913, 41.099879], [29.030737, 41.108071]);
+var itu_GM_sat_map = {
     "version": 8,
     "sources": {
-        "home2_map_tile": {
+        "itu_GM_sat_map_tile": {
             "type": "raster",
             // "url": "mapbox://map-id"
-            //"url": location.origin+location.pathname+"itu-ayazaga" 
-            "tiles": [location.origin + "/maps/home2/{z}/{x}/{y}.png"],
+            //"url": location.origin+location.pathname+"itu-ayazaga"
+            "tiles": [location.origin + "/maps/itu_ayazaga_GM_sat/{z}/{x}/{y}.jpg.tile"],
             //"maxzoom": 19,
-            //"minzoom": 14,        
+            //"minzoom": 14,
 
         }
     },
     "layers": [{
-        "id": "home2_map_tile",
+        "id": "itu_GM_sat_map_tile",
         "type": "raster",
-        "source": "home2_map_tile",
-        "minzoom": 13,
-        "maxzoom": 17
+        "source": "itu_GM_sat_map_tile",
+        "minzoom": 0,
+        "maxzoom": 19
         }]
 };
+
+
+var utah_GM_map_bound = new mapboxgl.LngLatBounds([-110.798434, 38.401502], [-110.785805, 38.411034]);
+var utah_GM_map = {
+    "version": 8,
+    "sources": {
+        "utah_GM_map_tile": {
+            "type": "raster",
+            // "url": "mapbox://map-id"
+            //"url": location.origin+location.pathname+"itu-ayazaga"
+            "tiles": [location.origin + "/maps/UTAH_GM_comp_area/{z}/{x}/{y}.png.tile"],
+            //"maxzoom": 19,
+            //"minzoom": 14,
+
+        }
+    },
+    "layers": [{
+        "id": "utah_GM_map_tile",
+        "type": "raster",
+        "source": "utah_GM_map_tile",
+        "minzoom": 0,
+        "maxzoom": 19
+        }]
+};
+
+
+//var utah_bing_sat_map_bound = new mapboxgl.LngLatBounds([-110.798434, 38.401502], [-110.785805, 38.411034]);
+var utah_bing_sat_map = {
+    "version": 8,
+    "sources": {
+        "utah_bing_sat_map_tile": {
+            "type": "raster",
+            "tiles": [location.origin + "/maps/UTAH_bing_comp_area_sat/{z}/{x}/{y}.jpg.tile"],
+        }
+    },
+    "layers": [{
+        "id": "utah_bing_sat_map_tile",
+        "type": "raster",
+        "source": "utah_bing_sat_map_tile",
+        "minzoom": 0,
+        "maxzoom": 19
+    }]
+};
+
+
 var ui_variables = { // control değişkenleri oluşturuldu
     focused: false,
     editable: false,
@@ -234,7 +250,7 @@ var rover = {
 //heading value fo drone marker
 var direction;
 
-//sync drone position 
+//sync drone position
 function setDronePos() {
     map.getSource('drone').setData(drone);
 
@@ -480,6 +496,7 @@ function initSubscribers() {
     gps_listener.subscribe(function (msg) {
         drone.coordinates[1] = msg.latitude;
         drone.coordinates[0] = msg.longitude;
+        //console.log(drone.coordinates[1] + " " + drone.coordinates[0]); //Printing the gps coordinates to console
     });
 
     //--Compass heading
@@ -583,18 +600,33 @@ $("#map-offline-1").click(function () {
     map.setZoom(15);
 });
 
-
-$("#map-offline-3").click(function () {
-    map.setStyle(midway_home_map);
-    map.setCenter([  -111.49768934897509, 
-        40.517994915252757]);
-    map.setMaxBounds(midway_home_map_bound);
-    map.setZoom(12);
+$("#map-offline-2").click(function () {
+    map.setStyle(itu_GM_map);
+    map.setCenter([29.022825, 41.103975]);
+    map.setMaxBounds(itu_GM_map_bound);
+    map.setZoom(15);
 });
 
+$("#map-offline-3").click(function () {
+    map.setStyle(itu_GM_sat_map);
+    map.setCenter([29.022825, 41.103975]);
+    map.setMaxBounds(itu_GM_sat_map_bound);
+    map.setZoom(15);
+});
 
+$("#map-offline-4").click(function () {
+    map.setStyle(utah_GM_map);
+    map.setCenter([-110.792119, 38.406268]);
+    //map.setMaxBounds(utah_GM_map_bound);
+    map.setZoom(15);
+});
 
-
+$("#map-offline-5").click(function () {
+    map.setStyle(utah_bing_sat_map);
+    map.setCenter([-110.792119, 38.406268]);
+    //map.setMaxBounds(utah_GM_sat_map_bound);
+    map.setZoom(16);
+});
 
 
 
@@ -634,27 +666,27 @@ function addMark(data) {
 
     /*
         System structure
-            
+
             when the user clicks on the map:
-            
-            --a marker_rs object is created. every marker_rs object has a bunch of functions and variables.Most important ones are; 
+
+            --a marker_rs object is created. every marker_rs object has a bunch of functions and variables.Most important ones are;
             id, coordinates and getFeature() function
             --this object is added to and of waypoints array.index of this object is referred as temp_index
             --id of the object is "waypoint-" + index.So the first marker will have an id of "waypoint-0"
-            --geojson data extracted from this object is pushed to markerDatas.features[] array. 
+            --geojson data extracted from this object is pushed to markerDatas.features[] array.
             --the geojson source "waypoints" watches markerDatas.İt automatically updates the points
-            
+
             waypoint deleting procedure:
-            
+
             --index of deleted marker will be held.
             -- waypoint will first be deleted from markerDatas Array, then from waypoints array and finally div object that has the correct "index" attribute.
             -- previous data will be shifted accordingly.
             --line data will be updated.
             --new data will be shown
-            
+
             line drawing procedure:
-            
-            
+
+
     */
     var temp_index = waypoints.indexOf(marker_prototype);
     var el = document.createElement('div');
