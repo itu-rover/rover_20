@@ -1,0 +1,256 @@
+<?xml version="1.0"?>
+<robot
+  name="rover_19_description">
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="0.0044130475778954 -0.0310568977431112 0.118279871618265"
+        rpy="0 0 0" />
+      <mass
+        value="5.00699131277012" />
+      <inertia
+        ixx="0.268939126634922"
+        ixy="0.000157102820952367"
+        ixz="-0.0117934298282522"
+        iyy="0.61282212173551"
+        iyz="0.0042109592921943"
+        izz="0.435034401814071" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 1.57" />
+      <geometry>
+        <mesh
+          filename="package://rover_19_description/meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rover_19_description/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="right_front_wheel_link">
+    <inertial>
+      <origin
+        xyz="-0.11217 8.8447E-05 5.7636E-05"
+        rpy="0 0 0" />
+      <mass
+        value="1.5004" />
+      <inertia
+        ixx="9.5426E-06"
+        ixy="3.0122E-07"
+        ixz="1.5725E-07"
+        iyy="0.00077209"
+        iyz="3.7664E-07"
+        izz="0.0007733" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rover_19_description/meshes/wheel_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rover_19_description/meshes/wheel_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_front_wheel_joint"
+    type="continuous">
+    <origin
+      xyz="0.62476 -0.39172  -0.30409"
+      rpy="1.5708 2.2837E-18 1.607305" />
+    <parent
+      link="base_link" />
+    <child
+      link="right_front_wheel_link" />
+    <axis
+      xyz="1 0 0" />
+  </joint>
+  <link
+    name="left_front_wheel_link">
+    <inertial>
+      <origin
+        xyz="-0.11217 8.8185E-05 5.7784E-05"
+        rpy="0 0 0" />
+      <mass
+        value="1.5004" />
+      <inertia
+        ixx="9.5533E-06"
+        ixy="3.0632E-07"
+        ixz="1.5757E-07"
+        iyy="0.00077207"
+        iyz="3.7952E-07"
+        izz="0.00077329" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rover_19_description/meshes/wheel_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rover_19_description/meshes/wheel_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="left_front_wheel_joint"
+    type="continuous">
+    <origin
+      xyz="0.64386 0.43707 -0.30409"
+      rpy="-1.5708 -2.2837E-18 -1.5343" />
+    <parent
+      link="base_link" />
+    <child
+      link="left_front_wheel_link" />
+    <axis
+      xyz="1 0 0" />
+  </joint>
+  <link
+    name="right_back_wheel_link">
+    <inertial>
+      <origin
+        xyz="-0.11217 8.8435E-05 5.7607E-05"
+        rpy="0 0 0" />
+      <mass
+        value="1.5004" />
+      <inertia
+        ixx="9.5638E-06"
+        ixy="3.0089E-07"
+        ixz="1.5622E-07"
+        iyy="0.00077205"
+        iyz="3.8333E-07"
+        izz="0.00077327" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rover_19_description/meshes/wheel_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rover_19_description/meshes/wheel_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_back_wheel_joint"
+    type="continuous">
+    <origin
+      xyz="-0.34311 -0.42784  -0.30409"
+      rpy="1.5708 2.2837E-18 1.607305" />
+    <parent
+      link="base_link" />
+    <child
+      link="right_back_wheel_link" />
+    <axis
+      xyz="1 0 0" />
+  </joint>
+  <link
+    name="left_back_wheel_link">
+    <inertial>
+      <origin
+        xyz="-0.11217 8.8435E-05 5.7607E-05"
+        rpy="0 0 0" />
+      <mass
+        value="1.5004" />
+      <inertia
+        ixx="9.5638E-06"
+        ixy="3.0089E-07"
+        ixz="1.5622E-07"
+        iyy="0.00077205"
+        iyz="3.8333E-07"
+        izz="0.00077327" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rover_19_description/meshes/wheel_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rover_19_description/meshes/wheel_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="left_back_wheel_joint"
+    type="continuous">
+    <origin
+      xyz="-0.32408 0.40294  -0.30409"
+      rpy="1.5708 5.545E-15 -1.5343" />
+    <parent
+      link="base_link" />
+    <child
+      link="left_back_wheel_link" />
+    <axis
+      xyz="1 0 0" />
+  </joint>
+</robot>

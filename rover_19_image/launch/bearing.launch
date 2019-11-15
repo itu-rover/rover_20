@@ -1,0 +1,7 @@
+<launch>
+    <arg name="logoutput" default="screen"/>
+    <rosparam command="delete" param="/RoverReachImage" />
+    <rosparam command="load" file="$(find rover_19_image)/config/reach_image.yaml" />
+    <node name="rover_detect_yeni" pkg="rover_19_image" type="rover_detect_yeni.py" output="$(arg logoutput)"/>
+    <node name="bearing" pkg="rover_19_image" type="bearing.py" output="screen"/>
+</launch>

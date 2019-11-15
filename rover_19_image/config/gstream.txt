@@ -1,0 +1,11 @@
+Önce remote computer'dan command line'a :
+gst-launch-1.0 v4l2src !  video/x-raw,width=640,height=480 !  timeoverlay !  tee name="local" !  queue !  autovideosink local. !  queue ! jpegenc! rtpjpegpay !  udpsink host=192.168.1.122 port= 5000
+girilir. Burada host'un karşısındaki ip ground station ip'sidir.
+
+Ground station'dan 
+gst-launch-1.0 udpsrc port=5000 !  application/x-rtp, encoding-name=JPEG,payload=26 !  rtpjpegdepay ! jpegdec ! autovideosink
+girilir ve yayın alınır.
+
+Fakat burada aynı kamerayı 2 işlemde kullanamadığımız için asıl kod çalıştırılır daha sonra ekran görüntüsü aktarılır.
+gst-launch-1.0 -v ximagesrc use-damage=false xname=/usr/lib/torcs/torcs-bin ! videoconvert ! videoscale ! video/x-raw,format=I420,width=800,height=600,framerate=25/1 ! jpegenc ! rtpjpegpay ! udpsink host=127.0.0.1 port=5000
+

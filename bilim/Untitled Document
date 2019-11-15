@@ -1,0 +1,8 @@
+
+$ time python long_exposure.py --video videos/river_01.mov --output river_01.png 
+[INFO] opening video file pointer...
+[INFO] computing frame averages (this will take awhile)...
+
+real	2m1.710s
+user	0m50.959s
+sys		0m40.207s

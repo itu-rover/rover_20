@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>ROVER'19</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.41.0/mapbox-gl.css' rel='stylesheet' />
+    <link rel="shortcut icon" type="image/x-icon" href="./images/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="./css/source-sans-pro.css" />
+    <link rel="stylesheet" type="text/css" href="./css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="./css/ionicons.min.css">
+    <link rel="stylesheet" type="text/css" href="./css/AdminLTE.min.css" />
+    <link rel="stylesheet" type="text/css" href="./css/_all-skins.css" />
+    <link rel="stylesheet" type="text/css" href="./css/animate.css" />
+    <link rel="stylesheet" type="text/css" href="./css/style.css" />
+    <link rel="stylesheet" type="text/css" href="./css/mapstyle.css" />
+    <script type="text/javascript" src="./js/external/mapbox-gl.js"></script>
+    <script type="text/javascript" src="./js/external/jquery-2.2.4.min.js"></script>
+    <script type="text/javascript" src="./js/external/bootstrap.min.js"></script>
+    <script type="text/javascript" src="./js/external/eventemitter2.min.js"></script>
+    <script type="text/javascript" src="./js/external/roslib.min.js"></script>
+    <script type="text/javascript" src="./js/external/app.min.js"></script>
+    <script type="text/javascript" src="./js/ui-customizations.js"></script>
+    <script type="text/javascript" src="./js/external/gamepad.js"></script>
+    <script type="text/javascript" src="./js/external/canvasjs.min.js"></script>
+    <script type="text/javascript" src="./js/external/geopoint.js"></script>
+
+
+</head>
+
+<body class="hold-transition skin-real-dark layout-top-nav">
+    <div class="wrapper">
+        <header class="main-header">
+            <nav class="navbar navbar-static-top">
+                <div class="container">
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="#"><img src="./images/itu_rover_white.png" alt="ITU Rover Team" style="box-sizing: border-box; 
+                                                                                                                         width: 60px"></a>
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                    </div>
+                    <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
+                        <ul class="nav navbar-nav">
+                            <li class="active"><a>Dashboard <span class="sr-only">(current)</span></a></li>
+                            <li><a href="mission-planning.html">Plan</a></li>
+                            <li><a href="science.html">ISRL</a></li>
+
+                        </ul>
+                        <ul class="nav navbar-nav bg-red">
+
+                            <li><a href="science_ecph.html">BIO-EC-PH</a></li>
+                            <li><a href="science_raman.html">RAMAN</a></li>
+                            <li><a href="science_nir.html">VIS-NIR</a></li>
+                            <li><a href="science_sensor.html">SENSOR</a></li>
+                        </ul>
+                    </div>
+
+                </div>
+            </nav>
+        </header>
+        <div class="content-wrapper">
+            <div class="container-fluid">
+                <section class="content-header">
+                    <h1 style="color:white">ITU ROVER TEAM</h1>
+                </section>
+                <section class="content">
+                    <div class="row">
+                        <div class="col-md-5 col-sm-12 col-xs-12">
+                            <div class="row">
+                                <!-- State Info -->
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <div id="boxState" class="info-box bg-gray collapsed-box">
+                                        <span class="info-box-icon">
+                                            <i class="fa  fa-line-chart"></i>
+                                        </span>
+                                        <div class="info-box-content bg-gray">
+                                            <span class="info-box-text">state</span>
+                                            <span class="info-box-number" id="txtState">Sensor Monitor</span>
+                                            <div class="pull-right">
+                                                <button type="button" class="btn btn-sm btn-info-box" data-widget="collapse-detail">Details: <i class="fa fa-plus"></i></button>
+                                            </div>
+                                        </div>
+                                        <div class="info-box-detail no-padding bg-gray">
+
+
+                                            <table class="table table-striped table-hover bg-gray no-margin">
+
+                                                <div id="chartContainer1" style="height: 400px; width: 100%; " width="514" height="251"></div>
+                                            </table>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <div id="boxState" class="info-box bg-gray collapsed-box">
+                                        <span class="info-box-icon">
+                                            <i class="fa fa-gamepad"></i>
+                                        </span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">state</span>
+                                            <span class="info-box-number" id="txtState">Joystick-1</span>
+                                            <div class="pull-right">
+                                                <button type="button" class="btn btn-sm btn-info-box" data-widget="collapse-detail">Details: <i class="fa fa-plus"></i></button>
+                                            </div>
+                                        </div>
+                                        <div class="info-box-detail no-padding" style="background-color: #636363 ">
+                                            <div style="padding:5px; box-sizing: border-box;">
+                                                <table class="table table-condensed">
+                                                    <tbody>
+                                                        <tr>
+                                                            <th style="width: 10px">#</th>
+                                                            <th>Control</th>
+                                                            <th>Value</th>
+                                                            <th style="width: 40px">Label-1</th>
+                                                        </tr>
+                                                        <tr id="joy1-axis-0">
+                                                            <td>1.</td>
+                                                            <td>axis-0</td>
+                                                            <td>
+                                                                <div class="progress progress-bg">
+                                                                    <div class="progress-bar progress-bar-danger" style="width: 0%"></div>
+                                                                </div>
+                                                            </td>
+
+                                                            <td><span class="badge bg-red">0</span></td>
+                                                        </tr>
+                                                        <tr id="joy1-axis-1">
+                                                            <td>2.</td>
+                                                            <td>axis-1</td>
+                                                            <td>
+                                                                <div class="progress progress-xs">
+                                                                    <div class="progress-bar progress-bar-yellow" style="width: 0%"></div>
+                                                                </div>
+                                                            </td>
+                                                            <td><span class="badge bg-red">0</span></td>
+                                                        </tr>
+                                                        <tr id="joy1-axis-2">
+                                                            <td>3.</td>
+                                                            <td>axis-2</td>
+                                                            <td>
+                                                                <div class="progress progress-xs progress-striped active">
+                                                                    <div class="progress-bar progress-bar-primary" style="width: 0%"></div>
+                                                                </div>
+                                                            </td>
+                                                            <td><span class="badge bg-red">0</span></td>
+                                                        </tr>
+                                                        <tr id="joy1-axis-3">
+                                                            <td>4.</td>
+                                                            <td>axis-3</td>
+                                                            <td>
+                                                                <div class="progress progress-xs progress-striped active">
+                                                                    <div class="progress-bar progress-bar-success" style="widtseh: 0%"></div>
+                                                                </div>
+                                                            </td>
+                                                            <td><span class="badge bg-red">0</span></td>
+                                                        </tr>
+                                                        <tr id="joy1-axis-4">
+                                                            <td>5.</td>
+                                                            <td>axis-4</td>
+                                                            <td>
+                                                                <div class="progress progress-xs progress-striped active">
+                                                                    <div class="progress-bar progress-bar-success" style="width: 0%"></div>
+                                                                </div>
+                                                            </td>
+                                                            <td><span class="badge bg-red">0</span></td>
+                                                        </tr>
+                                                        <tr id="joy1-axis-5">
+                                                            <td>6.</td>
+                                                            <td>axis-9</td>
+                                                            <td>
+                                                                <div class="progress progress-xs progress-striped active">
+                                                                    <div class="progress-bar progress-bar-success" style="width: 0%"></div>
+                                                                </div>
+                                                            </td>
+                                                            <td><span class="badge bg-red">0</span></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <div class="info-box bg-gray collapsed-box">
+                                        <span class="info-box-icon">
+                                            <i class="fa fa-gamepad"></i>
+                                        </span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">state</span>
+                                            <span class="info-box-number">Joystick-2</span>
+                                            <div class="pull-right">
+                                                <button type="button" class="btn btn-sm btn-info-box" data-widget="collapse-detail">Details: <i class="fa fa-plus"></i></button>
+                                            </div>
+                                        </div>
+                                        <div class="info-box-detail no-padding" style="background-color: #636363 ">
+                                            <div style="padding:5px; box-sizing: border-box;">
+                                                <table class="table table-condensed">
+                                                    <tbody>
+                                                        <tr>
+                                                            <th style="width: 10px">#</th>
+                                                            <th>Control</th>
+                                                            <th>Value</th>
+                                                            <th style="width: 40px">Label</th>
+                                                        </tr>
+                                                        <tr id="joy2-axis-0">
+                                                            <td>1.</td>
+                                                            <td>axis-0</td>
+                                                            <td>
+                                                                <div class="progress progress-bg">
+                                                                    <div class="progress-bar progress-bar-danger" style="width: 0%"></div>
+                                                                </div>
+                                                            </td>
+
+                                                            <td><span class="badge bg-red">0</span></td>
+                                                        </tr>
+                                                        <tr id="joy2-axis-1">
+                                                            <td>2.</td>
+                                                            <td>axis-1</td>
+                                                            <td>
+                                                                <div class="progress progress-xs">
+                                                                    <div class="progress-bar progress-bar-yellow" style="width: 0%"></div>
+                                                                </div>
+                                                            </td>
+                                                            <td><span class="badge bg-red">0</span></td>
+                                                        </tr>
+                                                        <tr id="joy2-axis-2">
+                                                            <td>3.</td>
+                                                            <td>axis-2</td>
+                                                            <td>
+                                                                <div class="progress progress-xs progress-striped active">
+                                                                    <div class="progress-bar progress-bar-primary" style="width: 0%"></div>
+                                                                </div>
+                                                            </td>
+                                                            <td><span class="badge bg-red">0</span></td>
+                                                        </tr>
+                                                        <tr id="joy2-axis-3">
+                                                            <td>4.</td>
+                                                            <td>axis-3</td>
+                                                            <td>
+                                                                <div class="progress progress-xs progress-striped active">
+                                                                    <div class="progress-bar progress-bar-success" style="width: 0%"></div>
+                                                                </div>
+                                                            </td>
+                                                            <td><span class="badge bg-red">0</span></td>
+                                                        </tr>
+                                                        <tr id="joy2-axis-4">
+                                                            <td>5.</td>
+                                                            <td>axis-4</td>
+                                                            <td>
+                                                                <div class="progress progress-xs progress-striped active">
+                                                                    <div class="progress-bar progress-bar-success" style="width: 0%"></div>
+                                                                </div>
+                                                            </td>
+                                                            <td><span class="badge bg-red">0</span></td>
+                                                        </tr>
+                                                        <tr id="joy2-axis-5">
+                                                            <td>6.</td>
+                                                            <td>axis-5</td>
+                                                            <td>
+                                                                <div class="progress progress-xs progress-striped active">
+                                                                    <div class="progress-bar progress-bar-success" style="width: 0%"></div>
+                                                                </div>
+                                                            </td>
+                                                            <td><span class="badge bg-red">0</span></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div>
+                                    </div>
+                                </div>
+                                <div id="progressbar"></div>
+
+                            </div>
+
+
+                        </div>
+                        <!-- map field -->
+                        <div class="col-md-7 col-xs-12">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li class="bg-green"><a style="color:white" id="map-online">Online</a></li>
+                                    <li class="bg-yellow"><a id="map-offline-1">Offline(Utah_2)</a></li>
+                                    <li class="bg-yellow"><a id="map-offline">Offline(Utah_home)</a></li>
+                                    <li class="bg-yellow"><a id="map-offline-5">Offline(Home)</a></li>
+                                </ul>
+                            </div>
+                            <div id="map" class="map-sm"></div>
+                        </div>
+                        <!-- map field ends-->
+                    </div>
+
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <script src="./js/dashboard_map.js" type="application/javascript"></script>
+</body>
+
+</html>

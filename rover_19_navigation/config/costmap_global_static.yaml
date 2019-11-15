@@ -1,0 +1,8 @@
+global_frame: map
+rolling_window: false
+track_unknown_space: true
+#uptade_frequency: 5.0
+
+plugins:
+  - {name: static,                  type: "costmap_2d::StaticLayer"}
+  - {name: inflation,               type: "costmap_2d::InflationLayer"}

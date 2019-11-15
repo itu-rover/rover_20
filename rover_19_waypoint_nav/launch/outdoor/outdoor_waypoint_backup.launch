@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<launch>
+  <!--In Debug Mode save results in the params directory at results.txt-->
+  <node pkg="rover_19_control" name="ball_search" type="ball_search_3.py" output="screen"/>
+  <node pkg="rover_19_control" name="ball_handler" type="ball_handler.py" output="screen"/>
+
+  <node pkg="rover_19_control" name="autonomous_backup" type="autonomous_backup.py" output="screen"/>
+
+</launch>

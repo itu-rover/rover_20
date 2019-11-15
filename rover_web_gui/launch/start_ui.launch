@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<launch>
+    <!--
+    If you change bridge_port argument below, you have to change
+    suffix of the variable ros_bridge_url in the file html/js/core.js -->
+    <arg name="bridge_port" default="9090" />
+    <arg name="webserver_port" default="8000" />
+    <arg name="urdf_package_name" default="rover_web_gui" />
+    <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch">
+        <arg name="port" value="$(arg bridge_port)" />
+    </include>
+    <node pkg="tf2_web_republisher" type="tf2_web_republisher" name="tf2_web_republisher" />
+    <node pkg="rover_web_gui" type="start_ui_node.py" name="rover_web_gui_node">
+        <param name="urdf_package_name" value="$(arg urdf_package_name)" />
+        <param name="port" value="$(arg webserver_port)" />
+    </node>
+</launch>

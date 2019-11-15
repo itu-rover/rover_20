@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- Load joint controller configurations from YAML file to parameter server -->
+  <rosparam file="$(find arm_control)/config/arm_19_control.yaml" command="load"/>
+
+  <!-- load the controllers -->
+  <node name="controller_spawner2" pkg="controller_manager" type="spawner" respawn="false"
+    output="screen" args="joint_state_controller
+				rover_arm_controller"/>
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+    output="screen" args="--stopped rover_arm_eksen1_joint_position_controller 
+				rover_arm_eksen2_joint_position_controller 
+				rover_arm_eksen3_joint_position_controller  
+				rover_arm_eksen4_joint_position_controller  
+				rover_arm_eksen5_joint_position_controller 
+				rover_arm_eksen6_joint_position_controller "/>
+
+
+  <!-- convert joint states to TF transforms for rviz, etc -->
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"
+    respawn="false" output="screen">	  
+  </node>
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
+    respawn="false" output="screen">	  
+  </node>
+
+</launch>
