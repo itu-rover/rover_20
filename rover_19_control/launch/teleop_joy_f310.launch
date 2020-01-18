@@ -15,7 +15,7 @@
   <param name="kill" value="4" type="int"/>
   <param name="turbo" value="5" type="int"/> 
   <param name="turbo_scale" value="2" type="double"/>
-  <node pkg="rover_19_control" type="teleop_joy_f310" name="teleop_joy_f310" output="screen"/>
+  <node pkg="rover_19_control" type="teleop_joy_20.py" name="teleop_joy_20" output="screen"/>
 
   <!--node pkg="rover_19_control" type="mobile_base_cmd_sub_main.py" name="mobile_base_cmd_sub_main"/-->
    
