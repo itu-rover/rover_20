@@ -1,15 +1,27 @@
-
+---------
 #A file named .git is created. To see the .git file, you should show hidden files.
 git init 
-
+---------
 #puts the files you want to send into .git.
 git add <file_name>
 
-#commits the files in the index to the repository. ıt is write to comment with -m
-git commit -m "<coment>"
+or
 
+#puts all files into .git.
+git add .
+---------
+#commits the files in the index to the repository. ıt is write to comment with -m
+git commit -m "<comment>"
+---------
 #To add a new remote, use the git remote add command on the terminal, in the directory your repository is stored at.
 git remote add origin git@github.com:itu-rover/Rover_19.git
-
+#Upper stage is not essential.
+---------
 #git push sends all the pending changes to the remote repository to which your branch is mapped
 git push -u origin master
+
+or
+
+#Easier way to push files in git
+git push
+---------
