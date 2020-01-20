@@ -81,6 +81,7 @@ class GoForwardAvoid():
                 """
             else:
                 self.stop_servo_rotation()
+                rospy.Subscriber('servo_angle', String, self.angleSubscriber)
                 print("waiting")
 
             
@@ -178,6 +179,7 @@ class GoForwardAvoid():
     # Servo control functions
     def angleSubscriber(self,data):
         self.sangle = int(data.data)
+        rospy.loginfo("angle is:", sangle)
 
         '''if self.sangle > 120: # max angle can change
             self.servo_rotated = True ''' #this condition is not needed.
