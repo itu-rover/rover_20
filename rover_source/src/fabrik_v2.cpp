@@ -206,7 +206,7 @@ int main(int argc, char **argv){
 		joint3_pub.publish(joint3_last);
 		joint4_pub.publish(joint4_last);
 		joint5_pub.publish(joint5_last);
-		joint6_pub.publish(12.0);
+		joint6_pub.publish(joint6_last);
 
 	 
 	    loop_rate.sleep();
