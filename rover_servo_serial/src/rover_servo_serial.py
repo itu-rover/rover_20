@@ -33,7 +33,6 @@ class Servocamera():
         rate = rospy.Rate(30)
 
         self.openserial()
-        self.start_servo()
 
         angle_pub = rospy.Publisher(self.angle_topic, String, queue_size = 10)
 
@@ -44,7 +43,7 @@ class Servocamera():
             print(self.servo_rotating)
             #print(self.serialMsg)
             #time.sleep(5)
-            
+
             if(self.serialMsg == "s10f" and self.servo_rotating is False):
                 #print("s10f done")
                 self.start_servo()
@@ -56,33 +55,50 @@ class Servocamera():
                 self.stop_servo()
                 print("stopped")
                 self.servo_rotating = False
-                #self.Reader()
+                time.sleep(1)
+                self.take_angle()
+                #angle_pub = rospy.Publisher(self.angle_topic, String, queue_size = 10)
+                break
+
 
             rospy.sleep(0.2)
+
         rospy.spin()
 
     def openserial(self):
+        print("jbcj")
+        try:
+            self.ser = serial.Serial(self.port, self.baudrate, timeout=1) #bytesize i ogren, buna ekle!
+        #self.ser.open() #
+        #self.ser.isOpen()
+            rospy.loginfo("port is opened.")
         
-        self.ser = serial.Serial(self.port, self.baudrate, timeout=1) #bytesize i ogren, buna ekle!
-        rospy.loginfo("port is opened.")
-
-
-    def Reader(self):
-        self.angle = self.ser.readline() #Onat'in aci degerlerini yazdirmasiyla duzenlencek.
+        '''except IOError:
+            rospy.loginfo("port is not opened.")
+            self.ser.close()
+            self.ser.open()
+            self.ser.isOpen()
+            rospy.loginfo("port was already open, was closed and opened again!")'''
+        
+    def take_angle(self):
+        self.angle = self.ser.readline() 
         self.ser.flushInput()
         rospy.loginfo(self.angle)
-        #angle_pub.publish(self.angle) #Onat'in aci degerlerini yazdirmasiyla duzenlencek.
+        angle_pub.publish(self.angle) 
 
     def stop_servo(self):
         self.ser.writelines(self.f_letter + "0" + "1" + self.l_letter + "\n")
         self.ser.flushOutput()
         self.first = False
+        #rospy.loginfo('writer 1')
 
     def start_servo(self): 
         self.ser.writelines(self.f_letter + "1" + "0" + self.l_letter + "\n")
         time.sleep(3)
-
+        #self.ser.writelines(self.f_letter + "0" + "1" + self.l_letter + "\n")
+        #rospy.loginfo('01 basildi')
         self.ser.flushOutput()
+        #rospy.loginfo("while ici writer iki")
 
     def controlSubscriber(self,data):
         self.serialMsg = data.data
@@ -98,3 +114,5 @@ if __name__ == '__main__':
 
     except rospy.ROSInterruptException:
         pass
+
+

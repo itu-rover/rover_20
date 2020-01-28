@@ -53,7 +53,7 @@ class GoForwardAvoid():
         while not rospy.is_shutdown():
             rospy.Subscriber('/outdoor_waypoint_nav/odometry/filtered',Odometry, self.robotPoseSubscriber)
             rospy.Subscriber('/rover_state_topic',RoverStateMsg, self.stateSubscriber)
-            rospy.Subscriber('/servo_angle', Imu, self.angleSubscriber)
+            #rospy.Subscriber('/servo_angle', Imu, self.angleSubscriber)
             rospy.Subscriber('/px_coordinates', String, self.pxCoordinateSubscriber)
             #rospy.Subscriber('/move_base/result',MoveBaseActionResult, self.moveSubscriber)
             #print(self.state.state)
@@ -81,6 +81,7 @@ class GoForwardAvoid():
                 """
             else:
                 self.stop_servo_rotation()
+                rospy.Subscriber('servo_angle', String, self.angleSubscriber)
                 print("waiting")
 
             
@@ -93,11 +94,8 @@ class GoForwardAvoid():
             if(self.send_once==1):
                 print("found image")
                 #self.Pub = rospy.Publisher('/cmd_vel', Twist, queue_size=10) 
-
-                rospy.Subscriber('servo_angle', Imu, self.angleSubscriber) #subscriber servo angle #Onat'ın açı değerlerini yazdırmasıyla düzenlencek.
-                rotate(self.sangle)
                 self.stop_servo_rotation()
-
+                rospy.Subscriber('servo_angle', String, self.angleSubscriber) 
                 self.twist = Twist()
                 self.twist.linear.x=0
                 self.twist.angular.z=0
@@ -181,9 +179,10 @@ class GoForwardAvoid():
     # Servo control functions
     def angleSubscriber(self,data):
         self.sangle = int(data.data)
+        rospy.loginfo("angle is:", sangle)
 
-        if self.sangle > 120: # max angle can change
-            self.servo_rotated = True
+        '''if self.sangle > 120: # max angle can change
+            self.servo_rotated = True ''' #this condition is not needed.
 
     def start_servo_rotation(self):
         self.Servo_pub.publish(self.startMsg)
