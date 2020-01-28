@@ -7,7 +7,7 @@
   <include
     file="$(find gazebo_ros)/launch/empty_world.launch">
     <arg name="paused" value="true"/>
-    <arg name="world_name" value="$(find rover_20_description)/worlds/rolling_landscape_120mx9.world" />
+    <arg name="world_name" value="$(find rover_20_description)/worlds/rolling_landscape_120m.world" />
   </include>
 
   <node

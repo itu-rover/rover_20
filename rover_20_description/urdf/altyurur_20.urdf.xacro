@@ -350,7 +350,7 @@
 
    <gazebo>
     <plugin name="imu_controller" filename="libhector_gazebo_ros_imu.so">
-      <updateRate>50.0</updateRate>
+      <updateRate>30.0</updateRate>
       <bodyName>base_link</bodyName>
       <topicName>/imu/data</topicName>
       <accelDrift>0.005 0.005 0.005</accelDrift>
@@ -364,7 +364,7 @@
 
   <gazebo>
     <plugin name="gps_controller" filename="libhector_gazebo_ros_gps.so">
-      <updateRate>40</updateRate>
+      <updateRate>30</updateRate>
       <bodyName>base_link</bodyName>
       <frameId>base_link</frameId>
       <topicName>gps/fix</topicName>
@@ -400,7 +400,7 @@
        <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
          <alwaysOn>true</alwaysOn>
          <updateRate>0.0</updateRate>
-         <cameraName>/mybot/camera</cameraName>
+         <cameraName>/rover_20/camera</cameraName>
          <imageTopicName>camera_view</imageTopicName>
          <cameraInfoTopicName>camera_info</cameraInfoTopicName>
          <frameName>camera</frameName>
