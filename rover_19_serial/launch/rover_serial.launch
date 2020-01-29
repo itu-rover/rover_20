@@ -1,6 +1,0 @@
-<launch>
-    <arg name="logoutput" default="screen"/>
-    <rosparam command="delete" param="/RoverSerial" />
-    <rosparam command="load" file="$(find rover_19_serial)/config/serial_config.yaml" />
-    <node name="serial_rover" pkg="rover_19_serial" type="serial_rover.py" output="$(arg logoutput)"/>
-</launch>

@@ -1,6 +1,0 @@
-<launch>
-    <arg name="logoutput" default="screen"/>
-    <rosparam command="delete" param="/RoverModelling" />
-    <rosparam command="load" file="$(find rover_19_image)/config/modelling.yaml" />    
-    <node name="rover_modelling" pkg="rover_19_image" type="rover_modelling.py" output="screen"/>
-</launch>
