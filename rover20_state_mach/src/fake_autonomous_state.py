@@ -1,8 +1,8 @@
 #!/usr/bin/env python
-## This is the demo code for state_machine.
+## This is the demo code for state_machine. ITU Rover Team 2020. 
 import rospy
 from std_msgs.msg import String
-from status_handler import status_handler
+from status_handler20 import status_handler
 from sensor_msgs.msg import NavSatFix
 from sensor_msgs.msg import Imu
 from nav_msgs.msg import Odometry
@@ -13,23 +13,25 @@ import rosparam
 
 sh = status_handler()
 
-def auto_demo():
-    rospy.init_node('autonomous_demo')
+def fake_auto_demo():
+    rospy.init_node('autonomous_demo23')
 
     #Requirements 
     pub1 = rospy.Publisher('/gps/fix', NavSatFix, queue_size =10)
     pub2 = rospy.Publisher('/imu/data', Imu ,queue_size = 10)
     pub3 = rospy.Publisher('/odometry/wheel', Odometry, queue_size = 10)
     pub4 = rospy.Publisher('/gps_waypoint_handler/status', String, queue_size = 10)
-
+    pub5 = rospy.Publisher('/pass_gate_topic', String, queue_size = 10)
     #Autonomous movement
     #pub5 = rospy.Publisher('/move_base/status',GoalStatusArray,queue_size=10)
-    
+
     #Image Detect
     pub6 = rospy.Publisher('/image_detect_topic',String,queue_size=10)
 
     #Image Reach
     pub7 = rospy.Publisher('/image_reach_topic',String,queue_size=10)
+    pub8 = rospy.Publisher('/done_app_topic', String, queue_size = 10)
+
     rate = rospy.Rate(10) # 10hz
     count = 0
 
@@ -41,10 +43,10 @@ def auto_demo():
         print("4: Did not get any waypoint")
         print("5: Reached to way point")
         print("6: Did not Reached to way point")
-        print("7: Detected Image")
-        print("8: Did not detect Image")
-        print("9: Reached Image")
-        print("10: Did not reached image")
+        print("7: Detected AR Tag")
+        print("8: Did not detect AR Tag")
+        print("9: Reached AR Tag")
+        print("10: Did not reached AR Tag")
 
         imuMsg = Imu()
         imuMsg.orientation.x = 5
@@ -55,7 +57,7 @@ def auto_demo():
         encoderMsg = Odometry()
         encoderMsg.pose.pose.position.x = 5
         encoderMsg.pose.pose.position.y = 5
-        
+
         wpStatusMsgLow = GoalStatus()
         wpStatusMsgLow.status = 3
         wpStatusArray =[]
@@ -63,53 +65,59 @@ def auto_demo():
         wpStatusMsg = GoalStatusArray()
         wpStatusMsg.status_list = wpStatusArray
 
-
-
-
         userInput = raw_input()
         if userInput == "0":   #All sensors are good.
 
             pub1.publish(gpsMsg)
             pub2.publish(imuMsg)
             pub3.publish(encoderMsg)
-            
 
-        elif userInput == "1":  # All sensors except encoder are good.
+        elif userInput == "1": # All sensors except encoder are good.
             pub1.publish(gpsMsg)
             pub2.publish(imuMsg)
             #pub3.publish("0")
 
-        elif userInput == "2":   #Damaged Sensors
+        elif userInput == "2": #Damaged Sensors
             pub1.publish(gpsMsg)
             #pub2.publish("0")
             pub3.publish(encoderMsg)
             
-        elif userInput == "3":  # Got Waypoint
+        elif userInput == "3": # Got Waypoint
             pub4.publish("1")
 
-        #elif userInput == "4":  #Did not get any waypoint
-            #pub4.publish("0")
+        elif userInput == "4": #Did not get any waypoint
+            pub4.publish("0")
 
-        elif userInput == "5":  #Reached to way point
+        elif userInput == "5": #Reached to way point
             #pub5.publish(wpStatusMsg)
             pub4.publish("2")
-            
 
-        #elif userInput == "6":  #Did not reached to way point
+
+        #elif userInput == "6": #Did not reached to way point
             #pub5.publish("0")
 
 
-        elif userInput == "7":  #Detected Image
+        elif userInput == "7": #Detected Image
             pub6.publish("1")
+            #pub5.publish("1")
 
-        elif userInput == "8":  #Did not Detect Image
+
+
+        elif userInput == "8": #Did not Detect Image
             pub6.publish("0")
 
-        elif userInput == "9":  #Reached Image
+        elif userInput == "9": #Reached Image
             pub7.publish("1")
 
         elif userInput == "10": #Did not reached image
             pub7.publish("0")
+
+        elif userInput == "11":
+            pub5.publish("1")
+
+        elif userInput == "12": 
+            pub8.publish("1")
+
         else:
             print("Invalid entry")
 
@@ -121,6 +129,6 @@ if __name__ == '__main__':
         
         sh.start()
         while  not rospy.is_shutdown():
-            auto_demo()
+            fake_auto_demo()
     except rospy.ROSInterruptException:
         pass
