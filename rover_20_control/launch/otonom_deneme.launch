@@ -22,7 +22,7 @@
 	</group>
 
 	<group if = "$(arg smach)">
-		<include file = "$(find rover_state_mach)/launch/rover_smach.launch"/>
+		<include file = "$(find rover20_state_mach)/launch/rover_smach.launch"/>
 	</group>
 
 	<group if = "$(arg waypoint)">
