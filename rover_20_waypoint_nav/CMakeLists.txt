@@ -13,7 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
   tf
   roslib
   roslaunch
-  rover_state_mach
+  rover20_state_mach
 )
 
 catkin_package()
@@ -24,7 +24,7 @@ include_directories(
 )
 add_executable(gps_waypoint src/gps_waypoint.cpp)
 add_executable(gps_waypoint_debugger src/gps_waypoint_debugger.cpp)
-add_executable(gps_waypoint_handler src/gps_waypoint_handler.cpp)
+#add_executable(gps_waypoint_handler src/gps_waypoint_handler.cpp)
 add_executable(gps_waypoint_continuous1 src/gps_waypoint_continuous1.cpp)
 add_executable(gps_waypoint_continuous2 src/gps_waypoint_continuous2.cpp)
 add_executable(gps_waypoint_mapping src/gps_waypoint_mapping.cpp)
@@ -36,7 +36,7 @@ add_executable(switch_controllers src/switch_controllers.cpp)
 
 target_link_libraries(gps_waypoint ${catkin_LIBRARIES})
 target_link_libraries(gps_waypoint_debugger ${catkin_LIBRARIES})
-target_link_libraries(gps_waypoint_handler ${catkin_LIBRARIES})
+#target_link_libraries(gps_waypoint_handler ${catkin_LIBRARIES})
 target_link_libraries(gps_waypoint_continuous1 ${catkin_LIBRARIES})
 target_link_libraries(gps_waypoint_continuous2 ${catkin_LIBRARIES})
 target_link_libraries(gps_waypoint_mapping ${catkin_LIBRARIES})

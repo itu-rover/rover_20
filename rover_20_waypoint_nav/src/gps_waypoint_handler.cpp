@@ -8,7 +8,7 @@
 #include <robot_localization/navsat_conversions.h>
 #include <geometry_msgs/PointStamped.h>
 #include <sensor_msgs/NavSatFix.h>
-#include <rover_state_mach/RoverStateMsg.h>
+#include <rover20_state_mach/RoverStateMsg.h>
 #include <std_msgs/Bool.h>
 #include <std_msgs/String.h>
 #include <tf/transform_listener.h>
@@ -32,7 +32,7 @@ private:
   ros::Subscriber cg_sub; //Current GPS point subscriber 
   ros::Rate rate;
 
-  rover_state_mach::RoverStateMsg roverState;
+  rover20_state_mach::RoverStateMsg roverState;
   move_base_msgs::MoveBaseGoal moveBaseGoal;
   int count = 0, wait_count = 0;
   geometry_msgs::PointStamped UTM_point, map_point, UTM_next, map_next;
@@ -43,7 +43,7 @@ private:
 public:
     GpsWaypoint() : ac("move_base", true),
           sm_pub(gw_nh.advertise<std_msgs::String>("/gps_waypoint_handler/status", 10)), 
-          sm_sub(gw_nh.subscribe<rover_state_mach::RoverStateMsg>("/rover_state_topic",10, &GpsWaypoint::stateMachineCB, this)), //TODO:  convert to state machine msgs type and topic
+          sm_sub(gw_nh.subscribe<rover20_state_mach::RoverStateMsg>("/rover_state_topic",10, &GpsWaypoint::stateMachineCB, this)), //TODO:  convert to state machine msgs type and topic
           tg_sub(gw_nh.subscribe<sensor_msgs::NavSatFix>("/rover_gps/waypoint", 10, &GpsWaypoint::targetPointCB, this)),
           cg_sub(gw_nh.subscribe<sensor_msgs::NavSatFix>("/gps/fix", 10, &GpsWaypoint::currentPointCB, this)),
           rate(2)
@@ -62,7 +62,7 @@ public:
           }
           ROS_INFO("Waiting for the move_base action server to come up");
       }
-      roverState.state = rover_state_mach::RoverStateMsg::INITIALISE;
+      roverState.state = rover20_state_mach::RoverStateMsg::INITIALISE;
       std_msgs::String sm_info;
       sm_info.data = "0";
       sm_pub.publish(sm_info);
@@ -91,7 +91,7 @@ public:
       //geometry_msgs/PoseStamped base_position
     }
 
-    void stateMachineCB(rover_state_mach::RoverStateMsg rvrStt)
+    void stateMachineCB(rover20_state_mach::RoverStateMsg rvrStt)
     {
       //ROS_INFO("Got Info from State Machine ");
       roverState.state = rvrStt.state;
@@ -257,7 +257,7 @@ public:
     {
       while(ros::ok())
       {
-        if (roverState.state == rover_state_mach::RoverStateMsg::READY)
+        if (roverState.state == rover20_state_mach::RoverStateMsg::READY)
         {
           if (targetFlag == true)
           {       
@@ -274,7 +274,7 @@ public:
           }
         }
 
-        else if (roverState.state == rover_state_mach::RoverStateMsg::REACH_GPS)
+        else if (roverState.state == rover20_state_mach::RoverStateMsg::REACH_GPS)
         {
           ROS_INFO("adim0\n");
 

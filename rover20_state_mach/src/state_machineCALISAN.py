@@ -9,7 +9,7 @@ import smach
 import smach_ros
 from std_msgs.msg import String
 from status_handler import status_handler    
-from rover_state_mach.msg import StateMsg
+from rover20_state_mach.msg import StateMsg
 from diagnostic_msgs.msg import DiagnosticArray
 import rosparam
 
@@ -322,7 +322,7 @@ def CreateStateMachine():
 
 
     #Codes for smach viewer
-    sis = smach_ros.IntrospectionServer('rover_state_machine', sm_rover, '/ROVER_SM_ROOT')
+    sis = smach_ros.IntrospectionServer('rover20_state_machine', sm_rover, '/ROVER_SM_ROOT')
     sis.start()
 
     outcome = sm_rover.execute()

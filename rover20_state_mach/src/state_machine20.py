@@ -412,7 +412,7 @@ def CreateStateMachine():
 
 
     #Codes for smach viewer
-    sis = smach_ros.IntrospectionServer('rover_state_machine', sm_rover, '/ROVER_SM_ROOT')
+    sis = smach_ros.IntrospectionServer('rover20_state_machine', sm_rover, '/ROVER_SM_ROOT')
     sis.start()
 
     outcome = sm_rover.execute()
