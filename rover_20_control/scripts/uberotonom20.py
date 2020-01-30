@@ -55,6 +55,10 @@ class autonomous():
 		self.last_dist = 0
 		self.curr_lat = 0
 		self.curr_lon = 0
+		self.initial_lat = 0
+		self.initial_lon = 0
+		self.curr_x = 0
+		self.curr_y = 0
 		self.curr_yaw = 0
 		self.last_yaw = 0
 		self.target_lat = 0
@@ -68,7 +72,8 @@ class autonomous():
 		self.yaw_angle_error = math.pi / self.yaw_angle_error_divider
 		self.yaw_offset = math.pi / 2 #Yaw offset of rover default: magnetic east
 		self.fix_yaw_on_cb = True
-		self.encoder_frequency = rospy.get_param("movement/encoder_frequency", 10) #Frequency of encoder data publish from serial
+		#self.encoder_frequency = rospy.get_param("movement/encoder_frequency", 10) #Frequency of encoder data publish from serial
+		self.gps_initial_flag = 0
 
 		#Wheel parameters
 		self.wheel_radius = rospy.get_param("vehicle/wheel/radius", 0.15) #Radius of wheel
@@ -107,7 +112,7 @@ class autonomous():
 		self.gps_sub_topic = rospy.get_param("topics/gps_sub_topic", "/gps/fix")
 		self.lidar_sub_topic = rospy.get_param("topics/lidar_sub_topic", "/scan")
 		self.imu_sub_topic = rospy.get_param("topics/imu_sub_topic", "/imu/data")
-		self.encoder_sub_topic = rospy.get_param("topics/encoder_sub_topic", "/rover_serial_encoder")
+		#self.encoder_sub_topic = rospy.get_param("topics/encoder_sub_topic", "/rover_serial_encoder")
 
 		#Publisher and subscriber definitions
 		self.twist_pub = rospy.Publisher(self.twist_pub_topic, Twist, queue_size = 50)
@@ -158,10 +163,14 @@ class autonomous():
 		self.curr_lat = lat / 5
 		self.curr_lon = lon / 5
 
-	#WIP
-	def encoder_cb(self, data):
-		encoder_msg = data.data		
-		
+		if self.gps_initial_flag == 0:
+			self.initial_lat = self.curr_lat
+			self.initial_lon = self.curr_lon
+			self.gps_initial_flag = 1
+
+	def convert_latlon(self):
+		pass
+
 	#Find density of objects in scan range
 	def find_obstacle_density(self, data = None):
 		left_density = 0
@@ -451,10 +460,14 @@ class autonomous():
 			self.reset_twist()
 
 	#Get GPS input from user
-	def gps_input(self):
-		print("Enter GPS coordinates (latitude and longitude): ")
-		self.target_lat = float(raw_input())
-		self.target_lon = float(raw_input())
+	def gps_input(self, target_lat = 0.0, target_lon = 0.0):
+		if target_lat == 0.0 and target_lon == 0.0:
+			print("Enter GPS coordinates (latitude and longitude): ")
+			self.target_lat = float(raw_input())
+			self.target_lon = float(raw_input())
+		else:
+			self.target_lat = target_lat
+			self.target_lon = target_lon
 
 	#Write speed data to serial WIP
 	def write_serial(self):
