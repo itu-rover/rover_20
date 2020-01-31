@@ -6,10 +6,13 @@ RoverSmach20:
         sub_encoder: '/odometry/wheel'
         sub_ArTag_detect: '/px_coordinates'   #uncomment for image processing data
         sub_artag_detect: '/image_detect_topic' #uncomment for fake state data
-        sub_ArTag_reach: '/artag_reach_topic'
+        sub_ArTag_reach: '/artag_reach_topic'	
 
     pub_topics:
         pub_rover_state: '/rover_state_topic'
+
+    stage_counter:
+	stagecounter: '/stage_counter_topic'
     
     timeouts:
         initialiseTimeout: 600
