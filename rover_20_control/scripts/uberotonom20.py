@@ -31,7 +31,7 @@ from geometry_msgs.msg import Twist
 from sensor_msgs.msg import NavSatFix
 import geopy.distance 
 from std_msgs.msg import String
-from rover_state_mach.msg import RoverStateMsg
+from rover20_state_mach.msg import RoverStateMsg
 from sensor_msgs.msg import LaserScan
 from empty_space_class import EmptySpace
 

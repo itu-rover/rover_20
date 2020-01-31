@@ -3,7 +3,7 @@
 ## This is the imageMsg converter code for ITU Rover Team
 import rospy
 from std_msgs.msg import String
-from rover_state_mach.msg import RoverStateMsg
+from rover20_state_mach.msg import RoverStateMsg
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
 import time

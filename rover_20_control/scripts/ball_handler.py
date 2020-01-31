@@ -10,7 +10,7 @@ from math import radians, cos, sin, asin, sqrt, pow, pi, atan2
 from std_msgs.msg import String
 from nav_msgs.msg import Odometry
 import tf
-from rover_state_mach.msg import RoverStateMsg
+from rover20_state_mach.msg import RoverStateMsg
 
 
 class GoForwardAvoid():

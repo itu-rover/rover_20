@@ -8,11 +8,10 @@ import rospy
 import smach
 import smach_ros
 from std_msgs.msg import String
-from status_handler import status_handler    
-from rover_state_mach.msg import RoverStateMsg
+from status_handler20 import status_handler    
+from rover20_state_mach.msg import StateMsg
 from diagnostic_msgs.msg import DiagnosticArray
 import rosparam
-
 import time
 
 _namespace = '[RoverStateMachine ] '
@@ -34,21 +33,21 @@ class INITIALISE(smach.State):
         self.initaliseTimeout = status_handler.initaliseTimeout
         self.timeoutCounter = status_handler.initaliseTimeout
         self.rate = rospy.Rate(1)
-        self.stateMsg = RoverStateMsg()
-
-
-
+        self.stateMsg = StateMsg()
+        self.scMsg = status_handler.sc
 
     def execute(self, userdata):
         rospy.loginfo(_namespace + 'On Initialise state')
 
         self.stateMsg.state = self.stateMsg.INITIALISE
-        status_handler.publishRoverState(self.stateMsg)
 
-        self.gpsWorking = status_handler.gpsWorking                                                     # Necessary parameters to go to READY state
+        status_handler.publishRoverState(self.stateMsg)
+        status_handler.publishRoverSC(self.scMsg)
+        print(self.scMsg)
+
+        self.gpsWorking = status_handler.gpsWorking                                                   # Necessary parameters to go to READY state
         self.imuWorking = status_handler.imuWorking
         self.encoderWorking = status_handler.encoderWorking
-        
 
         if self.gpsWorking == True and self.imuWorking == True and self.encoderWorking == True:         # Check all necessary parameters.
             rospy.loginfo(_namespace + "All localization sensors are working good...")
@@ -67,6 +66,7 @@ class INITIALISE(smach.State):
             self.timeoutCounter = 0
             return 'FAIL'
 
+        #print("Gps working {}\nImu working {}\n\n".format(self.gpsWorking,self.imuWorking))
 
         rospy.sleep(0.1)
         return 'REPEAT'
@@ -87,7 +87,7 @@ class READY(smach.State):
         self.readyTimeout = status_handler.readyTimeout
         self.timeoutCounter = 0
         self.rate = rospy.Rate(1)
-        self.stateMsg = RoverStateMsg()
+        self.stateMsg = StateMsg()
 
     def execute(self, userdata):
         rospy.loginfo(_namespace + 'On Ready State')
@@ -120,7 +120,6 @@ class READY(smach.State):
             self.timeoutCounter = 0
             return 'FAIL'
 
-
         rospy.sleep(0.1)
         return 'REPEAT'
 #########################################################################################################################################################
@@ -132,9 +131,10 @@ class REACH_GPS(smach.State):
     global status_handler
     global _namespace
     def __init__(self):
-        smach.State.__init__(self, outcomes=['SUCCESS','IMAGE_INTERRUPT', 'FAIL', 'REPEAT'])
+        smach.State.__init__(self, outcomes=['SUCCESS','IMAGE_INTERRUPT', 'FAIL', 'REPEAT', 'SUCCES12'])
         self.rate = rospy.Rate(1)
-        self.stateMsg = RoverStateMsg()
+        self.stateMsg = StateMsg()
+        self.scMsg = rospy.Subscriber
 
     def execute(self, userdata):
         rospy.loginfo(_namespace + "On Reach GPS State")
@@ -143,27 +143,32 @@ class REACH_GPS(smach.State):
         status_handler.publishRoverState(self.stateMsg)
 
         self.gpsReached = status_handler.gpsReached
-        self.imageDetected = status_handler.imageDetected
+        self.artagDetected = status_handler.artagDetected
 
         self.movementAttribute = status_handler.movementAttribute
 
-        if self.movementAttribute == 0:
+        if self.movementAttribute == 0: #muhtemelen test case
             if self.gpsReached == True:
-                rospy.loginfo(_namespace + "Reached to GPS, moving to FIND_IMAGE state.")
-                return 'SUCCESS'
+                rospy.loginfo(_namespace + "Reached to GPS, moving to FIND_ARTAG state.")
+                return 'SUCCESS'   #muhtemelen test case
             
         elif self.movementAttribute == 1:
-            if self.gpsReached == False and self.imageDetected == True:
-                rospy.loginfo(_namespace + "Detected the Ball, moving to REACH_IMAGE state.")
+            if self.scMsg == 1 or self.scMsg == 2 :
+                if self.gpsReached == True:
+                    rospy.loginfo(_namespace + "Reached to Gps, moving to DEINITIALISE state.")
+                    return 'SUCCES12'
+
+            elif self.gpsReached == False and self.artagDetected == True:
+                rospy.loginfo(_namespace + "Detected the ARTAG, moving to REACH_ARTAG state.")
                 return 'IMAGE_INTERRUPT'
 
-            elif self.gpsReached == True and self.imageDetected == False:
-                rospy.loginfo(_namespace + "Reached to Gps, moving to FIND_IMAGE state.")
+            elif self.gpsReached == True and self.artagDetected == False:
+                rospy.loginfo(_namespace + "Reached to Gps, moving to FIND_ARTAG state.")
                 return 'SUCCESS'
 
-            elif self.gpsReached == True and self.imageDetected == True:
-                rospy.loginfo(_namespace + "Reached to Gps, Detected the Ball, moving to REACH_IMAGE state.")
-                return 'SUCCESS'
+            elif self.gpsReached == True and self.artagDetected == True:
+                rospy.loginfo(_namespace + "Reached to Gps, Detected the ARTAG, moving to REACH_ARTAG state.")
+                return 'IMAGE_INTERRUPT'
 
 
         rospy.sleep(0.1)
@@ -171,38 +176,47 @@ class REACH_GPS(smach.State):
 ##############################################################################################################################################################
 # Checks if image detected.
 ## That's all.
-class FIND_IMAGE(smach.State):
+class FIND_ARTAG(smach.State):
     global status_handler
     global _namespace
     def __init__(self):
-        smach.State.__init__(self, outcomes=['SUCCESS', 'FAIL', 'REPEAT'])
-        self.findImageTimeout = status_handler.findImageTimeout
+        smach.State.__init__(self, outcomes=['SUCCESS', 'FAIL', 'REPEAT', 'GO_APPROACH'])
+        self.findArtagTimeout = status_handler.findArtagTimeout
         self.timeoutCounter = 0
         self.rate = rospy.Rate(1)
-        self.stateMsg = RoverStateMsg()
+        self.stateMsg = StateMsg()
         self.goBack = status_handler.goBack
         self.goBack = False
-        
+        self.scMsg = rospy.Subscriber
+
 
 
     def execute(self, userdata):
-        rospy.loginfo(_namespace + 'On Find Image State')
+        rospy.loginfo(_namespace + 'On Find Artag State')
 
-        self.stateMsg.state = self.stateMsg.FIND_IMAGE
+        self.stateMsg.state = self.stateMsg.FIND_ARTAG
         status_handler.publishRoverState(self.stateMsg)
-        self.imageDetected = status_handler.imageDetected
-        print(str(self.imageDetected))
-        if self.imageDetected == True:
-            rospy.loginfo(_namespace + "Ball has detected, moving to REACH_IMAGE state")
+        self.artagDetected = status_handler.artagDetected
+        print(str(self.artagDetected))
+        if self.artagDetected == True:
+            #if(self.scMsg >= 4):
+            rospy.loginfo(_namespace + "Artag has detected, moving to APPROACH state")
             self.timeoutCounter = 0
-            self.imageDetected = False  #??
-            return 'SUCCESS'
-
+            self.artagDetected = False  #??
+            return 'GO_APPROACH'
+            
+            """
+            else :					#elif(self.scMsg == 3):
+                rospy.loginfo(_namespace + "Artag has detected, moving to REACH_ARTAG state")
+                self.timeoutCounter = 0
+                self.artagDetected = False  #??
+                return 'SUCCESS'
+            """
         else:
             self.timeoutCounter += 1
 
-        if self.timeoutCounter == self.findImageTimeout:
-            rospy.loginfo(_namespace + "Ball is still not detected, get your shit together.")
+        if self.timeoutCounter == self.findArtagTimeout:
+            rospy.loginfo(_namespace + "Artag is still not detected, get your shit together.")
             self.timeoutCounter = 0
             return 'RETURN'
 
@@ -210,36 +224,104 @@ class FIND_IMAGE(smach.State):
         rospy.sleep(0.1)
         return 'REPEAT'
 ###########################################################################################################################################################
-class REACH_IMAGE(smach.State):
+
+class APPROACH(smach.State):
+    global status_handler
+    global _namespace
+
+    def __init__(self):
+        smach.State.__init__(self, outcomes=['SUCCESS', 'FAIL', 'REPEAT'])
+        self.approachTimeout = status_handler.approachTimeout 
+        self.timeoutCounter = 0
+        self.rate = rospy.Rate(1)
+        self.stateMsg = StateMsg()
+        self.goBack = status_handler.goBack
+        self.goBack = False
+        #self.goapp = False
+        
+        
+
+
+    def execute(self, userdata):
+        rospy.loginfo(_namespace + 'On APPROACH State')
+
+        self.stateMsg.state = self.stateMsg.APPROACH
+        status_handler.publishRoverState(self.stateMsg)
+        self.doneApproach = status_handler.doneApproach
+        #if self.gatePass == True:
+        #if(self.scMsg >= 4):   
+        if self.doneApproach == True:
+            rospy.loginfo(_namespace + "Artag has detected, moving to DEINITIALISE state")
+            self.timeoutCounter = 0
+            return 'SUCCESS'
+
+        
+        self.timeoutCounter += 1
+
+        if self.timeoutCounter == self.approachTimeout:
+            rospy.loginfo(_namespace + "Artag is still not detected, get your shit together.")
+            self.timeoutCounter = 0
+            return 'RETURN'
+
+
+        rospy.sleep(0.1)
+        return 'REPEAT'
+
+class PASS_GATE(smach.State):
+    def __init__(self):
+        smach.State.__init__(self, outcomes=['SUCCESS', 'FAIL','REPEAT_APPROACH'])
+        self.rate = rospy.Rate(1)
+        self.stateMsg = StateMsg()
+
+    def execute(self, userdata):
+        rospy.loginfo(_namespace + "On PASS_GATE State")
+
+        self.stateMsg.state = self.stateMsg.PASS_GATE
+        status_handler.publishRoverState(self.stateMsg)
+
+        self.passComplete = status_handler.passComplete
+
+        if self.passComplete == True:
+               rospy.loginfo(_namespace + "Pass through the gate, moving to DEINITIALISE state.")
+               return 'SUCCESS'
+
+        rospy.sleep(0.1)
+        return 'REPEAT_APPROACH'
+
+###########################################################################################################################################################
+
+
+class REACH_ARTAG(smach.State):
     global status_handler
     global _namespace
     def __init__(self):
         smach.State.__init__(self, outcomes=['SUCCESS', 'FAIL', 'REPEAT','BACK'])
-        self.reachImageTimeout = status_handler.reachImageTimeout
+        self.reachArtagTimeout = status_handler.reachArtagTimeout
         self.timeoutCounter = 0
         self.rate = rospy.Rate(1)
-        self.stateMsg = RoverStateMsg()
+        self.stateMsg = StateMsg()
 
     def execute(self, userdata):
-        rospy.loginfo(_namespace + 'On Reach Image State')
+        rospy.loginfo(_namespace + 'On Reach Artag State')
 
-        self.stateMsg.state = self.stateMsg.REACH_IMAGE
+        self.stateMsg.state = self.stateMsg.REACH_ARTAG
         status_handler.publishRoverState(self.stateMsg)
 
 
 
-        self.imageReached = status_handler.imageReached
+        self.artagReached = status_handler.artagReached
         self.goBack = status_handler.goBack
 
-        if self.imageReached == True:
-            rospy.loginfo(_namespace + "Reached The Ball !!")
-            self.timeoutCounter = 0
-            self.imageReached = False    #eklendi
-            return 'SUCCESS' 
-        else:
-            self.timeoutCounter += 1 
+        if self.scMsg == 3 :
+            if self.artagReached == True:
+                rospy.loginfo(_namespace + "Reached The Ball !!")
+                self.timeoutCounter = 0
+                self.artagReached = False    #eklendi
+                return 'SUCCESS' 
+            else:
+                self.timeoutCounter += 1 
 
-        if self.timeoutCounter == self.reachImageTimeout:
+        if self.timeoutCounter == self.reachArtagTimeout:
             rospy.loginfo(_namespace + "Ball is still not reached, get your shit together.")
             status_handler.checkAllSensors()                                                      #Check All Sensors For Once ##TODO: Criticize if it is neccesary
             self.allSensorsWorking = status_handler.allSensorsWorking  
@@ -267,10 +349,12 @@ class DEINITIALISE(smach.State):
     def __init__(self):
         smach.State.__init__(self, outcomes=['SUCCESS', 'REPEAT','FAIL'])
         self.rate = rospy.Rate(1)
-        self.stateMsg = RoverStateMsg()
+        self.stateMsg = StateMsg()
+
 
     def execute(self, userdata):
         rospy.loginfo(_namespace + 'On DEINITIALISE state')
+        #self.scMsg += 1
         status_handler.deinitialise()
         rospy.sleep(0.1)
         return 'SUCCESS'
@@ -305,13 +389,19 @@ def CreateStateMachine():
                                transitions={'TO_GPS': 'REACH_GPS', 'FAIL': 'ERROR', 'REPEAT':'READY'})
 
         smach.StateMachine.add('REACH_GPS', REACH_GPS(),
-                               transitions={'SUCCESS': 'FIND_IMAGE', 'IMAGE_INTERRUPT' : 'REACH_IMAGE','FAIL': 'ERROR', 'REPEAT': 'REACH_GPS'})
+                               transitions={'SUCCESS': 'FIND_ARTAG', 'SUCCES12': 'DEINITIALISE','IMAGE_INTERRUPT' : 'REACH_ARTAG','FAIL': 'ERROR', 'REPEAT': 'REACH_GPS'})
 
-        smach.StateMachine.add('FIND_IMAGE', FIND_IMAGE(),
-                               transitions={'SUCCESS': 'REACH_IMAGE', 'FAIL': 'ERROR', 'REPEAT': 'FIND_IMAGE'})
+        smach.StateMachine.add('FIND_ARTAG',FIND_ARTAG(),
+                               transitions={'SUCCESS': 'REACH_ARTAG', 'GO_APPROACH':'APPROACH' , 'FAIL': 'ERROR', 'REPEAT': 'FIND_ARTAG'})
 
-        smach.StateMachine.add('REACH_IMAGE', REACH_IMAGE(),
-                               transitions={'SUCCESS': 'DEINITIALISE', 'FAIL': 'ERROR', 'REPEAT': 'REACH_IMAGE','BACK':'FIND_IMAGE'})
+        smach.StateMachine.add('APPROACH', APPROACH(),
+                               transitions={'SUCCESS': 'PASS_GATE', 'FAIL': 'ERROR', 'REPEAT': 'APPROACH'})
+
+        smach.StateMachine.add('PASS_GATE', PASS_GATE(),
+                               transitions={'SUCCESS': 'DEINITIALISE', 'FAIL': 'ERROR', 'REPEAT_APPROACH' : 'APPROACH'})
+
+        smach.StateMachine.add('REACH_ARTAG', REACH_ARTAG(),
+                               transitions={'SUCCESS': 'DEINITIALISE', 'FAIL': 'ERROR', 'REPEAT': 'REACH_ARTAG','BACK':'FIND_ARTAG'})
 
         smach.StateMachine.add('DEINITIALISE', DEINITIALISE(),
                                transitions={'SUCCESS': 'INITIALISE', 'FAIL': 'ERROR', 'REPEAT': 'DEINITIALISE'})
@@ -322,7 +412,7 @@ def CreateStateMachine():
 
 
     #Codes for smach viewer
-    sis = smach_ros.IntrospectionServer('rover_state_machine', sm_rover, '/ROVER_SM_ROOT')
+    sis = smach_ros.IntrospectionServer('rover20_state_machine', sm_rover, '/ROVER_SM_ROOT')
     sis.start()
 
     outcome = sm_rover.execute()

@@ -9,7 +9,7 @@ from geometry_msgs.msg import PoseStamped,Twist
 from math import radians, cos, sin, asin, sqrt, pow, pi, atan2
 from std_msgs.msg import String
 from nav_msgs.msg import Odometry
-from rover_state_mach.msg import RoverStateMsg
+from rover20_state_mach.msg import RoverStateMsg
 from sensor_msgs.msg import Imu
 import tf
 
