@@ -31,6 +31,8 @@ class status_handler:
         self.imuWorking = True     #!!!!False
         self.encoderWorking = False
         self.allSensorsWorking = False
+        self.first_artag = False
+        self.second_artag = False
 
         	#Parameter for Waypoint
         self.gotWayPoint = False
@@ -52,7 +54,9 @@ class status_handler:
     	self.imu_topic = rospy.get_param('RoverSmach20/sub_topics/sub_imu','/imu/data')
     	self.gps_topic = rospy.get_param('RoverSmach20/sub_topics/sub_gps','/gps/fix')
     	self.encoder_topic = rospy.get_param('RoverSmach20/sub_topics/sub_encoder','/odometry/wheel')
-    	self.artag_detect_topic = rospy.get_param('RoverSmach20/sub_topics/sub_artag_detect','/artag_detect_topic') 
+    	#self.artag_detect_topic = rospy.get_param('RoverSmach20/sub_topics/sub_artag_detect','/artag_detect_topic') #fake
+        self.first_artag_detect = rospy.get_param('RoverReachImage/ImageProcessing/sub_ArTag_detect', '/px_coordinates')
+        self.second_artag_detect = rospy.get_param('RoverReachImage/ImageProcessing/sub_ArTag_detect1', '/px_coordinates1')
     	self.artag_reach_topic = rospy.get_param('RoverSmach20/sub_topics/sub_ArTag_reach','/artag_reach_topic')     #sub_reach_artag
     	self.rover_state_topic = rospy.get_param('RoverSmach20/pub_topics/pub_rover_state','/rover_state_topic')
         self.sc_topic = rospy.get_param('RoverSmach20/stage_counter/stagecounter', '/stage_counter_topic')#yeni-->stage counter topici 
@@ -65,7 +69,8 @@ class status_handler:
     	rospy.Subscriber(self.gps_topic, NavSatFix, self.gps_callback) 							# Listen Gps
     	rospy.Subscriber(self.imu_topic, Imu, self.imu_callback)								# Listen IMU
     	rospy.Subscriber(self.encoder_topic, Odometry, self.encoder_callback)					# Listen Encoder
-    	rospy.Subscriber(self.artag_detect_topic, String, self.artag_detect_callback) 			# Listen detecting artag
+    	rospy.Subscriber(self.artag_detect_topic, String, self.artag_detect_callback)
+        rospy.Subscriber(self.artag_detect_topic1, String, self.artag_detect_callback1) 			# Listen detecting artag
     	rospy.Subscriber(self.artag_reach_topic, String, self.artag_reach_callback)
         rospy.Subscriber(self.pass_topic, String, self.pass_gate_callback) #fake
         rospy.Subscriber(self.done_topic, String, self.done_approach_callback) #fake
@@ -74,6 +79,7 @@ class status_handler:
 
         self.sc_pub = rospy.Publisher(self.sc_topic, String, queue_size = 10) #yeni --> stagecounter topicine publishleniyor.
     	self.state_pub = rospy.Publisher(self.rover_state_topic, StateMsg, queue_size=10)
+        self.artag_detect_pub = rospy.Publisher(self.artag_detect_topic, String, queue_size =10)
     	rospy.Subscriber(self.rover_state_topic,StateMsg,self.state_callback)
         rospy.Subscriber(self.sc_topic, String, self.sc_callback)
 
@@ -151,7 +157,7 @@ class status_handler:
 
     		self.gpsReached = False
 
-    def artag_detect_callback(self,data):
+    '''def artag_detect_callback(self,data):
         #UNCOMMENT THIS BLOCK FOR FULL-AUTONOMOUS DRIVING
         '''-------------------------------------------------------------------'''
         self.ar_Detected = data.data
@@ -165,6 +171,7 @@ class status_handler:
                 self.artagDetected = False
             if self.state == 4:
                 self.goBack = True
+
         '''-------------------------------------------------------------------'''
 
         #UNCOMMENT THIS BLOCK FOR AUTONOMOUS DEMO
@@ -179,8 +186,17 @@ class status_handler:
         #    if self.state == 3:
         #        self.artagDetected = False
         '''-------------------------------------------------------------------'''
-        #DONT FORGET TO SWITCH THE ARTAG_DETECT TOPIC FROM smach_config.yaml
+        #DONT FORGET TO SWITCH THE ARTAG_DETECT TOPIC FROM smach_config.yaml  '''
 
+    def artag_detect_callback(self, data):
+        self.ar_Detected = data.data
+        if self.ar_Detected != "-":
+            self.first_artag = True
+
+    def artag_detect_callback1(self, data):
+        self.ar_Detected1 = data.data
+        if self.ar_Detected1 != "-":
+            self.second_artag = True
 
     def artag_reach_callback(self,data):
     	self.artagReached = False        #eklendi
@@ -191,6 +207,7 @@ class status_handler:
     		self.artagReached = False
     	"""elif self.ar_Reached == "2":			#!! GO BACK !!
     		self.goBack = True"""
+
     def gate_pass_callback(self, data):
         self.gatePass = False 
 
@@ -200,7 +217,10 @@ class status_handler:
     def publishRoverSC(self, nowstage):
         self.sc_pub.publish(str(nowstage))
 
-    def checkAllSensors(self):			# Checks sensors for once.
+    def publishArtagDetect(self, x):
+        self.artag_detect_pub.publish(str(x))
+
+    def checkAllSensors(self):# Checks sensors for once.
 
     	if self.encoderWorking == True and self.gpsWorking == True and self.imuWorking == True:
     		self.allSensorsWorking = True
