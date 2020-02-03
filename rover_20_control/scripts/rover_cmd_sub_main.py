@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# 2020 URC and 2020 ERC subs joy mobile_base,  pubs to serial node
+# 2018 URC and 2018 ERC subs joy mobile_base,  pubs to serial node
 # 1-3 are the left side of the mobile_base, 2-4 are the right side of the mobile_base.
 # "S + motor_1 + motor_2 + motor_3  + motor_4 + F"
 # If you dont use your joy, it will send 0000 to serial node
@@ -9,24 +9,29 @@ import math
 from std_msgs.msg import String
 from geometry_msgs.msg import Twist
 
+
+
 twist_cmd = Twist();
 twist_nav = Twist();
 twist = Twist();
 
-pub = rospy.Publisher("/rover_serial_topic", String, queue_size = 10)
+pub=rospy.Publisher("/rover_serial_topic", String, queue_size=10)
+
 
 def callbackcmd(data):  
-	twist_cmd.linear.x = data.linear.x * 60 #80  
-	twist_cmd.angular.z = data.angular.z * 60 #80
+	twist_cmd.linear.x = data.linear.x * 80  
+	twist_cmd.angular.z = data.angular.z * 80
 	
 def callbacknav(data):
-	twist_nav.linear.x = data.linear.x * 60 #80
-	twist_nav.angular.z = data.angular.z * 60 #80
+	twist_nav.linear.x = data.linear.x * 80
+	twist_nav.angular.z = data.angular.z * 80
 
 def main():
-	rospy.init_node('rover_20_cmd_sub_serial')
+	rospy.init_node('rover_19_cmd_sub_serial')
 	rospy.Subscriber("/cmd_vel", Twist, callbacknav)
-	#rospy.Subscriber("/joy_teleop/cmd_vel", Twist, callbackcmd)	
+	rospy.Subscriber("/rover_joy/cmd_vel", Twist, callbackcmd)
+
+	
 	
 	way_left="0"
 	left_wheelString="000"
@@ -47,34 +52,39 @@ def main():
 
 		if(twist_cmd.linear.x != 0.0 or twist_cmd.angular.z != 0.0):
 			twist = twist_cmd
+
+
 		else:
 			twist = twist_nav
+		
 
-		if twist.linear.x >= 0:				
+		if twist.linear.x >= 0:
+				
 			left_wheel = twist.linear.x -  twist.angular.z
 			#left_wheel = twist.linear.x -  (twist.linear.x/2) 
 			right_wheel = twist.linear.x + twist.angular.z
 			#right_wheel = twist.linear.x + (twist.linear.x/2)
 
+
 		elif twist.linear.x < 0: 
+
 			left_wheel = twist.linear.x + twist.angular.z
 			#left_wheel = twist.linear.x + (twist.linear.x/2)
 			right_wheel = twist.linear.x - twist.angular.z
 			#right_wheel = twist.linear.x - (twist.linear.x/2) 
 
-		if(left_wheel < 0):
-			way_left = 1
+		if(left_wheel<0):
+			way_left =1
 			left_wheel *= -1
 		else:
-			way_left = 0
-
-		if(right_wheel < 0):
-			way_right = 1
+			way_left =0
+		if(right_wheel<0):
+			way_right =1
 			right_wheel *= -1
 		else:
-			way_right = 0
+			way_right=0
 
-		print("left: "+ str(left_wheel) + " right: " + str(right_wheel))
+		print("left: "+str(left_wheel)+ " right: "+ str(right_wheel))
 		
 		if abs(left_wheel) < 10:
 			left_wheelString = "00" + str(int(left_wheel))
@@ -83,7 +93,8 @@ def main():
 			left_wheelString = "0" + str(int(left_wheel))
 
 		elif abs(left_wheel) > 100:
-			left_wheelString = str(int(left_wheel))			
+			left_wheelString = str(int(left_wheel))
+			
 
 		if abs(right_wheel) < 10:
 			right_wheelString = "00" + str(int(right_wheel))
@@ -99,10 +110,12 @@ def main():
 
 		if(right_wheel > 160):
 			right_wheelString = "160"
+
+
 		
-		all_wheels_msg = str(way_left) + str(left_wheelString) + "," + str(way_left) + str(left_wheelString) + "," + str(way_right) + str(right_wheelString) + "," + str(way_right) + str(right_wheelString)
-		print("A," + all_wheels_msg+ "," + robotic_arm_msg+ "," + science_msg + ",B")
-		pub.publish("A," + all_wheels_msg + "," + robotic_arm_msg + "," + science_msg + ",B")
+		all_wheels_msg = str(way_left) + str(left_wheelString) + str(way_right) + str(right_wheelString)
+		print("S"+ all_wheels_msg+ robotic_arm_msg + science_msg +"F")
+		pub.publish("S"+ all_wheels_msg + robotic_arm_msg + science_msg +"F")
 		rate.sleep()
 
 if __name__ == '__main__':

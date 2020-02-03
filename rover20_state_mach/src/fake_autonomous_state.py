@@ -20,16 +20,16 @@ def fake_auto_demo():
     pub1 = rospy.Publisher('/gps/fix', NavSatFix, queue_size =10)
     pub2 = rospy.Publisher('/imu/data', Imu ,queue_size = 10)
     pub3 = rospy.Publisher('/odometry/wheel', Odometry, queue_size = 10)
-    pub4 = rospy.Publisher('/gps_waypoint_handler/status', String, queue_size = 10)
+    pub4 = rospy.Publisher('/gps_waypoint_handler/status/gps/fix', String, queue_size = 10)
     pub5 = rospy.Publisher('/pass_gate_topic', String, queue_size = 10)
     #Autonomous movement
     #pub5 = rospy.Publisher('/move_base/status',GoalStatusArray,queue_size=10)
 
     #Image Detect
-    pub6 = rospy.Publisher('/image_detect_topic',String,queue_size=10)
+    pub6 = rospy.Publisher('/artag_detect_topic',String,queue_size=10)
 
     #Image Reach
-    pub7 = rospy.Publisher('/image_reach_topic',String,queue_size=10)
+    pub7 = rospy.Publisher('/artag_reach_topic',String,queue_size=10)
     pub8 = rospy.Publisher('/done_app_topic', String, queue_size = 10)
 
     rate = rospy.Rate(10) # 10hz
