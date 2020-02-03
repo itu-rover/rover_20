@@ -37,12 +37,12 @@ class GoForwardAvoid():
         #tell the action client that we want to spin a thread by default
         self.Pub = rospy.Publisher('/cmd_vel', Twist, queue_size=10)
         self.Servo_pub = rospy.Publisher('/servo_control', String, queue_size=10)
-        
+
 
         while not rospy.is_shutdown():
             rospy.Subscriber('/outdoor_waypoint_nav/odometry/filtered',Odometry, self.robotPoseSubscriber)
             rospy.Subscriber('/rover_state_topic',RoverStateMsg, self.stateSubscriber)
-            
+
             #rospy.Subscriber('/move_base/result',MoveBaseActionResult, self.moveSubscriber)
             #print(self.state.state)
             if(self.state.state==self.state.FIND_ARTAG):
@@ -60,7 +60,7 @@ class GoForwardAvoid():
             else:
                 print("waiting")
 
-        
+
             rate.sleep()
 
 
@@ -71,7 +71,7 @@ class GoForwardAvoid():
             	print("found artag")
                 self.stop_servo_rotation() #stop servo
                 rospy.Subscriber('/servo_angle', String, self.angleSubscriber) #subscribe servo angle
-                #self.Pub = rospy.Publisher('/cmd_vel', Twist, queue_size=10) 
+                #self.Pub = rospy.Publisher('/cmd_vel', Twist, queue_size=10)
                 rotate(self.sangle)  #Rover turns as much as the angle the servo sees the artag.
                 self.twist = Twist()
                 self.twist.linear.x=0
@@ -81,12 +81,12 @@ class GoForwardAvoid():
                 self.client.cancel_all_goals()
                 self.send_once=0
 
-    def angleSubscriber(self, data): 
+    def angleSubscriber(self, data):
         self.sangle = int(data.data) #convert string to integer.
         print(sangle)
-        
+
     def robotPoseSubscriber(self,poseMsg): #Odometry update recieved from ROS topic, run this function
-    
+
         self.currPosX = poseMsg.pose.pose.position.x
         self.currPosY = poseMsg.pose.pose.position.y
         self.currPosZ = poseMsg.pose.pose.position.z
@@ -110,7 +110,7 @@ class GoForwardAvoid():
         print("Going forward...")
         goal=MoveBaseGoal()
         goal.target_pose.header.frame_id = "/base_link"
-        dist=1                                                  #1 metre ileri gidiyor 
+        dist=1                                                  #1 metre ileri gidiyor
         goal.target_pose.pose.position.x = dist
         goal.target_pose.pose.position.y =0
         goal.target_pose.pose.position.z = 0
@@ -119,29 +119,29 @@ class GoForwardAvoid():
         goal.target_pose.pose.orientation.x = q[0]
         goal.target_pose.pose.orientation.y = q[1]
         goal.target_pose.pose.orientation.z = q[2]
-        goal.target_pose.pose.orientation.w = q[3] 
+        goal.target_pose.pose.orientation.w = q[3]
 
         self.client.send_goal(goal)
         wait = self.client.wait_for_result()
         dist=dist+0.5
 
-    def rotate(self, angle):     
+    def rotate(self, angle):
         print("Rotating...")
         #print(angle)
         goal = MoveBaseGoal()
-         
+
         goal.target_pose.header.frame_id = "/base_link"
         goal.target_pose.header.stamp = rospy.Time.now()
         goal.target_pose.pose.position.x =0
         goal.target_pose.pose.position.y = 0
-        goal.target_pose.pose.position.z = 0 
+        goal.target_pose.pose.position.z = 0
 
         q = tf.transformations.quaternion_from_euler(0,0,(float(angle)*pi/180))
         goal.target_pose.pose.orientation.x = q[0]
         goal.target_pose.pose.orientation.y =q[1]
         goal.target_pose.pose.orientation.z = q[2]
-        goal.target_pose.pose.orientation.w = q[3] 
-         
+        goal.target_pose.pose.orientation.w = q[3]
+
         self.client.send_goal(goal)
         wait = self.client.wait_for_result()
 
@@ -164,21 +164,14 @@ class GoForwardAvoid():
         self.Servo_pub.publish(self.stopMsg)
         #print("servo had stopped")
 
-
-    
     def look_around():
-
         if servo_rotated == False:
             self.start_servo_rotation()
-               
         elif self.servo_rotated == True:
             self.rotate(180)
             self.servo_rotated = False
             self.start_servo_rotation()
             
-
-
-
 
 if __name__ == '__main__':
     try:

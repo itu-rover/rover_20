@@ -8,7 +8,7 @@ import rospy
 import smach
 import smach_ros
 from std_msgs.msg import String
-from status_handler20 import status_handler    
+from status_handler20 import status_handler
 from rover20_state_mach.msg import StateMsg
 from diagnostic_msgs.msg import DiagnosticArray
 import rosparam
@@ -22,15 +22,15 @@ status_handler = status_handler()
 # First State of the ITU Rover
 ## Checksgps, imu, encoder datas through status_handler
 ### If they are all working correct, passes to Ready State.
-#### Encoder sensor is not critical here. 
+#### Encoder sensor is not critical here.
 
 class INITIALISE(smach.State):
 
     global status_handler
-    global _namespace 
+    global _namespace
     #global scMsg
 
-    def __init__(self):               
+    def __init__(self):
         smach.State.__init__(self, outcomes=['REPEAT', 'FAIL', 'SUCCESS'])
         self.initaliseTimeout = status_handler.initaliseTimeout
         self.timeoutCounter = status_handler.initaliseTimeout
@@ -62,7 +62,7 @@ class INITIALISE(smach.State):
             return 'SUCCESS'
 
         else:                                                                                           # Count timeout.
-            self.timeoutCounter += 1            
+            self.timeoutCounter += 1
 
         if self.timeoutCounter == self.initaliseTimeout:                                                # If Timeout counter has reached the limit.
             self.timeoutCounter = 0
@@ -100,14 +100,14 @@ class READY(smach.State):
 
         self.gotWayPoint = status_handler.gotWayPoint
 
-        
+
 
         if self.gotWayPoint == True:
 
             status_handler.checkAllSensors()                                                      #Check All Sensors For Once ##TODO: Criticize if it is neccesary
-            self.allSensorsWorking = status_handler.allSensorsWorking                                        
+            self.allSensorsWorking = status_handler.allSensorsWorking
 
-            if self.allSensorsWorking == True:                            
+            if self.allSensorsWorking == True:
                 rospy.loginfo(_namespace + "Got new waypoint. Switching to GPS state.")
                 self.timeoutCounter = 0
                 return 'TO_GPS'
@@ -156,7 +156,7 @@ class REACH_GPS(smach.State):
             if self.gpsReached == True:
                 rospy.loginfo(_namespace + "Reached to GPS, moving to FIND_ARTAG state.")
                 return 'SUCCESS'   #muhtemelen test case
-            
+
         elif self.movementAttribute == 1:
             if self.scMsg == 1 or self.scMsg == 2 :
                 if self.gpsReached == True:
@@ -211,7 +211,7 @@ class FIND_ARTAG(smach.State):
             self.timeoutCounter = 0
             self.artagDetected = False  #??
             return 'GO_APPROACH'
-            
+
             """
             else :					#elif(self.scMsg == 3):
                 rospy.loginfo(_namespace + "Artag has detected, moving to REACH_ARTAG state")
@@ -239,15 +239,15 @@ class APPROACH(smach.State):
 
     def __init__(self):
         smach.State.__init__(self, outcomes=['SUCCESS', 'FAIL', 'REPEAT'])
-        self.approachTimeout = status_handler.approachTimeout 
+        self.approachTimeout = status_handler.approachTimeout
         self.timeoutCounter = 0
         self.rate = rospy.Rate(1)
         self.stateMsg = StateMsg()
         self.goBack = status_handler.goBack
         self.goBack = False
         #self.goapp = False
-        
-        
+
+
 
 
     def execute(self, userdata):
@@ -257,12 +257,12 @@ class APPROACH(smach.State):
         status_handler.publishRoverState(self.stateMsg)
         self.doneApproach = status_handler.doneApproach
         #if self.gatePass == True:
-        #if(self.scMsg >= 4):   
+        #if(self.scMsg >= 4):
         if self.doneApproach == True: #fake
             rospy.loginfo(_namespace + "Artag has detected, moving to DEINITIALISE state")
             self.timeoutCounter = 0
             return 'SUCCESS'
-        
+
         self.timeoutCounter += 1
 
         if self.timeoutCounter == self.approachTimeout:
@@ -336,14 +336,14 @@ class REACH_ARTAG(smach.State):
                 rospy.loginfo(_namespace + "Reached The Ball !!")
                 self.timeoutCounter = 0
                 self.artagReached = False    #eklendi
-                return 'SUCCESS' 
+                return 'SUCCESS'
             else:
-                self.timeoutCounter += 1 
+                self.timeoutCounter += 1
 
         if self.timeoutCounter == self.reachArtagTimeout:
             rospy.loginfo(_namespace + "Ball is still not reached, get your shit together.")
             status_handler.checkAllSensors()                                                      #Check All Sensors For Once ##TODO: Criticize if it is neccesary
-            self.allSensorsWorking = status_handler.allSensorsWorking  
+            self.allSensorsWorking = status_handler.allSensorsWorking
             if self.allSensorsWorking == True:
                 self.timeoutCounter = 0
                 return 'REPEAT'     #RETURN
@@ -379,7 +379,7 @@ class DEINITIALISE(smach.State):
         #rospy.Subscriber('/stage_counter_topic', String, self.deinitialise_callback)
         #status_handler.publishRoverSC(self.scMsg)
         #self.scMsg += 1
-        status_handler.sc += 1 
+        status_handler.sc += 1
         status_handler.publishRoverSC(status_handler.sc)
         print("stage:", status_handler.sc)
         status_handler.deinitialise()
@@ -415,7 +415,7 @@ def CreateStateMachine():
     with sm_rover:
 
         smach.StateMachine.add('INITIALISE', INITIALISE(),
-                               transitions={'SUCCESS': 'READY', 'REPEAT': 'INITIALISE', 'FAIL': 'ERROR'})        
+                               transitions={'SUCCESS': 'READY', 'REPEAT': 'INITIALISE', 'FAIL': 'ERROR'})
 
         smach.StateMachine.add('READY', READY(),
                                transitions={'TO_GPS': 'REACH_GPS', 'FAIL': 'ERROR', 'REPEAT':'READY'})

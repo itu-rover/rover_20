@@ -20,7 +20,7 @@ class GoForwardAvoid():
         rospy.init_node('ball_search', anonymous=False)
 
         # those messages will determined by Onat
-        # Added by Berke A.  
+        # Added by Berke A.
         self.angleMsg = "" # get servo angle #TODO must filled
         self.startMsg = "s10f" # start serve search
         self.stopMsg  = "s01f" # stop  servo search
@@ -60,7 +60,7 @@ class GoForwardAvoid():
             if(self.pxCor == "-"):#(self.state.state==self.state.FIND_ARTAG):
                 print("searching")
                 self.start_servo_rotation()
-                """
+
                 if self.rotate_cam_once == 1:
                     self.start_servo_rotation()
                     self.rotate_cam_once = 0
@@ -78,12 +78,11 @@ class GoForwardAvoid():
                     self.servo_rotated = False
                     self.rotate_once = 1
                     print("con3")
-                """
             else:
                 self.stop_servo_rotation()
                 print("waiting")
 
-            
+
             rate.sleep()
 
 
@@ -92,7 +91,7 @@ class GoForwardAvoid():
         if(self.state.state==self.state.REACH_ARTAG  or self.state.state == self.state.APPROACH):
             if(self.send_once==1):
                 print("found image")
-                #self.Pub = rospy.Publisher('/cmd_vel', Twist, queue_size=10) 
+                #self.Pub = rospy.Publisher('/cmd_vel', Twist, queue_size=10)
 
                 rospy.Subscriber('servo_angle', Imu, self.angleSubscriber) #subscriber servo angle #Onat'ın açı değerlerini yazdırmasıyla düzenlencek.
                 rotate(self.sangle)
@@ -105,9 +104,9 @@ class GoForwardAvoid():
                 self.client.cancel_goal()
                 self.client.cancel_all_goals()
                 self.send_once=0
-        
+
     def robotPoseSubscriber(self,poseMsg): #Odometry update recieved from ROS topic, run this function
-    
+
         self.currPosX = poseMsg.pose.pose.position.x
         self.currPosY = poseMsg.pose.pose.position.y
         self.currPosZ = poseMsg.pose.pose.position.z
@@ -131,7 +130,7 @@ class GoForwardAvoid():
         print("Going forward...")
         goal=MoveBaseGoal()
         goal.target_pose.header.frame_id = "/base_link"
-        dist=1                                                  #1 metre ileri gidiyor 
+        dist=1                                                  #1 metre ileri gidiyor
         goal.target_pose.pose.position.x = dist
         goal.target_pose.pose.position.y =0
         goal.target_pose.pose.position.z = 0
@@ -140,29 +139,29 @@ class GoForwardAvoid():
         goal.target_pose.pose.orientation.x = q[0]
         goal.target_pose.pose.orientation.y = q[1]
         goal.target_pose.pose.orientation.z = q[2]
-        goal.target_pose.pose.orientation.w = q[3] 
+        goal.target_pose.pose.orientation.w = q[3]
 
         self.client.send_goal(goal)
         wait = self.client.wait_for_result()
         dist=dist+0.5
 
-    def rotate(self, angle):     
+    def rotate(self, angle):
         print("Rotating...")
         #print(angle)
         goal = MoveBaseGoal()
-         
+
         goal.target_pose.header.frame_id = "/base_link"
         goal.target_pose.header.stamp = rospy.Time.now()
-        goal.target_pose.pose.position.x = 0  
+        goal.target_pose.pose.position.x = 0
         goal.target_pose.pose.position.y = 0
-        goal.target_pose.pose.position.z = 0 
+        goal.target_pose.pose.position.z = 0
 
         q = tf.transformations.quaternion_from_euler(0,0,(float(angle)*pi/180))
         goal.target_pose.pose.orientation.x = q[0]
         goal.target_pose.pose.orientation.y =q[1]
         goal.target_pose.pose.orientation.z = q[2]
-        goal.target_pose.pose.orientation.w = q[3] 
-         
+        goal.target_pose.pose.orientation.w = q[3]
+
         self.client.send_goal(goal)
         wait = self.client.wait_for_result()
 
@@ -177,7 +176,7 @@ class GoForwardAvoid():
         # this is the function that makes arduino rotate servo
         self.Servo_pub.publish("s" + 10 + "f")
         pass
-    
+
     # Servo control functions
     def angleSubscriber(self,data):
         self.sangle = int(data.data)
