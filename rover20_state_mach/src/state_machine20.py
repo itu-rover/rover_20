@@ -204,23 +204,32 @@ class FIND_ARTAG(smach.State):
         self.stateMsg.state = self.stateMsg.FIND_ARTAG
         status_handler.publishRoverState(self.stateMsg)
         self.artagDetected = status_handler.artagDetected
-        print(str(self.artagDetected))
-        if self.artagDetected == True:
-            #if(self.scMsg >= 4):
-            rospy.loginfo(_namespace + "Artag has detected, moving to APPROACH state")
-            self.timeoutCounter = 0
-            self.artagDetected = False  #??
-            return 'GO_APPROACH'
+        self.first_artag = status_handler.first_artag
+        self.second_artag = status_handler.second_artag
 
-            """
-            else :					#elif(self.scMsg == 3):
+        print(str(self.artagDetected))
+        
+        #if self.artagDetected == True:
+        if(status_handler.sc >= 4):
+            if self.first_artag == True and self.second_artag == True:
+                rospy.loginfo(_namespace + "Artag has detected, moving to APPROACH state")
+                self.timeoutCounter = 0
+                #self.artagDetected = False  #??
+                return 'GO_APPROACH'
+            else:
+                self.timeoutCounter += 1
+            
+        if(status_handler.sc == 3):
+            if(self.first_artag == True):				
+              
                 rospy.loginfo(_namespace + "Artag has detected, moving to REACH_ARTAG state")
                 self.timeoutCounter = 0
-                self.artagDetected = False  #??
+                #self.artagDetected = False  #??
                 return 'SUCCESS'
-            """
-        else:
-            self.timeoutCounter += 1
+
+            else:
+                self.timeoutCounter += 1
+        
 
         if self.timeoutCounter == self.findArtagTimeout:
             rospy.loginfo(_namespace + "Artag is still not detected, get your shit together.")
