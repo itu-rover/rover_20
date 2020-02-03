@@ -39,7 +39,10 @@ class Approacher():
         #tell the action client that we want to spin a thread by default
         self.Pub = rospy.Publisher('/cmd_vel', Twist, queue_size=10) #Publish Nav Goal to ROS topic
         self.Pub2=rospy.Publisher('/artag_reach_topic',String,queue_size=10)  #Publisher oluşturduk
+        done_topic = rospy.get_param('RoverSmach20/sub_topics/sub_done_approach', '/done_topic')
         #self.count = 0
+        self.done_pub = rospy.Publisher(self.done_topic, String, queue_size = 10)
+
         while not rospy.is_shutdown():
 
             rospy.Subscriber('/outdoor_waypoint_nav/odometry/filtered',Odometry, self.robotPoseSubscriber)
@@ -66,6 +69,7 @@ class Approacher():
                     bear = abs(float(self.msg))
                     self.bearingToartag= float(self.msg)*pi /180
                     self.Pub2.publish("0")     #eklendi
+
                     if bear> 5:
                         self.rotate_to_ball_2()
 
@@ -76,8 +80,11 @@ class Approacher():
                         #if(self.count<3):#3
                         if(self.sc ==3):
                             self.go_forward_for3()
+                            self.done_topic.publish("1")
+
                         if(self.sc >= 4):
                             self.go_forward()
+                            self.done_topic.publish("1")
 
                         while not rospy.is_shutdown():
                             print("Succesful")
@@ -100,7 +107,7 @@ class Approacher():
 
     def ballYawSubscriber(self,yawMsg):
         self.msg=yawMsg.data 
-        #print(self.msg)    
+        #print(self.msg)   
 
     def robotPoseSubscriber(self,poseMsg): #Odometry update recieved from ROS topic, run this function
     

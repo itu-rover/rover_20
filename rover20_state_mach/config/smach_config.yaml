@@ -6,6 +6,7 @@ RoverSmach:
         sub_encoder: '/odometry/wheel'
         sub_artag_detect: '/artag_detect_topic' #px_coordinates
         sub_artag_reach: '/artag_reach_topic'
+        sub_done_approach : '/done_topic'
 
     pub_topics:
         pub_rover_state: '/rover_state_top'

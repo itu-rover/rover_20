@@ -100,8 +100,6 @@ class READY(smach.State):
 
         self.gotWayPoint = status_handler.gotWayPoint
 
-        
-
         if self.gotWayPoint == True:
 
             status_handler.checkAllSensors()                                                      #Check All Sensors For Once ##TODO: Criticize if it is neccesary
@@ -158,7 +156,7 @@ class REACH_GPS(smach.State):
                 return 'SUCCESS'   #muhtemelen test case
             
         elif self.movementAttribute == 1:
-            if self.scMsg == 1 or self.scMsg == 2 :
+            if status_handler.sc == 1 or status_handler.sc == 2 :
                 if self.gpsReached == True:
                     rospy.loginfo(_namespace + "Reached to Gps, moving to DEINITIALISE state.")
                     return 'SUCCES12'
@@ -184,7 +182,6 @@ class REACH_GPS(smach.State):
 class FIND_ARTAG(smach.State):
     global status_handler
     global _namespace
-    #global scMsg
 
     def __init__(self):
         smach.State.__init__(self, outcomes=['SUCCESS', 'FAIL', 'REPEAT', 'GO_APPROACH'])
@@ -194,9 +191,6 @@ class FIND_ARTAG(smach.State):
         self.stateMsg = StateMsg()
         self.goBack = status_handler.goBack
         self.goBack = False
-        #self.scMsg = rospy.Subscriber
-
-
 
     def execute(self, userdata):
         rospy.loginfo(_namespace + 'On Find Artag State')
@@ -242,7 +236,6 @@ class FIND_ARTAG(smach.State):
 class APPROACH(smach.State):
     global status_handler
     global _namespace
-    #global scMsg
 
     def __init__(self):
         smach.State.__init__(self, outcomes=['SUCCESS', 'FAIL', 'REPEAT'])
@@ -250,22 +243,16 @@ class APPROACH(smach.State):
         self.timeoutCounter = 0
         self.rate = rospy.Rate(1)
         self.stateMsg = StateMsg()
-        self.goBack = status_handler.goBack
-        self.goBack = False
+        #self.goBack = status_handler.goBack
+        #self.goBack = False
         #self.goapp = False
-        
-        
-
 
     def execute(self, userdata):
         rospy.loginfo(_namespace + 'On APPROACH State')
 
         self.stateMsg.state = self.stateMsg.APPROACH
         status_handler.publishRoverState(self.stateMsg)
-        self.doneApproach = status_handler.doneApproach
-        #if self.gatePass == True:
-        #if(self.scMsg >= 4):   
-        if self.doneApproach == True: #fake
+        if self.doneApproach == True: #Kodlari degistirince fake olmasi lazim :)))
             rospy.loginfo(_namespace + "Artag has detected, moving to DEINITIALISE state")
             self.timeoutCounter = 0
             return 'SUCCESS'
@@ -280,11 +267,11 @@ class APPROACH(smach.State):
 
         rospy.sleep(0.1)
         return 'REPEAT'
+###############################################################################################################################################################################
 
 class PASS_GATE(smach.State):
     global status_handler
     global _namespace
-    #global scMsg
 
     def __init__(self):
         smach.State.__init__(self, outcomes=['SUCCESS', 'FAIL','REPEAT_APPROACH'])
@@ -299,9 +286,9 @@ class PASS_GATE(smach.State):
         self.control_dir = status_handler.control_dir
         self.passComplete = status_handler.passComplete #fake
 
-        if self.passComplete == True: #fake
+        '''if self.passComplete == True: #fake
                rospy.loginfo(_namespace + "Pass through the gate, moving to DEINITIALISE state.")
-               return 'SUCCESS'
+               return 'SUCCESS'      '''
 
         if self.control_dir == False:
             rospy.loginfo(_namespace + " Pass through the gate, moving to DEINITIALISE state.")
@@ -318,7 +305,6 @@ class PASS_GATE(smach.State):
 class REACH_ARTAG(smach.State):
     global status_handler
     global _namespace
-    #global scMsg
 
     def __init__(self):
         smach.State.__init__(self, outcomes=['SUCCESS', 'FAIL', 'REPEAT','BACK'])
@@ -338,7 +324,7 @@ class REACH_ARTAG(smach.State):
         self.artagReached = status_handler.artagReached
         self.goBack = status_handler.goBack
 
-        if self.scMsg == 3 :
+        if status_handler.sc == 3 :
             if self.artagReached == True:
                 rospy.loginfo(_namespace + "Reached The Ball !!")
                 self.timeoutCounter = 0
@@ -372,7 +358,6 @@ class REACH_ARTAG(smach.State):
 class DEINITIALISE(smach.State):
     global status_handler
     global _namespace
-    #global scMsg
 
     def __init__(self):
         smach.State.__init__(self, outcomes=['SUCCESS', 'REPEAT','FAIL'])
@@ -383,21 +368,13 @@ class DEINITIALISE(smach.State):
 
     def execute(self, userdata):
         rospy.loginfo(_namespace + 'On DEINITIALISE state')
-        #rospy.Subscriber('/stage_counter_topic', String, self.deinitialise_callback)
-        #status_handler.publishRoverSC(self.scMsg)
-        #self.scMsg += 1
         status_handler.sc += 1 
         status_handler.publishRoverSC(status_handler.sc)
         print("stage:", status_handler.sc)
         status_handler.deinitialise()
         rospy.sleep(1)
         return 'SUCCESS'
-
-    def deinitialise_callback(self,data):
-        self.x = data.data
-
-
-
+######################################################################################################################################################################
 
 
 class ERROR(smach.State):
@@ -464,9 +441,7 @@ def main():
     global _namespace
     global status_handler
 
-    #scMsg = status_handler.sc
     status_handler.start()
-    #scMsg = status_handler.sc
 
     while not rospy.is_shutdown():
         CreateStateMachine()
