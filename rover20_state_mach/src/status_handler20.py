@@ -42,6 +42,7 @@ class status_handler:
         	#Parameter for attribute
         self.movementAttribute = rospy.get_param('RoverSmach20/attributes/movementAttribute',0)			#0 for pure navigation, 1 for navigation + artag searching.     #0 da calisti
 
+        self.control_dir = True
         self.wpStatus = 0
         self.state = 0
         self.sc = 1
@@ -51,12 +52,14 @@ class status_handler:
     	self.imu_topic = rospy.get_param('RoverSmach20/sub_topics/sub_imu','/imu/data')
     	self.gps_topic = rospy.get_param('RoverSmach20/sub_topics/sub_gps','/gps/fix')
     	self.encoder_topic = rospy.get_param('RoverSmach20/sub_topics/sub_encoder','/odometry/wheel')
-    	self.artag_detect_topic = rospy.get_param('RoverSmach20/sub_topics/sub_artag_detect','/image_detect_topic') 
+    	self.artag_detect_topic = rospy.get_param('RoverSmach20/sub_topics/sub_artag_detect','/artag_detect_topic') 
     	self.artag_reach_topic = rospy.get_param('RoverSmach20/sub_topics/sub_ArTag_reach','/artag_reach_topic')     #sub_reach_artag
     	self.rover_state_topic = rospy.get_param('RoverSmach20/pub_topics/pub_rover_state','/rover_state_topic')
-        self.sc_topic = '/stage_counter_topic' #yeni-->stage counter topici 
+        self.sc_topic = rospy.get_param('RoverSmach20/stage_counter/stagecounter', '/stage_counter_topic')#yeni-->stage counter topici 
+        self.direction_topic = rospy.get_param('RoverReachImage/ImageProcessing/direction', '/artag_direction')
         self.pass_topic = '/pass_gate_topic' #fake
-        self.done_topic = '/done_app_topic'
+        self.done_topic = '/done_app_topic' #fake
+        #self.sc_topic = '/rover_state_topic'
 
     	rospy.Subscriber(self.wp_topic, String, self.waypoint_callback) 						# Listen waypoints
     	rospy.Subscriber(self.gps_topic, NavSatFix, self.gps_callback) 							# Listen Gps
@@ -66,8 +69,8 @@ class status_handler:
     	rospy.Subscriber(self.artag_reach_topic, String, self.artag_reach_callback)
         rospy.Subscriber(self.pass_topic, String, self.pass_gate_callback) #fake
         rospy.Subscriber(self.done_topic, String, self.done_approach_callback) #fake
+        rospy.Subscriber(self.direction_topic, String, self.direction_callback)
         				# Listen reaching artag
-
 
         self.sc_pub = rospy.Publisher(self.sc_topic, String, queue_size = 10) #yeni --> stagecounter topicine publishleniyor.
     	self.state_pub = rospy.Publisher(self.rover_state_topic, StateMsg, queue_size=10)
@@ -91,6 +94,10 @@ class status_handler:
     def sc_callback(self, data):
         self.sc = int(data.data)
         #print(self.sc)
+    def direction_callback(self, data):
+        self.dir = data.data
+        if self.dir == 1:
+            self.control_dir = False
 
     def waypoint_callback(self,data):								##TODO: Maybe comprassion with old waypoint ??
     	self.wp = data.data
@@ -225,3 +232,4 @@ class status_handler:
 
         	#Parameter for Reach Artag
         self.goBack = False
+        self.control_dir = True

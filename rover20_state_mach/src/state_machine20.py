@@ -16,6 +16,7 @@ import time
 
 _namespace = '[RoverStateMachine ] '
 status_handler = status_handler()
+#scMsg = status_handler.sc
 
 ####################################################################################################################################################
 # First State of the ITU Rover
@@ -27,6 +28,7 @@ class INITIALISE(smach.State):
 
     global status_handler
     global _namespace 
+    #global scMsg
 
     def __init__(self):               
         smach.State.__init__(self, outcomes=['REPEAT', 'FAIL', 'SUCCESS'])
@@ -34,7 +36,7 @@ class INITIALISE(smach.State):
         self.timeoutCounter = status_handler.initaliseTimeout
         self.rate = rospy.Rate(1)
         self.stateMsg = StateMsg()
-        self.scMsg = status_handler.sc
+        #self.scMsg = status_handler.sc
 
     def execute(self, userdata):
         rospy.loginfo(_namespace + 'On Initialise state')
@@ -42,8 +44,8 @@ class INITIALISE(smach.State):
         self.stateMsg.state = self.stateMsg.INITIALISE
 
         status_handler.publishRoverState(self.stateMsg)
-        status_handler.publishRoverSC(self.scMsg)
-        print(self.scMsg)
+        status_handler.publishRoverSC(status_handler.sc)
+        #print(self.scMsg)
 
         self.gpsWorking = status_handler.gpsWorking                                                   # Necessary parameters to go to READY state
         self.imuWorking = status_handler.imuWorking
@@ -81,6 +83,7 @@ class READY(smach.State):
 
     global status_handler
     global _namespace
+    #global scMsg
 
     def __init__(self):
         smach.State.__init__(self, outcomes=['TO_GPS', 'FAIL','REPEAT'])
@@ -130,11 +133,13 @@ class READY(smach.State):
 class REACH_GPS(smach.State):
     global status_handler
     global _namespace
+    #global scMsg
+
     def __init__(self):
         smach.State.__init__(self, outcomes=['SUCCESS','IMAGE_INTERRUPT', 'FAIL', 'REPEAT', 'SUCCES12'])
         self.rate = rospy.Rate(1)
         self.stateMsg = StateMsg()
-        self.scMsg = rospy.Subscriber
+        #self.scMsg = rospy.Subscriber
 
     def execute(self, userdata):
         rospy.loginfo(_namespace + "On Reach GPS State")
@@ -179,6 +184,8 @@ class REACH_GPS(smach.State):
 class FIND_ARTAG(smach.State):
     global status_handler
     global _namespace
+    #global scMsg
+
     def __init__(self):
         smach.State.__init__(self, outcomes=['SUCCESS', 'FAIL', 'REPEAT', 'GO_APPROACH'])
         self.findArtagTimeout = status_handler.findArtagTimeout
@@ -187,7 +194,7 @@ class FIND_ARTAG(smach.State):
         self.stateMsg = StateMsg()
         self.goBack = status_handler.goBack
         self.goBack = False
-        self.scMsg = rospy.Subscriber
+        #self.scMsg = rospy.Subscriber
 
 
 
@@ -228,6 +235,7 @@ class FIND_ARTAG(smach.State):
 class APPROACH(smach.State):
     global status_handler
     global _namespace
+    #global scMsg
 
     def __init__(self):
         smach.State.__init__(self, outcomes=['SUCCESS', 'FAIL', 'REPEAT'])
@@ -250,11 +258,10 @@ class APPROACH(smach.State):
         self.doneApproach = status_handler.doneApproach
         #if self.gatePass == True:
         #if(self.scMsg >= 4):   
-        if self.doneApproach == True:
+        if self.doneApproach == True: #fake
             rospy.loginfo(_namespace + "Artag has detected, moving to DEINITIALISE state")
             self.timeoutCounter = 0
             return 'SUCCESS'
-
         
         self.timeoutCounter += 1
 
@@ -268,6 +275,10 @@ class APPROACH(smach.State):
         return 'REPEAT'
 
 class PASS_GATE(smach.State):
+    global status_handler
+    global _namespace
+    #global scMsg
+
     def __init__(self):
         smach.State.__init__(self, outcomes=['SUCCESS', 'FAIL','REPEAT_APPROACH'])
         self.rate = rospy.Rate(1)
@@ -278,12 +289,18 @@ class PASS_GATE(smach.State):
 
         self.stateMsg.state = self.stateMsg.PASS_GATE
         status_handler.publishRoverState(self.stateMsg)
+        self.control_dir = status_handler.control_dir
+        self.passComplete = status_handler.passComplete #fake
 
-        self.passComplete = status_handler.passComplete
-
-        if self.passComplete == True:
+        if self.passComplete == True: #fake
                rospy.loginfo(_namespace + "Pass through the gate, moving to DEINITIALISE state.")
                return 'SUCCESS'
+
+        if self.control_dir == False:
+            rospy.loginfo(_namespace + " Pass through the gate, moving to DEINITIALISE state.")
+            self.timeoutCounter = 0
+            return 'SUCCESS'
+
 
         rospy.sleep(0.1)
         return 'REPEAT_APPROACH'
@@ -294,6 +311,8 @@ class PASS_GATE(smach.State):
 class REACH_ARTAG(smach.State):
     global status_handler
     global _namespace
+    #global scMsg
+
     def __init__(self):
         smach.State.__init__(self, outcomes=['SUCCESS', 'FAIL', 'REPEAT','BACK'])
         self.reachArtagTimeout = status_handler.reachArtagTimeout
@@ -346,18 +365,31 @@ class REACH_ARTAG(smach.State):
 class DEINITIALISE(smach.State):
     global status_handler
     global _namespace
+    #global scMsg
+
     def __init__(self):
         smach.State.__init__(self, outcomes=['SUCCESS', 'REPEAT','FAIL'])
         self.rate = rospy.Rate(1)
         self.stateMsg = StateMsg()
 
 
+
     def execute(self, userdata):
         rospy.loginfo(_namespace + 'On DEINITIALISE state')
+        #rospy.Subscriber('/stage_counter_topic', String, self.deinitialise_callback)
+        #status_handler.publishRoverSC(self.scMsg)
         #self.scMsg += 1
+        status_handler.sc += 1 
+        status_handler.publishRoverSC(status_handler.sc)
+        print("stage:", status_handler.sc)
         status_handler.deinitialise()
-        rospy.sleep(0.1)
+        rospy.sleep(1)
         return 'SUCCESS'
+
+    def deinitialise_callback(self,data):
+        self.x = data.data
+
+
 
 
 
@@ -424,12 +456,15 @@ def main():
     rospy.init_node("state_machine")
     global _namespace
     global status_handler
-    status_handler.start()
 
+    #scMsg = status_handler.sc
+    status_handler.start()
+    #scMsg = status_handler.sc
 
     while not rospy.is_shutdown():
         CreateStateMachine()
         rospy.loginfo(_namespace + "Created State Machine..")
+
 
 
 if __name__ == '__main__':
