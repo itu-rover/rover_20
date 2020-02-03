@@ -61,37 +61,39 @@ class status_handler:
     	self.rover_state_topic = rospy.get_param('RoverSmach20/pub_topics/pub_rover_state','/rover_state_topic')
         self.sc_topic = rospy.get_param('RoverSmach20/stage_counter/stagecounter', '/stage_counter_topic')#yeni-->stage counter topici 
         self.direction_topic = rospy.get_param('RoverReachImage/ImageProcessing/direction', '/artag_direction')
-        self.pass_topic = '/pass_gate_topic' #fake
-        self.done_topic = '/done_app_topic' #fake
+        self.done_topic = rospy.get_param('RoverSmach20/sub_topics/sub_done_approach', '/done_topic')
+        #self.pass_topic = '/pass_gate_topic' #fake
+        #self.done_topic = '/done_app_topic' #fake
         #self.sc_topic = '/rover_state_topic'
 
     	rospy.Subscriber(self.wp_topic, String, self.waypoint_callback) 						# Listen waypoints
     	rospy.Subscriber(self.gps_topic, NavSatFix, self.gps_callback) 							# Listen Gps
     	rospy.Subscriber(self.imu_topic, Imu, self.imu_callback)								# Listen IMU
     	rospy.Subscriber(self.encoder_topic, Odometry, self.encoder_callback)					# Listen Encoder
-    	rospy.Subscriber(self.artag_detect_topic, String, self.artag_detect_callback)
-        rospy.Subscriber(self.artag_detect_topic1, String, self.artag_detect_callback1) 			# Listen detecting artag
+    	rospy.Subscriber(self.first_artag_detect, String, self.artag_detect_callback)
+        rospy.Subscriber(self.second_artag_detect, String, self.artag_detect_callback1) 			# Listen detecting artag
     	rospy.Subscriber(self.artag_reach_topic, String, self.artag_reach_callback)
-        rospy.Subscriber(self.pass_topic, String, self.pass_gate_callback) #fake
-        rospy.Subscriber(self.done_topic, String, self.done_approach_callback) #fake
+        #rospy.Subscriber(self.pass_topic, String, self.pass_gate_callback) #fake
+        #rospy.Subscriber(self.done_topic, String, self.done_approach_callback) #fake
         rospy.Subscriber(self.direction_topic, String, self.direction_callback)
+        rospy.Subscriber(self.done_topic, String, self.done_app_callback)
         				# Listen reaching artag
 
         self.sc_pub = rospy.Publisher(self.sc_topic, String, queue_size = 10) #yeni --> stagecounter topicine publishleniyor.
     	self.state_pub = rospy.Publisher(self.rover_state_topic, StateMsg, queue_size=10)
-        self.artag_detect_pub = rospy.Publisher(self.artag_detect_topic, String, queue_size =10)
+        #self.artag_detect_pub = rospy.Publisher(self.artag_detect_topic, String, queue_size =10)
     	rospy.Subscriber(self.rover_state_topic,StateMsg,self.state_callback)
         rospy.Subscriber(self.sc_topic, String, self.sc_callback)
 
-    def pass_gate_callback(self,data): #fake
+    '''def pass_gate_callback(self,data): #fake
         self.pg = data.data
         if(self.pg == "1"):
-            self.passComplete = True
+            self.passComplete = True'''
 
-    def done_approach_callback(self, data): #fake
+    '''def done_approach_callback(self, data): #fake
         self.d = data.data
         if self.d == "1":
-            self.doneApproach = True
+            self.doneApproach = True'''
 
     def state_callback(self,data):
     	self.state = data.state
@@ -104,6 +106,12 @@ class status_handler:
         self.dir = data.data
         if self.dir == 1:
             self.control_dir = False
+
+    def done_app_callback(self, data):
+        self.done_app = data.data
+        if self.done_app == "1":
+            self.doneApproach == True
+
 
     def waypoint_callback(self,data):								##TODO: Maybe comprassion with old waypoint ??
     	self.wp = data.data
@@ -156,37 +164,6 @@ class status_handler:
 
 
     		self.gpsReached = False
-
-    '''def artag_detect_callback(self,data):
-        #UNCOMMENT THIS BLOCK FOR FULL-AUTONOMOUS DRIVING
-        '''-------------------------------------------------------------------'''
-        self.ar_Detected = data.data
-        if self.ar_Detected != "-":
-            if self.state == 3:
-                self.artagDetected = True
-
-            self.goBack = False
-        else:
-            if self.state == 3:
-                self.artagDetected = False
-            if self.state == 4:
-                self.goBack = True
-
-        '''-------------------------------------------------------------------'''
-
-        #UNCOMMENT THIS BLOCK FOR AUTONOMOUS DEMO
-        '''-------------------------------------------------------------------'''
-        #self.ar_Detected = data.data
-        #if self.self.ar_Detected == "1":
-        #    if self.state == True:
-        #        self.artagDetected = True
-        #
-        #    self.goBack = False
-        #else:
-        #    if self.state == 3:
-        #        self.artagDetected = False
-        '''-------------------------------------------------------------------'''
-        #DONT FORGET TO SWITCH THE ARTAG_DETECT TOPIC FROM smach_config.yaml  '''
 
     def artag_detect_callback(self, data):
         self.ar_Detected = data.data
