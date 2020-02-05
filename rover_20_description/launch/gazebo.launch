@@ -7,6 +7,7 @@
   <include
     file="$(find gazebo_ros)/launch/empty_world.launch">
     <arg name="paused" value="true"/>
+    <arg name="world_name" value="$(find rover_20_description)/worlds/rolling_landscape_120m.world" />
   </include>
 
   <node
@@ -15,13 +16,13 @@
     type="static_transform_publisher"
     args="0 0 0 0 0 0 base_link base_footprint 40" />
 
-  <param name="robot_description" command="cat $(find rover_20_description)/urdf/altyurur_20.urdf"/>
+  <param name="robot_description" command="xacro --inorder $(find rover_20_description)/urdf/altyurur_20.urdf.xacro"/>
 
   <node
     name="spawn_model"
     pkg="gazebo_ros"
     type="spawn_model"
-    args="-z 2 -file $(find rover_20_description)/urdf/altyurur_20.urdf -urdf -model altyurur_20"
+    args="-z 2 -urdf -param robot_description -model altyurur_20"
     output="screen" />
 
   <node

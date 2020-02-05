@@ -1,3 +1,6 @@
+// v2 FABRIK algorithm for 20' Rover
+// v2 basically ignores the 4th joint, finds the angle of 1st joint by making the plane (which consists of other joints) turn towards the target
+// FABRIK algorithm is applied to the joints in the same plane (Joints 2,3,5 and the target. Algorithm is applied for 2D space) 
 #include <iostream>
 #include <vector>
 #include <sstream>
@@ -11,8 +14,9 @@
 using namespace std;
 
 bool new_message = false;
-
 joy_message joy_msg;
+
+double REACH = 74.6831; 
 
 void joystick_callback(const sensor_msgs::Joy::ConstPtr& msg)
 {
@@ -27,19 +31,19 @@ int main(int argc, char **argv){
 
 	vector<coordinate> my_joints;
 
-	my_joints.push_back(coordinate(0.0,0.0,14.0));
-	my_joints.push_back(coordinate(0.0,0.0,64.0));
-	my_joints.push_back(coordinate(42.0,0.0,53.0));
-	my_joints.push_back(coordinate(69.0,0.0,53.0));
+	my_joints.push_back(coordinate(0.0,0.0,7.0));
+	my_joints.push_back(coordinate(0.0,0.0,33.5));
+	my_joints.push_back(coordinate(27.3,0.0,26.5));
+	my_joints.push_back(coordinate(47.3,0.0,26.5));
 
 	int i;
 	double r, lambda;
 
 	double link_lengths[3];
 
-	link_lengths[0] = 50.0;							// link_2_3_length
-	link_lengths[1] = 43.4165;						// link_3_5_length
-	link_lengths[2] = 27.0;							// link_5_end_length
+	link_lengths[0] = 26.5;							// link_2_3_length
+	link_lengths[1] = 28.1831;						// link_3_5_length
+	link_lengths[2] = 20.0;							// link_5_end_length
 
 	ros::init(argc, argv, "talker");
 	ros::NodeHandle n;
@@ -65,12 +69,12 @@ int main(int argc, char **argv){
 
 	//ros::Publisher chatter_pub = joint_pos_handle.advertise<std_msgs::String>("joint_pos", 1000);
 	ros::Publisher joint_pos_pub = n.advertise<std_msgs::String>("chatter", 1000);
-	ros::Publisher joint1_pub = joint1_handle.advertise<std_msgs::Float64>("/rover_arm_eksen1_joint_position_controller/command", 1000);
-	ros::Publisher joint2_pub = joint2_handle.advertise<std_msgs::Float64>("/rover_arm_eksen2_joint_position_controller/command", 1000);
-	ros::Publisher joint3_pub = joint3_handle.advertise<std_msgs::Float64>("/rover_arm_eksen3_joint_position_controller/command", 1000);
-	ros::Publisher joint4_pub = joint4_handle.advertise<std_msgs::Float64>("/rover_arm_eksen4_joint_position_controller/command", 1000);
-	ros::Publisher joint5_pub = joint5_handle.advertise<std_msgs::Float64>("/rover_arm_eksen5_joint_position_controller/command", 1000);
-	ros::Publisher joint6_pub = joint6_handle.advertise<std_msgs::Float64>("/rover_arm_eksen6_joint_position_controller/command", 1000);
+	ros::Publisher joint1_pub = joint1_handle.advertise<std_msgs::Float64>("/rover_arm_j1_joint_position_controller/command", 1000);
+	ros::Publisher joint2_pub = joint2_handle.advertise<std_msgs::Float64>("/rover_arm_j2_joint_position_controller/command", 1000);
+	ros::Publisher joint3_pub = joint3_handle.advertise<std_msgs::Float64>("/rover_arm_j3_joint_position_controller/command", 1000);
+	ros::Publisher joint4_pub = joint4_handle.advertise<std_msgs::Float64>("/rover_arm_j4_joint_position_controller/command", 1000);
+	ros::Publisher joint5_pub = joint5_handle.advertise<std_msgs::Float64>("/rover_arm_j5_joint_position_controller/command", 1000);
+	ros::Publisher joint6_pub = joint6_handle.advertise<std_msgs::Float64>("/rover_arm_j6_joint_position_controller/command", 1000);
 	ros::Subscriber joy_sub = joy_handle.subscribe("/joy",1,joystick_callback);
 	ros::Rate loop_rate(100);
 
@@ -84,10 +88,6 @@ int main(int argc, char **argv){
 
 	double joint_1_angle;
 	double joint_4_part;
-
-	bool first_stage = true;
-	bool second_stage = false;
-	bool angles_valid = true;
 
 	double joint_angles[5];
 	
@@ -122,16 +122,16 @@ int main(int argc, char **argv){
 
 		else{
 
-			X += joy_msg.get_axis(3) * 0.06;
-			Y += joy_msg.get_axis(0) * 0.06;
-			Z += joy_msg.get_axis(1) * 0.06;
+			X += joy_msg.get_axis(3) * 0.05;
+			Y += joy_msg.get_axis(0) * 0.05;
+			Z += joy_msg.get_axis(1) * 0.05;
 		}
 
 		//joint_4_part += joy_msg.get_axis(2) * 0.0009;
 
 		//cout << endl << "X: " << X << "  " << "Y: " << Y << "  " << "Z: " << Z << "  " << endl;
 
-		coordinate new_end_point_pos = coordinate(69.0 + X, 0.0 + Y, 53.0 + Z);
+		coordinate new_end_point_pos = coordinate(47.3 + X, 0.0 + Y, 26.5 + Z);
 		cout << endl << "Target: X = " << new_end_point_pos.get_x() << "  Y = " << new_end_point_pos.get_y() << "  Z = " << new_end_point_pos.get_z() << endl << endl;
 
 		double joint_1_angle_dif = (-1.0)*joint_1_angle;
@@ -153,7 +153,7 @@ int main(int argc, char **argv){
 			cout << "The joint " << i << " position is: x = " << my_joints[i].get_x() << "  y = " << my_joints[i].get_y() << "  z = " << my_joints[i].get_z() << endl;
 		}*/
 
-		FABRIK_algorithm(my_joints, link_lengths, new_end_point_pos);
+		FABRIK_algorithm(my_joints, link_lengths, new_end_point_pos, REACH);
 
 		for(i = 0; i < 4; i++){
 
@@ -182,9 +182,9 @@ int main(int argc, char **argv){
 
 		joint_angles[0] = joint_1_angle;								// Calculated angles minus zero pos angles
 		joint_angles[1] = 180.0 - joint_2_angle;
-		joint_angles[2] = 90.0 - (joint_3_angle + 14.676352);
+		joint_angles[2] = 90.0 - (joint_3_angle + 14.38138);
 		joint_angles[3] = 0.0;
-		joint_angles[4] = 270 - (joint_5_angle + 75.323648);
+		joint_angles[4] = (joint_5_angle + 75.61862) - 270.0;
 
 		msg_ss << joint_angles[0] << "  " << joint_angles[1] << "  " << joint_angles[2] << "  " << joint_angles[3] << "  " << joint_angles[4] << endl; 
 		angles.data = msg_ss.str();
@@ -196,18 +196,17 @@ int main(int argc, char **argv){
 		joint1_last.data = (joint_angles[0]*PI)/180; 
 		joint2_last.data = (joint_angles[1]*PI)/180;
 		joint3_last.data = (joint_angles[2]*PI)/180;
-		joint4_last.data = 0.0;
+		joint4_last.data = (joint_angles[3]*PI)/180;
 		joint5_last.data = (joint_angles[4]*PI)/180;
 		joint6_last.data = 0.0;
 	
-		chatter_pub.publish(angles);
+		//chatter_pub.publish(angles);
 		joint1_pub.publish(joint1_last);
 		joint2_pub.publish(joint2_last);
 		joint3_pub.publish(joint3_last);
 		joint4_pub.publish(joint4_last);
 		joint5_pub.publish(joint5_last);
 		joint6_pub.publish(joint6_last);
-
 	 
 	    loop_rate.sleep();
 	    ++count;
@@ -215,6 +214,4 @@ int main(int argc, char **argv){
 	}
 
 	return 0;
-
-
 }

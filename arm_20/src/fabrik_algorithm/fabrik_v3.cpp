@@ -14,6 +14,7 @@ bool new_message = false;
 
 joy_message joy_msg;
 
+
 void joystick_callback(const sensor_msgs::Joy::ConstPtr& msg)
 {
     new_message = true;
@@ -30,7 +31,7 @@ int main(int argc, char **argv){
 	my_joints.push_back(coordinate(0.0,0.0,14.0));
 	my_joints.push_back(coordinate(0.0,0.0,64.0));
 	my_joints.push_back(coordinate(42.0,0.0,53.0));
-	my_joints.push_back(coordinate(69.0,0.0,53.0));
+	my_joints.push_back(coordinate(52.0,0.0,53.0));
 
 	int i;
 	double r, lambda;
@@ -39,7 +40,7 @@ int main(int argc, char **argv){
 
 	link_lengths[0] = 50.0;							// link_2_3_length
 	link_lengths[1] = 43.4165;						// link_3_5_length
-	link_lengths[2] = 27.0;							// link_5_end_length
+	link_lengths[2] = 10.0;							// link_5_end_length
 
 	ros::init(argc, argv, "talker");
 	ros::NodeHandle n;
@@ -50,10 +51,8 @@ int main(int argc, char **argv){
 	ros::NodeHandle joint5_handle;
 	ros::NodeHandle joint6_handle;
 	ros::NodeHandle joy_handle;
-	//ros::NodeHandle joint_pos_handle;
 
 	std_msgs::String angles;
-	//std_msgs::String joint_pos;
 	std_msgs::Float64 joint1_last;
 	std_msgs::Float64 joint2_last;
 	std_msgs::Float64 joint3_last;
@@ -63,8 +62,7 @@ int main(int argc, char **argv){
 
 	stringstream msg_ss;
 
-	//ros::Publisher chatter_pub = joint_pos_handle.advertise<std_msgs::String>("joint_pos", 1000);
-	ros::Publisher joint_pos_pub = n.advertise<std_msgs::String>("chatter", 1000);
+	ros::Publisher chatter_pub = n.advertise<std_msgs::String>("chatter", 1000);
 	ros::Publisher joint1_pub = joint1_handle.advertise<std_msgs::Float64>("/rover_arm_eksen1_joint_position_controller/command", 1000);
 	ros::Publisher joint2_pub = joint2_handle.advertise<std_msgs::Float64>("/rover_arm_eksen2_joint_position_controller/command", 1000);
 	ros::Publisher joint3_pub = joint3_handle.advertise<std_msgs::Float64>("/rover_arm_eksen3_joint_position_controller/command", 1000);
@@ -81,15 +79,6 @@ int main(int argc, char **argv){
 	double X;
 	double Y;
 	double Z;
-
-	double joint_1_angle;
-	double joint_4_part;
-
-	bool first_stage = true;
-	bool second_stage = false;
-	bool angles_valid = true;
-
-	double joint_angles[5];
 	
 	while(ros::ok()){
 
@@ -100,8 +89,6 @@ int main(int argc, char **argv){
 			X = 0.0;
 			Y = 0.0;
 			Z = 0.0;
-
-			joint_1_angle = 0.0;
 
 			first_run = false;
 		}
@@ -115,9 +102,9 @@ int main(int argc, char **argv){
 
 		else if(joy_msg.get_button(4) == 1){
 
-			X += joy_msg.get_axis(3) * 0.01;
-			Y += joy_msg.get_axis(0) * 0.01;
-			Z += joy_msg.get_axis(1) * 0.01;
+			X += joy_msg.get_axis(3) * 0.02;
+			Y += joy_msg.get_axis(0) * 0.02;
+			Z += joy_msg.get_axis(1) * 0.02;
 		}
 
 		else{
@@ -127,33 +114,27 @@ int main(int argc, char **argv){
 			Z += joy_msg.get_axis(1) * 0.06;
 		}
 
-		//joint_4_part += joy_msg.get_axis(2) * 0.0009;
-
 		//cout << endl << "X: " << X << "  " << "Y: " << Y << "  " << "Z: " << Z << "  " << endl;
 
-		coordinate new_end_point_pos = coordinate(69.0 + X, 0.0 + Y, 53.0 + Z);
+		coordinate new_end_point_pos = coordinate(52.0 + X, 0.0 + Y, 53.0 + Z);
 		cout << endl << "Target: X = " << new_end_point_pos.get_x() << "  Y = " << new_end_point_pos.get_y() << "  Z = " << new_end_point_pos.get_z() << endl << endl;
-
-		double joint_1_angle_dif = (-1.0)*joint_1_angle;
 
 		coordinate reference_coord = coordinate(4,0,0);
 		coordinate proj_joint_1 = coordinate(new_end_point_pos.get_x(), new_end_point_pos.get_y(), 0);
-		joint_1_angle = angle_of_vectors(proj_joint_1, reference_coord);		// Projection of endpoint on xy and reference cord
+		double joint_1_angle = angle_of_vectors(proj_joint_1, reference_coord);		// Projection of endpoint on xy and reference cord
 		if(proj_joint_1.get_y() < 0) joint_1_angle = joint_1_angle * (-1);
 
-		joint_1_angle_dif += joint_1_angle; 
-
-		rotate_on_xy(my_joints[0], joint_1_angle_dif);
-		rotate_on_xy(my_joints[1], joint_1_angle_dif);
-		rotate_on_xy(my_joints[2], joint_1_angle_dif);
-		rotate_on_xy(my_joints[3], joint_1_angle_dif);
+		rotate_on_xy(my_joints[0], joint_1_angle);
+		rotate_on_xy(my_joints[1], joint_1_angle);
+		rotate_on_xy(my_joints[2], joint_1_angle);
+		rotate_on_xy(my_joints[3], joint_1_angle);
 
 		/*for(i = 0; i < 4; i++){
 
 			cout << "The joint " << i << " position is: x = " << my_joints[i].get_x() << "  y = " << my_joints[i].get_y() << "  z = " << my_joints[i].get_z() << endl;
 		}*/
 
-		FABRIK_algorithm(my_joints, link_lengths, new_end_point_pos);
+		//FABRIK_algorithm(my_joints, link_lengths, new_end_point_pos);
 
 		for(i = 0; i < 4; i++){
 
@@ -180,10 +161,12 @@ int main(int argc, char **argv){
 		//cout << "Joint 1: " << joint_1_angle << endl;
 		//cout << joint_5_angle << endl;
 
+		double joint_angles[5];
+
 		joint_angles[0] = joint_1_angle;								// Calculated angles minus zero pos angles
 		joint_angles[1] = 180.0 - joint_2_angle;
 		joint_angles[2] = 90.0 - (joint_3_angle + 14.676352);
-		joint_angles[3] = 0.0;
+		joint_angles[3] = 90.0 - 90.0;
 		joint_angles[4] = 270 - (joint_5_angle + 75.323648);
 
 		msg_ss << joint_angles[0] << "  " << joint_angles[1] << "  " << joint_angles[2] << "  " << joint_angles[3] << "  " << joint_angles[4] << endl; 
@@ -191,12 +174,10 @@ int main(int argc, char **argv){
 
 		cout << "Joint angles:  " << joint_angles[0] << "  " << joint_angles[1] << "  " << joint_angles[2] << "  " << joint_angles[3] << "  " << joint_angles[4] << endl;
 
-		//if(joint_angles[1])
-
 		joint1_last.data = (joint_angles[0]*PI)/180; 
 		joint2_last.data = (joint_angles[1]*PI)/180;
 		joint3_last.data = (joint_angles[2]*PI)/180;
-		joint4_last.data = 0.0;
+		joint4_last.data = (joint_angles[3]*PI)/180;
 		joint5_last.data = (joint_angles[4]*PI)/180;
 		joint6_last.data = 0.0;
 	
@@ -208,6 +189,10 @@ int main(int argc, char **argv){
 		joint5_pub.publish(joint5_last);
 		joint6_pub.publish(joint6_last);
 
+		my_joints[0] = coordinate(0.0,0.0,14.0);
+		my_joints[1] = coordinate(0.0,0.0,64.0);
+		my_joints[2] = coordinate(42.0,0.0,53.0);
+		my_joints[3] = coordinate(52.0,0.0,53.0);
 	 
 	    loop_rate.sleep();
 	    ++count;

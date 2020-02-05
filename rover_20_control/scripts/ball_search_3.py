@@ -10,10 +10,7 @@ from math import radians, cos, sin, asin, sqrt, pow, pi, atan2
 from std_msgs.msg import String
 from nav_msgs.msg import Odometry
 from rover20_state_mach.msg import RoverStateMsg
-from sensor_msgs.msg import Imu
 import tf
-
-# Changes are made by Berke Algul in 24.12.2019
 
 class GoForwardAvoid():
     def __init__(self):
@@ -22,12 +19,10 @@ class GoForwardAvoid():
         self.currPosY=0
         self.currPosZ=0
         self.yaw=0
-        self.rotate_once=1 # deleted in code
-        self.servo_rotated = False # if servo completed its rotation this will be true
+        self.rotate_once=1
         self.send_once=1
         self.R=0.5
         self.ball_is_found=0
-        self.sangle = 0 #servo angle
         self.state=RoverStateMsg()
         print("waiting move base client...")
         self.client = actionlib.SimpleActionClient('move_base',MoveBaseAction)
@@ -36,26 +31,24 @@ class GoForwardAvoid():
         rate = rospy.Rate(10) # 1hz
         #tell the action client that we want to spin a thread by default
         self.Pub = rospy.Publisher('/cmd_vel', Twist, queue_size=10)
-        self.Servo_pub = rospy.Publisher('/servo_control', String, queue_size=10)
         
 
         while not rospy.is_shutdown():
             rospy.Subscriber('/outdoor_waypoint_nav/odometry/filtered',Odometry, self.robotPoseSubscriber)
             rospy.Subscriber('/rover_state_topic',RoverStateMsg, self.stateSubscriber)
-            
             #rospy.Subscriber('/move_base/result',MoveBaseActionResult, self.moveSubscriber)
             #print(self.state.state)
-            if(self.state.state==self.state.FIND_ARTAG):
-                print("searching")
-                self.look_around()
-                servo_rotated = True
-                self.look_around()
-                servo_rotated = True
-                rotate(180)
-
-                if(self.state.state==self.state.FIND_ARTAG):
+            if(self.state.state==self.state.FIND_IMAGE):
+                if( self.rotate_once==1):
+                    print("searching")
                     self.go_forward()
-                if(self.state.state==self.state.FIND_ARTAG):
+                    self.rotate(180)
+                    self.rotate(-180)
+                    self.rotate_once=0
+
+                if(self.state.state==self.state.FIND_IMAGE):
+                    self.go_forward()
+                if(self.state.state==self.state.FIND_IMAGE):
                     self.rotate(90)
             else:
                 print("waiting")
@@ -63,16 +56,12 @@ class GoForwardAvoid():
         
             rate.sleep()
 
-
     def stateSubscriber(self,stateMsg):
         self.state=stateMsg
-        if(self.state.state==self.state.REACH_ARTAG  or self.state.state == self.state.APPROACH):
+        if(self.state.state==self.state.REACH_IMAGE):
             if(self.send_once==1):
-            	print("found artag")
-                self.stop_servo_rotation() #stop servo
-                rospy.Subscriber('/servo_angle', String, self.angleSubscriber) #subscribe servo angle
-                #self.Pub = rospy.Publisher('/cmd_vel', Twist, queue_size=10) 
-                rotate(self.sangle)  #Rover turns as much as the angle the servo sees the artag.
+                print("found image")
+                self.Pub = rospy.Publisher('/cmd_vel', Twist, queue_size=10) 
                 self.twist = Twist()
                 self.twist.linear.x=0
                 self.twist.angular.z=0
@@ -81,10 +70,8 @@ class GoForwardAvoid():
                 self.client.cancel_all_goals()
                 self.send_once=0
 
-    def angleSubscriber(self, data): 
-        self.sangle = int(data.data) #convert string to integer.
-        print(sangle)
-        
+
+
     def robotPoseSubscriber(self,poseMsg): #Odometry update recieved from ROS topic, run this function
     
         self.currPosX = poseMsg.pose.pose.position.x
@@ -144,42 +131,13 @@ class GoForwardAvoid():
          
         self.client.send_goal(goal)
         wait = self.client.wait_for_result()
-
-    '''def rotate_2(self):
+    def rotate_2(self):
         self.twist = Twist()
         self.twist.angular.z=0.5
         self.twist.linear.x=0
-        self.Pub.publish(self.twist)'''
-
-    #def rotate_cam(self):
-        # this is the function that makes arduino rotate servo
-        #self.Servo_pub.publish("s" + 10 + "f")
-        #pass
-
-    def start_servo_rotation(self):
-        self.Servo_pub.publish(self.startMsg)
-        #print("rotation had begun")
-
-    def stop_servo_rotation(self):
-        self.Servo_pub.publish(self.stopMsg)
-        #print("servo had stopped")
-
-
+        self.Pub.publish(self.twist)
+   
     
-    def look_around():
-
-        if servo_rotated == False:
-            self.start_servo_rotation()
-               
-        elif self.servo_rotated == True:
-            self.rotate(180)
-            self.servo_rotated = False
-            self.start_servo_rotation()
-            
-
-
-
-
 if __name__ == '__main__':
     try:
         GoForwardAvoid()
