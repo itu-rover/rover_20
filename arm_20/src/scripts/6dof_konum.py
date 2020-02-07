@@ -8,11 +8,11 @@ L3 = 27.3
 L4 = 7.0
 L5 = 20.0
 
-j1_angle = 90.0
-j2_angle = 90.0
-j3_angle = 90.0
-j4_angle = 90.0
-j5_angle = 90.0
+j1_angle = 0.0
+j2_angle = 0.0
+j3_angle = 0.0
+j4_angle = 0.0
+j5_angle = 0.0
  
 class coordinate():
 
@@ -99,29 +99,27 @@ rospy.Subscriber("/rover_arm_j3_joint_position_controller/command", Float64, cal
 rospy.Subscriber("/rover_arm_j4_joint_position_controller/command", Float64, callback_j4)
 rospy.Subscriber("/rover_arm_j5_joint_position_controller/command", Float64, callback_j5)
 
-while not rospy.is_shutdown():    
+  
 
-    j1_pos = Dof_1(j1_angle)
-    j2_pos = Dof_2(j1_angle,j2_angle)
-    j3_pos = Dof_3(j1_angle,j2_angle,j3_angle)
-    j4_pos = Dof_4(j1_angle,j2_angle,j3_angle)
-    j5_pos = Dof_5(j1_angle,j2_angle,j3_angle)
-    ee_pos = Dof_6(j1_angle,j2_angle,j3_angle,j4_angle,j5_angle)
+j1_pos = Dof_1(j1_angle)
+j2_pos = Dof_2(j1_angle,j2_angle)
+j3_pos = Dof_3(j1_angle,j2_angle,j3_angle)
+j4_pos = Dof_4(j1_angle,j2_angle,j3_angle)
+j5_pos = Dof_5(j1_angle,j2_angle,j3_angle)
+ee_pos = Dof_6(j1_angle,j2_angle,j3_angle,j4_angle,j5_angle)
 
-    print(j1_angle)
-    print(j2_angle)
-    print(j3_angle)
-    print(j4_angle)
-    print(j5_angle)
+#print(j1_angle)
+#print(j2_angle)
+#print(j3_angle)
+#print(j4_angle)
+#print(j5_angle)
 
-    rospy.spin()
-
-#print(j1_pos.x,"  ",j1_pos.y,"  ",j1_pos.z,"  ")
-#print(j2_pos.x,"  ",j2_pos.y,"  ",j2_pos.z,"  ")
-#print(j3_pos.x,"  ",j3_pos.y,"  ",j3_pos.z,"  ")
-#print(j4_pos.x,"  ",j4_pos.y,"  ",j4_pos.z,"  ")
-#print(j5_pos.x,"  ",j5_pos.y,"  ",j5_pos.z,"  ")
-#print(ee_pos.x,"  ",ee_pos.y,"  ",ee_pos.z,"  ")
+print(j1_pos.x,"  ",j1_pos.y,"  ",j1_pos.z,"  ")
+print(j2_pos.x,"  ",j2_pos.y,"  ",j2_pos.z,"  ")
+print(j3_pos.x,"  ",j3_pos.y,"  ",j3_pos.z,"  ")
+print(j4_pos.x,"  ",j4_pos.y,"  ",j4_pos.z,"  ")
+print(j5_pos.x,"  ",j5_pos.y,"  ",j5_pos.z,"  ")
+print(ee_pos.x,"  ",ee_pos.y,"  ",ee_pos.z,"  ")
 
 
 
