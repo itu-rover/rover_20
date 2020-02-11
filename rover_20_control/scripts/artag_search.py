@@ -48,7 +48,7 @@ class GoForwardAvoid():
             rospy.Subscriber('/rover_state_topic',StateMsg, self.stateSubscriber)
             rospy.Subscriber('/stage_counter_topic', String, self.stageSubscriber)
             rospy.Subscriber('/px_coordinates', String, self.artag_Subscriber)
-            rospy.Subscriber('px_coordinates1', string, self.artag_Subscriber1)
+            rospy.Subscriber('px_coordinates1', String, self.artag_Subscriber1)
             print(self.state.state)
 
             
