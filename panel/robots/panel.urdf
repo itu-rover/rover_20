@@ -1,7 +1,22 @@
+<?xml version="1.0"?>
 <robot
   name="panel">
   <link
-    name="base_link">
+    name="world">
+  </link>
+  <joint
+    name="world_joint"
+    type="fixed">
+    <origin
+      xyz="0 0 0.5"
+      rpy="0 0 0" />
+    <parent
+      link="world" />
+    <child
+      link="panel_base_link" />
+  </joint>
+  <link
+    name="panel_base_link">
     <inertial>
       <origin
         xyz="-0.059734 0.0071587 -0.022133"
@@ -9,12 +24,12 @@
       <mass
         value="14.025" />
       <inertia
-        ixx="2.8304E-05"
-        ixy="-2.9688E-05"
-        ixz="-2.473E-05"
-        iyy="8.1382E-05"
-        iyz="-1.0057E-05"
-        izz="9.2931E-05" />
+        ixx="1"
+        ixy="0"
+        ixz="0"
+        iyy="1"
+        iyz="0"
+        izz="1" />
     </inertial>
     <visual>
       <origin
@@ -27,7 +42,7 @@
       <material
         name="">
         <color
-          rgba="0.79216 0.81961 0.93333 1" />
+          rgba="0.0 0.0 0.93333 1" />
       </material>
     </visual>
     <collision>
@@ -49,12 +64,12 @@
       <mass
         value="4.5006" />
       <inertia
-        ixx="4.7042E-06"
-        ixy="1.4632E-06"
-        ixz="6.1898E-06"
-        iyy="3.3586E-05"
-        iyz="-2.7951E-07"
-        izz="3.5926E-05" />
+        ixx="1"
+        ixy="0"
+        ixz="0"
+        iyy="1"
+        iyz="0"
+        izz="1" />
     </inertial>
     <visual>
       <origin
@@ -67,7 +82,7 @@
       <material
         name="">
         <color
-          rgba="0.79216 0.81961 0.93333 1" />
+          rgba="0.0 0.0 0.93333 1" />
       </material>
     </visual>
     <collision>
@@ -87,16 +102,19 @@
       xyz="0.09269 -0.0295 0.1071"
       rpy="1.5708 0 0" />
     <parent
-      link="base_link" />
+      link="panel_base_link" />
     <child
       link="case_cover_link" />
     <axis
-      xyz="0 0 0" />
+      xyz="0 1 0" />
     <limit
-      lower="-1.57"
-      upper="1.57"
+      lower="0"
+      upper="2"
       effort="0"
       velocity="0" />
+    <dynamics
+      damping = 2
+      friction = 0.1/> 
   </joint>
   <link
     name="small_shelf_link">
@@ -107,12 +125,12 @@
       <mass
         value="0.926162" />
       <inertia
-        ixx="0"
+        ixx="1"
         ixy="0"
         ixz="0"
-        iyy="0"
+        iyy="1"
         iyz="0"
-        izz="0" />
+        izz="1" />
     </inertial>
     <visual>
       <origin
@@ -125,7 +143,7 @@
       <material
         name="">
         <color
-          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+          rgba="0.0 0.0 0.933333333333333 1" />
       </material>
     </visual>
     <collision>
@@ -145,16 +163,19 @@
       xyz="-0.06081 -0.0975 -0.0048573"
       rpy="1.5708 0 3.1416" />
     <parent
-      link="base_link" />
+      link="panel_base_link" />
     <child
       link="small_shelf_link" />
     <axis
-      xyz="0 0 0" />
+      xyz="0 0 -1" />
     <limit
       lower="0"
       upper="0.1"
       effort="0"
       velocity="0" />
+    <dynamics
+      damping = 10
+      friction = 2/> 
   </joint>
   <link
     name="large_shelf_link">
@@ -165,12 +186,12 @@
       <mass
         value="3.23928" />
       <inertia
-        ixx="0"
+        ixx="1"
         ixy="0"
         ixz="0"
-        iyy="0"
+        iyy="1"
         iyz="0"
-        izz="0" />
+        izz="1" />
     </inertial>
     <visual>
       <origin
@@ -203,15 +224,30 @@
       xyz="-0.05981 -0.1075 -0.16286"
       rpy="1.5708 0 0" />
     <parent
-      link="base_link" />
+      link="panel_base_link" />
     <child
       link="large_shelf_link" />
     <axis
-      xyz="0 0 0" />
+      xyz="0 0 1" />
     <limit
       lower="0"
       upper="0.1"
       effort="0"
       velocity="0" />
+    <dynamics
+      damping = 10
+      friction = 2/> 
   </joint>
+<gazebo reference="case_cover_link">
+<material>Gazebo/Grey</material>
+</gazebo>
+<gazebo reference="panel_base_link">
+<material>Gazebo/Grey</material>
+</gazebo>
+<gazebo reference="large_shelf_link">
+<material>Gazebo/Red</material>
+</gazebo>
+<gazebo reference="small_shelf_link">
+<material>Gazebo/Red</material>
+</gazebo> 
 </robot>

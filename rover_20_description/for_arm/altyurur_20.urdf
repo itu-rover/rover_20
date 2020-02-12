@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.5.1-0-g916b5db  Build Version: 1.5.7152.31018
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="altyurur_20" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="0.036648 -0.78 -0.1149"
+        rpy="0 0 0" />
+      <mass
+        value="97.6922" />
+      <inertia
+        ixx="0.16992"
+        ixy="-1.2309E-05"
+        ixz="0.040329"
+        iyy="0.48212"
+        iyz="-1.555E-07"
+        izz="0.54282" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rover_20_description/meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rover_20_description/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="left_front_link">
+    <inertial>
+      <origin
+        xyz="-3.0122E-05 0.00014177 0.082453"
+        rpy="0 0 0" />
+      <mass
+        value="51.1573" />
+      <inertia
+        ixx="0.0096934"
+        ixy="-5.9959E-08"
+        ixz="-1.119E-06"
+        iyy="0.0096827"
+        iyz="2.2683E-06"
+        izz="0.01783" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rover_20_description/meshes/left_front_linkk.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rover_20_description/meshes/left_front_linkk.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="left_front_joint"
+    type="fixed">
+    <origin
+      xyz="0.45031 -0.2596 -0.31064"
+      rpy="1.5708 1.2698 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="left_front_link" />
+    <axis
+      xyz="0 0 -1" />
+  </joint>
+  <link
+    name="right_front_link">
+    <inertial>
+      <origin
+        xyz="-2.8756E-05 0.00014342 0.07551"
+        rpy="0 0 0" />
+      <mass
+        value="51.1573" />
+      <inertia
+        ixx="0.0096937"
+        ixy="2.8004E-07"
+        ixz="-1.119E-06"
+        iyy="0.0096825"
+        iyz="2.2683E-06"
+        izz="0.01783" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rover_20_description/meshes/right_front_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rover_20_description/meshes/right_front_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_front_joint"
+    type="fixed">
+    <origin
+      xyz="0.45155 -1.1425 -0.31113"
+      rpy="1.5708 -1.0421 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="right_front_link" />
+    <axis
+      xyz="0 0 -1" />
+  </joint>
+  <link
+    name="right_rear_link">
+    <inertial>
+      <origin
+        xyz="-3.0122E-05 0.00014177 0.07551"
+        rpy="0 0 0" />
+      <mass
+        value="51.1573" />
+      <inertia
+        ixx="0.0096934"
+        ixy="-5.9909E-08"
+        ixz="-1.119E-06"
+        iyy="0.0096827"
+        iyz="2.2683E-06"
+        izz="0.01783" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rover_20_description/meshes/right_rear_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rover_20_description/meshes/right_rear_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_rear_joint"
+    type="fixed">
+    <origin
+      xyz="-0.25574 -1.1425 -0.31006"
+      rpy="1.5708 1.2698 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="right_rear_link" />
+    <axis
+      xyz="0 0 -1" />
+  </joint>
+  <link
+    name="left_rear_link">
+    <inertial>
+      <origin
+        xyz="-2.9287E-05 0.00014265 0.082453"
+        rpy="0 0 0" />
+      <mass
+        value="51.1573" />
+      <inertia
+        ixx="0.0096936"
+        ixy="1.0425E-07"
+        ixz="-1.119E-06"
+        iyy="0.0096826"
+        iyz="2.2683E-06"
+        izz="0.01783" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rover_20_description/meshes/left_rear_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rover_20_description/meshes/left_rear_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="left_rear_joint"
+    type="fixed">
+    <origin
+      xyz="-0.25698 -0.2596 -0.31054"
+      rpy="1.5708 0.64514 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="left_rear_link" />
+    <axis
+      xyz="0 0 -1" />
+  </joint>
+<gazebo reference="right_rear_link">
+<material>Gazebo/Black</material>
+</gazebo>  
+<gazebo reference="left_rear_link">
+<material>Gazebo/Black</material>
+</gazebo>
+<gazebo reference="right_front_link">
+<material>Gazebo/Black</material>
+</gazebo>  
+<gazebo reference="left_front_link">
+<material>Gazebo/Black</material>
+</gazebo>   
+</robot>
