@@ -43,8 +43,7 @@
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="package://robotic_arm_20/meshes/base_link.STL" />
+        
       </geometry>
       <material
         name="">
