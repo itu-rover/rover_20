@@ -140,6 +140,7 @@ int main(int argc, char **argv){
 		coordinate proj_joint_1 = coordinate(new_end_point_pos.get_x(), new_end_point_pos.get_y(), 0);
 		joint_1_angle = angle_of_vectors(proj_joint_1, reference_coord);		// Projection of endpoint on xy and reference cord
 		if(proj_joint_1.get_y() < 0) joint_1_angle = joint_1_angle * (-1);
+		cout << endl << "Joint 1 angle: " << joint_1_angle << endl;
 
 		joint_1_angle_dif += joint_1_angle; 
 
@@ -164,9 +165,9 @@ int main(int argc, char **argv){
 
 		//cout << endl << endl;
 
-		double joint_5_angle = find_angle(my_joints[2],my_joints[1],my_joints[3]);
-		double joint_3_angle = find_angle(my_joints[1],my_joints[0],my_joints[2]);
-		double joint_2_angle = find_angle(my_joints[0],coordinate(0.0,0.0,0.0),my_joints[1]);
+		double joint_5_angle = find_angle(my_joints[2],my_joints[1],my_joints[3],joint_1_angle);
+		double joint_3_angle = find_angle(my_joints[1],my_joints[0],my_joints[2],joint_1_angle);
+		double joint_2_angle = find_angle(my_joints[0],coordinate(0.0,0.0,0.0),my_joints[1],joint_1_angle);
 
 		//cout << "Joint 5 narrow: " << cosinus_theorem(my_joints[3],my_joints[2],my_joints[4]) << endl;
 		//cout << "Joint 3 narrow: " << cosinus_theorem(my_joints[2],my_joints[1],my_joints[3]) << endl;

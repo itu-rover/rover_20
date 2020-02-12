@@ -6,6 +6,21 @@ using namespace std;
 const double PI = 3.14159265;
 const double TOLERANCE = 0.1;
 
+const double J1_ANGLE_BORDER_MAX = 80.0;
+const double J1_ANGLE_BORDER_MIN = -80.0;
+
+const double J2_ANGLE_BORDER_MAX = 90.0;
+const double J2_ANGLE_BORDER_MIN = -90.0;
+
+const double J3_ANGLE_BORDER_MAX = 70.0;
+const double J3_ANGLE_BORDER_MIN = -120.0;
+
+const double J4_ANGLE_BORDER_MAX = 80.0;
+const double J4_ANGLE_BORDER_MIN = -80.0;
+
+const double J5_ANGLE_BORDER_MAX = 70.0;
+const double J5_ANGLE_BORDER_MIN = -120.0;
+
 double abs_val(double candidate){
 
 	if(candidate < 0) return candidate*(-1);
@@ -129,7 +144,7 @@ double angle_of_vectors(coordinate one, coordinate two){
 	return angle;
 }
 
-double find_angle(coordinate center, coordinate before, coordinate next){
+double find_angle(coordinate center, coordinate before, coordinate next, double joint_1_angle){
 
 	double a = center.calculate_dist(before);
 	double b = center.calculate_dist(next);
@@ -142,7 +157,8 @@ double find_angle(coordinate center, coordinate before, coordinate next){
 
 	double cross_product_y = new_before.get_z()*new_next.get_x() - new_before.get_x()*new_next.get_z();
 
-	if(cross_product_y > 0)  my_angle = 360 - my_angle;
+	if(((joint_1_angle < 90) && (joint_1_angle > -90)) && cross_product_y > 0)  my_angle = 360 - my_angle;
+	if(((joint_1_angle > 90) || (joint_1_angle < -90)) && cross_product_y < 0)  my_angle = 360 - my_angle;
 
 	return my_angle;
 }
