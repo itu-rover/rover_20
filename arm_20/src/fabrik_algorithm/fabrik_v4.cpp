@@ -155,8 +155,8 @@ int main(int argc, char **argv){
 
 			FABRIK_algorithm(my_joints_1, link_lengths_1, new_end_point, REACH_1);
 
-			joint_2_angle =	find_angle(my_joints_1[0],coordinate(0.0,0.0,0.0),my_joints_1[1]);
-			joint_3_angle = find_angle(my_joints_1[1],my_joints_1[0],my_joints_1[2]);
+			joint_2_angle =	find_angle(my_joints_1[0],coordinate(0.0,0.0,0.0),my_joints_1[1],joint_1_angle);
+			joint_3_angle = find_angle(my_joints_1[1],my_joints_1[0],my_joints_1[2],joint_1_angle);
 
 			joint_angles[0] = joint_1_angle;								// Calculated angles minus zero pos angles
 			joint_angles[1] = 180.0 - joint_2_angle;

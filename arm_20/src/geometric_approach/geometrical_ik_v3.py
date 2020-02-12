@@ -51,29 +51,13 @@ def movement_1(r,destination_point):
 	r.joint_angles[0]=base_yaw
 	r.joint_angles[3]=base_yaw
 
-# left right
-def movement_2(r,destination_point):
-	distance=lengths(destination_point)
-	angles=get_triangle_angles(r.lengths[1],r.lengths[2] + r.lengths[4],distance)
-	alpha=atan(destination_point[1]/destination_point[0])
-	base_pitch=angles[1]+alpha
-	second_joint=angles[2]
-	a=sqrt( (distance ** 2)-(destination_point[1] ** 2))
-	base_yaw=asin(destination_point[2]/a)
-	#for making parallel
-	r.joint_angles[1]=base_pitch
-	r.joint_angles[2]=second_joint
-	r.joint_angles[0]=base_yaw
 
 def check_limits(r,jointangles):
-	check=0
-	for i in range(5):
+	check=False
+	for i in range(6):
 		if jointangles[i]>r.ub[i] or jointangles[i]<r.lb[i]:
-			check+=1
-	if check==0:
-		return False
-	else:
-		return True
+			check=True
+	return check
 
 
 if __name__ == '__main__':
@@ -94,28 +78,6 @@ if __name__ == '__main__':
 		y=y+yi
 		z=z+zi
 
-
-#		if flag==True:
-#
-#			#w=arm.initial_angles[4]-arm.joint_angles[4]
-#
-#			arm.initial_angles[4]=arm.initial_angles[4]-direction1
-#			arm.initial_angles[3]=arm.initial_angles[3]+direction2
-#
-#			movement_2(arm,[x,y,z])
-#
-#		else:
-
-
-		#if(arm.joint_angles[1]>0.90 or xi<0):
-
-	#	else:
-	#		print("hiziniz 102 yavas amk")
-	#	if(arm.joint_angles[3]>0.90 or yi<0):
-
-	#	else:
-	#		print("hiziniz 102 yavas amk")
-			#print(arm.joint_angles[1])
 		movement_1(arm,[x,y,z])
 		arm.initial_angles[4]=arm.initial_angles[4]-pitch
 		arm.initial_angles[3]=arm.initial_angles[3]-yaw
@@ -125,9 +87,9 @@ if __name__ == '__main__':
 		arm_pub = [arm.initial_angles[0]-arm.joint_angles[0],arm.initial_angles[1]-arm.joint_angles[1],arm.initial_angles[2]-arm.joint_angles[2],arm.initial_angles[3]-arm.joint_angles[3],arm.initial_angles[4]-arm.joint_angles[4],arm.initial_angles[5]-arm.joint_angles[5]]
 		print(arm_pub)
 		if not check_limits(arm,arm_pub):
-			print("Gripper pitch %d ",np.degrees(arm.initial_angles[4]))
-			print("Gripper yaw %d ",np.degrees(arm.initial_angles[3]))
-			print("Gripper roll %d ",np.degrees(arm.initial_angles[5]))
+			print("Gripper pitch %d ",np.degrees(arm_pub[4]))
+			print("Gripper yaw %d ",np.degrees(arm_pub[3]))
+			print("Gripper roll %d ",np.degrees(arm_pub[5]))
 
 			pub1.publish(arm_pub[0])
 			pub2.publish(arm_pub[1])
@@ -137,9 +99,9 @@ if __name__ == '__main__':
 			pub6.publish(arm_pub[5])
 			rate.sleep()
 		else:
-			arm.initial_angles[4]=arm.initial_angles[4]-pitch
-			arm.initial_angles[3]=arm.initial_angles[3]-yaw
-			arm.initial_angles[5]=arm.initial_angles[5]-roll
-			x=x-3*xi
-			y=y-3*yi
-			z=z-3*zi
+			arm.initial_angles[4]=arm.initial_angles[4]+2*pitch
+			arm.initial_angles[3]=arm.initial_angles[3]+2*yaw
+			arm.initial_angles[5]=arm.initial_angles[5]+2*roll
+			x=x-2*xi
+			y=y-2*yi
+			z=z-2*zi
