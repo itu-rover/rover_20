@@ -111,8 +111,6 @@ catkin_package(
 #  DEPENDS system_lib
 )
 
-add_executable(artag_main src/artag_main.cpp)
-target_link_libraries(artag_main ${catkin_LIBRARIES} ${OpenCV_LIBS})
 
 ###########
 ## Build ##
@@ -157,6 +155,14 @@ include_directories(
 # target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
 # )
+
+
+add_executable(artag_main src/artag_main.cpp)
+target_link_libraries(artag_main ${catkin_LIBRARIES} ${OpenCV_LIBS})
+
+add_executable(localization_aruco src/localization_aruco.cpp)
+target_link_libraries(localization_aruco ${catkin_LIBRARIES} ${OpenCV_LIBS})
+
 
 #############
 ## Install ##
