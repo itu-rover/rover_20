@@ -1,4 +1,0 @@
-RoverModelling:
-    attribute: True # True For DMS, False For DS (DMS is Ferhat edition, not %100 sure but gives right form.)
-    remote: True
-       
