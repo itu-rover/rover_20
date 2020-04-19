@@ -1,0 +1,221 @@
+<robot
+  name="panel">
+     <material name="blue">
+       <color rgba="0 0 0.8 1"/>
+     </material>
+   
+     <material name="white">
+       <color rgba="1 1 1 1"/>
+    </material>
+  
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="-0.059734 0.0071587 -0.022133"
+        rpy="0 0 0" />
+      <mass
+        value="14.025" />
+      <inertia
+        ixx="2.8304E-05"
+        ixy="-2.9688E-05"
+        ixz="-2.473E-05"
+        iyy="8.1382E-05"
+        iyz="-1.0057E-05"
+        izz="9.2931E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://panel/meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="blue"
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://panel/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="case_cover_link">
+    <inertial>
+      <origin
+        xyz="-0.15308 -0.03104 0.029242"
+        rpy="0 0 0" />
+      <mass
+        value="4.5006" />
+      <inertia
+        ixx="4.7042E-06"
+        ixy="1.4632E-06"
+        ixz="6.1898E-06"
+        iyy="3.3586E-05"
+        iyz="-2.7951E-07"
+        izz="3.5926E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://panel/meshes/case_cover_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.0 0.0 0.9 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://panel/meshes/case_cover_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="case_cover_joint"
+    type="revolute">
+    <origin
+      xyz="0.09269 -0.0295 0.1071"
+      rpy="1.5708 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="case_cover_link" />
+    <axis
+      xyz="0 0 0" />
+    <limit
+      lower="-1.57"
+      upper="1.57"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="small_shelf_link">
+    <inertial>
+      <origin
+        xyz="-6.93889390390723E-18 -0.0178125630289301 0.0912591458081848"
+        rpy="0 0 0" />
+      <mass
+        value="0.926162" />
+      <inertia
+        ixx="0"
+        ixy="0"
+        ixz="0"
+        iyy="0"
+        iyz="0"
+        izz="0" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://panel/meshes/small_shelf_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.0 0.819607843137255 0.0 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://panel/meshes/small_shelf_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="small_shelf_joint"
+    type="prismatic">
+    <origin
+      xyz="-0.06081 -0.0975 -0.0048573"
+      rpy="1.5708 0 3.1416" />
+    <parent
+      link="base_link" />
+    <child
+      link="small_shelf_link" />
+    <axis
+      xyz="0 0 0" />
+    <limit
+      lower="0"
+      upper="0.1"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="large_shelf_link">
+    <inertial>
+      <origin
+        xyz="6.93889390390723E-18 0.00201303993480031 -0.0995843520782396"
+        rpy="0 0 0" />
+      <mass
+        value="3.23928" />
+      <inertia
+        ixx="0"
+        ixy="0"
+        ixz="0"
+        iyy="0"
+        iyz="0"
+        izz="0" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://panel/meshes/large_shelf_link.STL" />
+      </geometry>
+      <material
+        name="blue"
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://panel/meshes/large_shelf_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="large_shelf_joint"
+    type="prismatic">
+    <origin
+      xyz="-0.05981 -0.1075 -0.16286"
+      rpy="1.5708 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="large_shelf_link" />
+    <axis
+      xyz="0 0 0" />
+    <limit
+      lower="0"
+      upper="0.1"
+      effort="0"
+      velocity="0" />
+  </joint>
+</robot>

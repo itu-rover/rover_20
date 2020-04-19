@@ -1,0 +1,89 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<script src="js/external/jquery.min.js"></script>
+	<script src="js/external/popper.min.js"></script>
+	<script src="js/external/bootstrap.min.js"></script>
+	<script src="js/external/canvasjs.min.js"></script>
+	<script src="js/science.js"></script>
+	<style>
+		#vr{
+			width : 1px ;
+			height : 100px ;
+		}
+	</style>
+</head>
+<body>
+	<nav class="navbar navbar-static-top">
+			<div class="container">
+					<div class="navbar-header">
+							<a class="navbar-brand" href="#"><img src="./images/itu_rover_white.png" alt="ITU Rover Team" style="box-sizing: border-box; width: 60px;"></a>
+							<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+									<i class="fa fa-bars"></i>
+							</button>
+					</div>
+					<div class="collapse navbar-collapse pull-left" id="navbar-collapse">
+							<ul class="nav navbar-nav">
+									<li><a href="index.html">Dashboard</a></li>
+									<li><a href="mission-planning.html">Plan</a></li>
+									<li><a href="science.html">ISRL</a></li>
+							</ul>
+							<ul class="nav navbar-nav bg-red">
+									<li><a href="science_ecph.html">BIO-EC-PH</a></li>
+									<li><a href="science_raman.html">RAMAN</a></li>
+									<li><a href="science_nir.html">VIS-NIR</a></li>
+									<li><a href="science_sensor.html">SENSOR</a></li>
+							</ul>
+					</div>
+
+			</div>
+	</nav>
+	<div class="container">
+
+		<div class="row" style="margin-bottom: 10px;">
+			<div class="col-sm" id="chartContainer_1" style="height: 300px; width: 45%; float:left;"></div>
+			<div class="col-sm" id="chartContainer_2" style="height: 300px; width: 45%; float:right;"></div>
+		</div>
+
+		<div class="row" style="margin-bottom: 40px;">
+			<div class="col-sm-6"><button id="exportChart_1" style="float:left;">Export Chart</button></div>
+			<div class="col-sm-6" style="padding-left: 73px"><button id="exportChart_2" style="float:left;">Export Chart</button></div>
+		</div>
+
+		<div class="row" style="margin-bottom: 10px;">
+			<div class="col-sm" id="chartContainer_3" style="height: 300px; width: 45%; float:left;"></div>
+			<div class="col-sm" id="chartContainer_4" style="height: 300px; width: 45%; float:right;"></div>
+		</div>
+
+		<div class="row" style="margin-bottom: 40px;">
+			<div class="col-sm-6"><button id="exportChart_3" style="float:left;">Export Chart</button></div>
+			<div class="col-sm-6" style="padding-left: 73px;"><button id="exportChart_4" style="float:left;">Export Chart</button></div>
+		</div>
+
+		<div class="row" style="margin-bottom: 10px;">
+			<div class="col-sm-8" id="chartContainer_5" style="height: 300px; width: 65%; float:left;"></div>
+			<div class="col-sm-4" style="height: 300px;">
+				<input id="xValue" type="number" step="any" placeholder="Enter X-Value">
+				<input id="yValue" type="number" step="any" placeholder="Enter Y-Value">
+				<button id="renderButton1">Add Data to Chart</button>
+				<button id="deleteButton1">Delete Last Data</button>
+			</div>
+		</div>
+
+		<div class="row" style="padding-left: 30px; margin-bottom: 40px;"><button id="exportChart_5" style="float:left;">Export Chart</button></div>
+
+		<div class="row" style="margin-bottom: 10px;">
+			<div class="col-sm-8" id="chartContainer_6" style="height: 300px; width: 65%; float:left;"></div>
+			<div class="col-sm-4" style="height: 300px;">
+				<input id="yValue2" type="number" step="any" placeholder="Enter Y-Value">
+				<button id="renderButton2">Add Data to Chart</button>
+				<button id="deleteButton2">Delete Last Data</button>
+			</div>
+		</div>
+
+		<div class="row" style="padding-left: 30px; margin-bottom: 40px;"><button id="exportChart_6" style="float:left;">Export Chart</button></div>
+	</div>
+</body>
+</html>

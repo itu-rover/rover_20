@@ -1,0 +1,130 @@
+.info-box-detail {
+    clear: both;
+    background: #fff;
+    color: #000;
+    border-width: 0 1px 1px 1px;
+    border-style: solid;
+    border-color: #fff;
+    padding: 10px;
+    border-radius: 2px;
+}
+
+.bg-gray .info-box-detail {
+    border-color: #d2d6de !important;
+}
+
+.bg-gray-light .info-box-detail {
+    border-color: #f7f7f7 !important;
+}
+
+.bg-red .info-box-detail {
+    border-color: #f39c12 !important;
+}
+
+.bg-aqua .info-box-detail {
+    border-color: #00c0ef !important;
+}
+
+.bg-blue .info-box-detail {
+    border-color: #0073b7 !important;
+}
+
+.bg-light-blue .info-box-detail {
+    border-color: #3c8dbc !important;
+}
+
+.bg-green .info-box-detail {
+    border-color: #00a65a !important;
+}
+
+.bg-navy .info-box-detail {
+    border-color: #001f3f !important;
+}
+
+.bg-teal .info-box-detail {
+    border-color: #39cccc !important;
+}
+
+.bg-lime .info-box-detail {
+    border-color: #01ff70 !important;
+}
+
+.bg-orange .info-box-detail {
+    border-color: #ff851b !important;
+}
+
+.bg-fuchsia .info-box-detail {
+    border-color: #f012be !important;
+}
+
+.bg-purple .info-box-detail {
+    border-color: #605ca8 !important;
+}
+
+.bg-maroon .info-box-detail {
+    border-color: #d81b60 !important;
+}
+
+.bg-olive .info-box-detail {
+    border-color: #3d9970 !important;
+}
+
+.info-box .btn-info-box {
+    border: 0;
+    box-shadow: none;
+    padding: 5px;
+    font-size: 12px;
+    background: transparent;
+    color: #fff;
+}
+
+.info-box .btn-info-box:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.bg-gray .btn-info-box {
+    color: #000;
+}
+
+.bg-gray-light .btn-info-box {
+    color: #000;
+}
+
+.info-box.collapsed-box .info-box-detail {
+    display: none;
+}
+
+.split {
+  height: 100%;
+  width: 50%;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
+.left {
+  left: 0;
+ 
+}
+
+.right {
+  right: 0;
+  
+}
+
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.centered img {
+  width: 150px;
+  border-radius: 50%;
+}
+
+

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<launch>
+  <param name="robot_description"
+   command="$(find xacro)/xacro.py '$(find robotic_arm_20)/robots/robotic_arm_20.urdf'" />
+  <include
+    file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="paused" value="true"/>
+  </include>
+
+  <!--node
+    name="tf_footprint_base"
+    pkg="tf"
+    type="static_transform_publisher"
+    args="0 0 0 0 0 0 base_link base_footprint 40" /-->
+
+ <node
+    name="spawn_alt_yurur"
+    pkg="gazebo_ros"
+    type="spawn_model"
+    args="-file $(find rover_20_description)/for_arm/altyurur_20.urdf -urdf -x -0.3 -y 0.715 -z 0.47 -model alt_yurur"
+    output="screen" />
+ <node
+    name="spawn_panel"
+    pkg="gazebo_ros"
+    type="spawn_model"
+    args="-file $(find panel)/robots/panel.urdf -urdf -x 0.95 -z 0.30 -Y -1.57 -model panel"
+    output="screen" />
+  <node
+    name="spawn_model"
+    pkg="gazebo_ros"
+    type="spawn_model"
+    args="-file $(find robotic_arm_20)/urdf/robotic_arm_20.urdf -urdf -z 0.185 -R -1.57 -model robotic_arm_20"
+    output="screen" />
+  <!--node
+    name="fake_joint_calibration"
+    pkg="rostopic"
+    type="rostopic"
+    args="pub /calibrated std_msgs/Bool true" /-->
+</launch>

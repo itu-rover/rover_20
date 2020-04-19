@@ -1,0 +1,11 @@
+GROUND STATION : 
+	rover_lora_checkout:
+		sends data to rover, rover_lora2 checks it frequently to understand if the communication breaks or not.
+	rover_lora:
+		wait for the "communication break down" data from on board script rover_lora2. 
+
+ROVER : 
+	rover_lora2:
+		checks data from rover_lora_checkoyut. When the communication breaks, sends the "comunnication break down" data and the status of rover to ground station.
+		
+	

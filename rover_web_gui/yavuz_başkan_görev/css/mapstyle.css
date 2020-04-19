@@ -1,0 +1,46 @@
+
+@media screen and (min-width: 768px){
+.map-sm{
+    position: relative;
+    height: 600px;
+    width: 800px;
+    border-color: #bb2c1a;
+    }
+}
+
+
+.map-sm{
+    position: relative;
+    height: 600px;
+    width: 100%;
+    border-style: solid;
+    border-width: 3px;
+    border-color: gray
+    }
+
+.map-bg{
+    position: absolute;
+    height: 92vh;
+    width: 98vw;
+}
+.waypoint {
+    width: 40px;
+    height: 40px;
+    background-color: rgba( 0, 0, 0, 0.602 );
+    
+    border-radius: 50%;
+    font-size: 25px;
+    text-align: center;
+    padding-top: 10px;
+    color:rgba( 255, 0, 0, 0.602 );
+    cursor:pointer;
+}
+
+.mapboxgl-popup {
+    max-width: 200px;
+}
+
+#focus-btn, .disabled{
+    cursor: pointer !important; 
+}
+

@@ -1,0 +1,54 @@
+
+@media screen and (min-width: 100px) and (max-width: 1000px){
+.map-sm{
+    position: relative;
+    height: 100vh;
+    width: 100vw;
+    border-color: #bb2c1a;
+    }
+    
+#joy-left {
+            position: absolute;
+            left: 10vw;
+            bottom: 4vh;
+            height: 40%;
+            width: 40%;
+        }
+
+#joy-right {
+            position: absolute;
+            right: 10vw;
+            bottom: 4vh;
+            height: 40%;
+            width: 40%;
+        }
+}
+
+@media screen and (min-width: 1001px){
+.map-sm{
+    position: absolute;
+    left: 15vw;
+    top: 5vh;
+    height: 70vh;
+    width: 70vw;
+    border-style: solid;
+    border-width: 5px;
+    border-color: #bb2c1a;
+    }
+    
+#joy-left {
+            position: absolute;
+            left: 2vw;
+            bottom: 1vh;
+            height: 40%;
+            width: 40%;
+        }
+
+#joy-right {
+            position: absolute;
+            right: 2vw;
+            bottom: 10px;
+            height: 40%;
+            width: 40%;
+        }
+}

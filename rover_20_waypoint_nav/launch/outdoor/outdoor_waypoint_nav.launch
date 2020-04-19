@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<launch>
+  <!--In Debug Mode save results in the params directory at results.txt-->
+  <param name="/outdoor_waypoint_nav/debug" type="bool" value="true" />
+
+  <!--node name="rover_20_waypoint_nav" pkg="rover_20_waypoint_nav" type="gps_waypoint" output="screen"/-->
+  <node name="rover_20_waypoint_nav_handler" pkg="rover_20_waypoint_nav" type="gps_waypoint_handler" output="screen"/>
+
+  <!--node pkg="rover_19_control" name="ball_search" type="ball_search_3.py" output="screen"/>
+  <node pkg="rover_19_control" name="ball_handler" type="ball_handler.py" output="screen"/-->
+
+</launch>

@@ -1,0 +1,12 @@
+var  chart =  new  CanvasJS.Chart("container",
+{
+ .
+ .
+ data: [{
+   type: "line",
+   lineThickness: 5,
+ }],
+ .
+ . 
+});
+chart.render();

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<launch>
+
+ <!-- Publishes joint tf for displaying Rviz-->
+ <include file="$(find mobile_base_description)/launch/display_2018.launch"/>
+ 
+
+ <!-- Subscribes mobile_base_serial and publishing gps/fix -->
+<node name="velocity_node" pkg="mobile_base_simulator" type="velocity_odom_simulation.py" />
+
+ 
+ <!-- İnitializes Rviz  -->
+<include file="$(find mobile_base_base)/launch/mobile_base_sim.launch"/>
+
+
+ 
+</launch>
