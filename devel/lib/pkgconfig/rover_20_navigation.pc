@@ -1,0 +1,8 @@
+prefix=/home/basestation/rover20_ws/devel
+
+Name: rover_20_navigation
+Description: Description of rover_20_navigation
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

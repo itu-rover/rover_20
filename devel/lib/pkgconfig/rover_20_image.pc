@@ -1,0 +1,8 @@
+prefix=/home/basestation/rover20_ws/devel
+
+Name: rover_20_image
+Description: Description of rover_20_image
+Version: 0.0.0
+Cflags: -I/home/basestation/rover20_ws/devel/include
+Libs: -L${prefix}/lib 
+Requires: 

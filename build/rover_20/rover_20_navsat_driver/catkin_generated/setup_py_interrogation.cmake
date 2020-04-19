@@ -1,0 +1,6 @@
+set(rover_20_navsat_driver_SETUP_PY_VERSION "0.5.0")
+set(rover_20_navsat_driver_SETUP_PY_SCRIPTS "")
+set(rover_20_navsat_driver_SETUP_PY_PACKAGES "libnmea_navsat_driver")
+set(rover_20_navsat_driver_SETUP_PY_PACKAGE_DIRS "src/libnmea_navsat_driver")
+set(rover_20_navsat_driver_SETUP_PY_MODULES "")
+set(rover_20_navsat_driver_SETUP_PY_MODULE_DIRS "")
