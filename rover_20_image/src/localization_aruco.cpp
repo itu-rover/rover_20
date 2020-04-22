@@ -116,12 +116,15 @@ void broadcast_tf(tf::TransformBroadcaster br, slam_obj *obj)
 	br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), FIXED_FRAME, obj->name));
 }
 
-
 int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "localization_aruco");
 
 	//aruco stoff
+	Mat_<double> mtx(3,3);
+	Mat_<double> dist(1,5);
+	Mat frame;
+
 	std::vector<std::vector<Point2f>> corners;
 	std::vector<int> ids;
 	std::vector<Vec3d> rvecs, tvecs;
@@ -146,7 +149,7 @@ int main(int argc, char **argv)
     slam_obj *world = NULL;
     world = add(world, create_camera());
 
-	cap.open(0);
+	cap.open(1);
 
 	if(!cap.isOpened())
 	{
