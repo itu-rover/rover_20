@@ -1,0 +1,8 @@
+prefix=/home/basestation/rover20_ws/install
+
+Name: geonav_transform
+Description: Description of geonav_transform
+Version: 0.0.1
+Cflags: -I${prefix}/include -I/usr/include/eigen3
+Libs: -L${prefix}/lib -lgeonav_transform
+Requires: roscpp cmake_modules geographic_msgs geometry_msgs nav_msgs sensor_msgs std_msgs tf2 tf2_geometry_msgs tf2_ros

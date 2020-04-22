@@ -1,0 +1,8 @@
+prefix=/home/basestation/rover20_ws/install
+
+Name: rover_web_gui
+Description: Description of rover_web_gui
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

@@ -1,0 +1,8 @@
+prefix=/home/basestation/rover20_ws/devel
+
+Name: rover_20_imu
+Description: Description of rover_20_imu
+Version: 1.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

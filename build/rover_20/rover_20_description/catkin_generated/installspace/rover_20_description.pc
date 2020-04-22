@@ -1,0 +1,8 @@
+prefix=/home/basestation/rover20_ws/install
+
+Name: rover_20_description
+Description: Description of rover_20_description
+Version: 1.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
