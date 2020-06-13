@@ -98,26 +98,6 @@ OPER_MODE_M4G = 0x0a
 OPER_MODE_NDOF_FMC_OFF = 0x0b
 OPER_MODE_NDOF = 0x0C
 
-#  Power modes
-PWR_MODE_NORMAL = 0x00
-PWR_MODE_LOW = 0x01
-PWR_MODE_SUSPEND  = 0x02
-
-# Communication constants
-BNO055_ID = 0xa0
-START_BYTE_WR = 0xaa
-START_BYTE_RESP = 0xbb
-READ = 0x01
-WRITE = 0x00
-
-# Read data from IMU
-def read_from_dev(ser, reg_addr, length):
-    buf_out = bytearray()
-    buf_out.append(START_BYTE_WR)
-    buf_out.append(READ)
-    buf_out.append(reg_addr)
-    buf_out.append(length)
-
     try:
         ser.write(buf_out)
         buf_in = bytearray(ser.read(2 + length))
@@ -186,16 +166,7 @@ if __name__ == '__main__':
     try:
         ser = serial.Serial(port, 115200, timeout=0.02) #115200
     except serial.serialutil.SerialException:
-        rospy.logerr("IMU not found at port " + port + ". Check the port in the launch file.")
-        sys.exit(0)
-
-    # Check if IMU ID is correct
-    buf = read_from_dev(ser, CHIP_ID, 1)
-    if buf == 0 or buf[0] != BNO055_ID:
-        #rospy.logerr("Device ID is incorrect. Shutdown.")
-        sys.exit(0)
-
-    # IMU Configuration
+        ros
     if not(write_to_dev(ser, OPER_MODE, 1, OPER_MODE_CONFIG)):
         rospy.logerr("Unable to set IMU into config mode.")
 
