@@ -13,6 +13,7 @@
 
 #define PI 3.14159265358979323846
 #define FIXED_FRAME "aruco_slam_world"
+#define RELOCALIZATION_COOLDOWN 10
 
 using namespace cv;
 using namespace aruco;
@@ -22,7 +23,7 @@ std::tuple<tf::Quaternion, tf::Vector3> estimate_cam_transform(tf::Quaternion R_
 slam_obj *create_marker_obj(tf::Quaternion R_cm, tf::Vector3 T_cm, int id, slam_obj* camera);
 slam_obj *create_camera();
 tf::Quaternion avarage_quaternions(std::vector<tf::Quaternion> quaternions);
-tf::Vector3 avarage_vectors(std::vector<tf::Vector3> vectors)
+tf::Vector3 avarage_vectors(std::vector<tf::Vector3> vectors);
 
 
 int main(int argc, char **argv)
@@ -72,16 +73,16 @@ int main(int argc, char **argv)
 		cap.read(frame);
 
 		detectMarkers(frame, dictionary, corners, ids ,params);
-		estimatePoseSingleMarkers(corners, 0.2, mtx, dist, rvecs, tvecs);
-
-		std::vector<tf::Quaternion> cam_orientations;
-		std::vector<tf::Vector3>    cam_locations;
 
 		if(ids.size() > 0)
 		{
 			slam_obj *cam = tree.search_id(-1);
 
+			estimatePoseSingleMarkers(corners, 0.2, mtx, dist, rvecs, tvecs);
 			drawDetectedMarkers(frame, corners);
+
+			std::vector<tf::Quaternion> cam_orientations;
+			std::vector<tf::Vector3>    cam_locations;
 
 			for (int i = 0, n = ids.size(); i < n; i++)
 			{
@@ -98,7 +99,7 @@ int main(int argc, char **argv)
 				slam_obj *marker = tree.search_id(id);
 
 				// If marker is not exist in map(slam system) we will add it
-				// Else estimate cam transform with it 
+				// otherwise estimate cam transform with it 
 				// Note: Markers are assumed to be static
 				if(marker == NULL)
 				{
@@ -114,20 +115,24 @@ int main(int argc, char **argv)
 
 					cam_orientations.push_back(R);
 					cam_locations.push_back(T);
+
+					marker->relocalization_cooldown_counter--;
 				}
+
+				//TODO: Relokalizasyon fonksiyonunu temizce ekle
 			}
 
+			//Update camera with average of multiple estimations
 			cam->R = avarage_quaternions(cam_orientations);
 			cam->T = avarage_vectors(cam_locations);
 		}
 
-		//TODO: Ağacı dolaşarak her objenin tf'sini yayınlamalısın
+		tree.traverse(br, broadcast_tf);
 
 		imshow("frame", frame);
 
 		ros::spinOnce();
-		if(waitKey(10) == 27) //27 == esc
-			break;
+		if(waitKey(10) == 27) break;
 	}
 	
 	return 0;
@@ -135,15 +140,16 @@ int main(int argc, char **argv)
 
 slam_obj *create_marker_obj(tf::Quaternion R_cm, tf::Vector3 T_cm, int id, slam_obj* camera)
 {
-	tf::Quaternion R_wc = camera->r;
+	tf::Quaternion R_wc = camera->R;
 	tf::Quaternion R_wm = R_wc * R_cm;
 
-	tf::Vector3 T_wc = camera->t;
+	tf::Vector3 T_wc = camera->T;
 	tf::Vector3 T_wm = T_wc + (tf::Matrix3x3(R_wc) * T_cm);
 
 	slam_obj *marker = new slam_obj;
 
 	marker->id = id;
+	marker->relocalization_cooldown_counter = RELOCALIZATION_COOLDOWN;
 	marker->name = "id="+std::to_string(id);
 	marker->R = R_wm;
 	marker->T = T_wm;
@@ -185,8 +191,8 @@ slam_obj *create_camera()
 void broadcast_tf(tf::TransformBroadcaster br, slam_obj *obj)
 {
 	tf::Transform transform;
-	transform.setOrigin(obj->t);
-	transform.setRotation(obj->r);
+	transform.setOrigin(obj->T);
+	transform.setRotation(obj->R);
 	br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), FIXED_FRAME, obj->name));
 }
 
@@ -199,7 +205,7 @@ tf::Quaternion avarage_quaternions(std::vector<tf::Quaternion> quaternions)
 	int n = quaternions.size();
 	float weight = 1.0f / (float)n;
 
-	for(int i = 0,; i < n; i++)
+	for(int i = 0; i < n; i++)
 		avg *= I.slerp(quaternions[i], weight);
 
 	return avg;
