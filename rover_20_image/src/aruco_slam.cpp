@@ -18,6 +18,7 @@
 using namespace cv;
 using namespace aruco;
 
+void relocalize_marker(slam_obj* marker, slam_obj* camera, tf::Quaternion R_cm, tf::Vector3 T_cm);
 void broadcast_tf(tf::TransformBroadcaster br, slam_obj *obj);
 std::tuple<tf::Quaternion, tf::Vector3> estimate_cam_transform(tf::Quaternion R_cm, tf::Vector3 T_cm ,slam_obj *camera, slam_obj *marker);
 slam_obj *create_marker_obj(tf::Quaternion R_cm, tf::Vector3 T_cm, int id, slam_obj* camera);
@@ -89,6 +90,7 @@ int main(int argc, char **argv)
 				int id = ids[i];
 				Vec3d r = rvecs[i];
 				Vec3d t = tvecs[i];
+
 				drawAxis(frame, mtx, dist, r, t, 0.1);
 
 				tf::Vector3 T_cm;
@@ -119,7 +121,14 @@ int main(int argc, char **argv)
 					marker->relocalization_cooldown_counter--;
 				}
 
-				//TODO: Relokalizasyon fonksiyonunu temizce ekle
+				//Relocalize marker if needed.
+				//Note: This is experimental can be removed
+				if(marker->relocalization_cooldown_counter == 0)
+				{
+					std::cout << "Relocalized";
+					relocalize_marker(marker, cam, R_cm, T_cm);
+					marker->relocalization_cooldown_counter = RELOCALIZATION_COOLDOWN;
+				}
 			}
 
 			//Update camera with average of multiple estimations
@@ -136,6 +145,18 @@ int main(int argc, char **argv)
 	}
 	
 	return 0;
+}
+
+void relocalize_marker(slam_obj* marker, slam_obj* camera, tf::Quaternion R_cm, tf::Vector3 T_cm)
+{
+	tf::Quaternion R_wc = camera->R;
+	tf::Quaternion R_wm = R_wc * R_cm;
+
+	tf::Vector3 T_wc = camera->T;
+	tf::Vector3 T_wm = T_wc + (tf::Matrix3x3(R_wc) * T_cm);
+
+	marker->T = T_wm;
+	marker->R = R_wm;
 }
 
 slam_obj *create_marker_obj(tf::Quaternion R_cm, tf::Vector3 T_cm, int id, slam_obj* camera)
@@ -184,6 +205,9 @@ slam_obj *create_camera()
 	camera->T = tf::Vector3(0, 0, 0);
 	camera->left = NULL;
 	camera->right = NULL;
+	//Wont be used with camera but lets initialize 
+	//for not getting error
+	camera->relocalization_cooldown_counter = RELOCALIZATION_COOLDOWN;
 	
 	return camera;
 }
