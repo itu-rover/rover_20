@@ -13,7 +13,8 @@
 
 #define PI 3.14159265358979323846
 #define FIXED_FRAME "aruco_slam_world"
-#define RELOCALIZATION_COOLDOWN 10
+#define update_cam_interval 3
+#define transform_confidence_tresh 0.2f 
 
 using namespace cv;
 using namespace aruco;
@@ -23,8 +24,7 @@ void broadcast_tf(tf::TransformBroadcaster br, slam_obj *obj);
 std::tuple<tf::Quaternion, tf::Vector3> estimate_cam_transform(tf::Quaternion R_cm, tf::Vector3 T_cm ,slam_obj *camera, slam_obj *marker);
 slam_obj *create_marker_obj(tf::Quaternion R_cm, tf::Vector3 T_cm, int id, slam_obj* camera);
 slam_obj *create_camera();
-tf::Quaternion avarage_quaternions(std::vector<tf::Quaternion> quaternions);
-tf::Vector3 avarage_vectors(std::vector<tf::Vector3> vectors);
+void update_camera_transform(slam_obj* camera, std::vector<tf::Quaternion> qv, std::vector<tf::Vector3> tv);
 
 
 int main(int argc, char **argv)
@@ -56,7 +56,11 @@ int main(int argc, char **argv)
 	slam_tree tree;
 	tree.add(create_camera());
 
-	cap.open(0);
+	//other stuff
+
+	int iter = 0;
+
+	cap.open(1);
 
 	if(!cap.isOpened())
 	{
@@ -71,77 +75,69 @@ int main(int argc, char **argv)
 
 	while(ros::ok())
 	{
+		int x = waitKey(1);
+		ros::spinOnce();
+		tree.traverse(br, broadcast_tf);
+		iter++;
+
 		cap.read(frame);
 
 		detectMarkers(frame, dictionary, corners, ids ,params);
 
-		if(ids.size() > 0)
+		if(ids.size() == 0)
 		{
-			slam_obj *cam = tree.search_id(-1);
-
-			estimatePoseSingleMarkers(corners, 0.2, mtx, dist, rvecs, tvecs);
-			drawDetectedMarkers(frame, corners);
-
-			std::vector<tf::Quaternion> cam_orientations;
-			std::vector<tf::Vector3>    cam_locations;
-
-			for (int i = 0, n = ids.size(); i < n; i++)
-			{
-				int id = ids[i];
-				Vec3d r = rvecs[i];
-				Vec3d t = tvecs[i];
-
-				drawAxis(frame, mtx, dist, r, t, 0.1);
-
-				tf::Vector3 T_cm;
-				tf::Quaternion R_cm;
-				T_cm = tf::Vector3(t[0],t[1],t[2]);
-				R_cm.setRPY(r[0], r[1], r[2]);
-
-				slam_obj *marker = tree.search_id(id);
-
-				// If marker is not exist in map(slam system) we will add it
-				// otherwise estimate cam transform with it 
-				// Note: Markers are assumed to be static
-				if(marker == NULL)
-				{
-					marker = create_marker_obj(R_cm, T_cm, id, cam);
-					tree.add(marker);
-				}
-				else
-				{
-					tf::Quaternion R;
-					tf::Vector3 T;
-
-					std::tie(R, T) = estimate_cam_transform(R_cm, T_cm, cam, marker);
-
-					cam_orientations.push_back(R);
-					cam_locations.push_back(T);
-
-					marker->relocalization_cooldown_counter--;
-				}
-
-				//Relocalize marker if needed.
-				//Note: This is experimental can be removed
-				if(marker->relocalization_cooldown_counter == 0)
-				{
-					std::cout << "Relocalized";
-					relocalize_marker(marker, cam, R_cm, T_cm);
-					marker->relocalization_cooldown_counter = RELOCALIZATION_COOLDOWN;
-				}
-			}
-
-			//Update camera with average of multiple estimations
-			cam->R = avarage_quaternions(cam_orientations);
-			cam->T = avarage_vectors(cam_locations);
+			imshow("frame", frame);	
+			continue;
 		}
 
-		tree.traverse(br, broadcast_tf);
+		slam_obj *cam = tree.search_id(-1);
+
+		estimatePoseSingleMarkers(corners, 0.2, mtx, dist, rvecs, tvecs);
+		drawDetectedMarkers(frame, corners);
+
+		std::vector<tf::Quaternion> cam_orientations;
+		std::vector<tf::Vector3>    cam_locations;
+
+		for (int i = 0, n = ids.size(); i < n; i++)
+		{
+			int id = ids[i];
+			Vec3d r = rvecs[i];
+			Vec3d t = tvecs[i];
+
+			drawAxis(frame, mtx, dist, r, t, 0.1);
+
+			tf::Vector3 T_cm;
+			tf::Quaternion R_cm;
+			T_cm = tf::Vector3(t[0],t[1],t[2]);
+			R_cm.setRPY(r[0], r[1], r[2]);
+
+			slam_obj *marker = tree.search_id(id);
+
+			// If marker is not exist in map(slam system) we will add it
+			// otherwise estimate cam transform with it 
+			// Note: Markers are assumed to be static
+			if(marker == NULL)
+			{
+				marker = create_marker_obj(R_cm, T_cm, id, cam);
+				tree.add(marker);
+			}
+			else
+			{
+				tf::Quaternion R;
+				tf::Vector3 T;
+
+				std::tie(R, T) = estimate_cam_transform(R_cm, T_cm, cam, marker);
+
+				cam_orientations.push_back(R);
+				cam_locations.push_back(T);
+			}
+		}
+
+		//Update camera 
+		if(iter % 3 == 0)
+			update_camera_transform(cam, cam_orientations, cam_locations);
 
 		imshow("frame", frame);
-
-		ros::spinOnce();
-		if(waitKey(10) == 27) break;
 	}
 	
 	return 0;
@@ -170,7 +166,7 @@ slam_obj *create_marker_obj(tf::Quaternion R_cm, tf::Vector3 T_cm, int id, slam_
 	slam_obj *marker = new slam_obj;
 
 	marker->id = id;
-	marker->relocalization_cooldown_counter = RELOCALIZATION_COOLDOWN;
+	//marker->relocalization_cooldown_counter = RELOCALIZATION_COOLDOWN;
 	marker->name = "id="+std::to_string(id);
 	marker->R = R_wm;
 	marker->T = T_wm;
@@ -207,7 +203,7 @@ slam_obj *create_camera()
 	camera->right = NULL;
 	//Wont be used with camera but lets initialize 
 	//for not getting error
-	camera->relocalization_cooldown_counter = RELOCALIZATION_COOLDOWN;
+	//camera->relocalization_cooldown_counter = RELOCALIZATION_COOLDOWN;
 	
 	return camera;
 }
@@ -220,29 +216,57 @@ void broadcast_tf(tf::TransformBroadcaster br, slam_obj *obj)
 	br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), FIXED_FRAME, obj->name));
 }
 
-tf::Quaternion avarage_quaternions(std::vector<tf::Quaternion> quaternions)
-{
-	tf::Quaternion I, avg;
-	I.setRPY(0, 0, 0);
-	avg.setRPY(0, 0, 0);
+void update_camera_transform(slam_obj* camera, std::vector<tf::Quaternion> qv, std::vector<tf::Vector3> tv)
+{	
+	tf::Quaternion R = camera->R;
+	tf::Vector3 T = camera->T;
 
-	int n = quaternions.size();
-	float weight = 1.0f / (float)n;
+	int n = qv.size();
 
-	for(int i = 0; i < n; i++)
-		avg *= I.slerp(quaternions[i], weight);
+	if(n == 0)
+		return;
 
-	return avg;
-}
+	else if(n == 1)
+	{
+		camera->R = qv[0];
+		camera->T = tv[0];
+		return;
+	}
 
-tf::Vector3 avarage_vectors(std::vector<tf::Vector3> vectors)
-{
-	tf::Vector3 avg = tf::Vector3(0, 0, 0);
-	int n = vectors.size();
+	float minDot = R.dot(qv[0]);
+	float minDis = T.distance(tv[0]);
 
-	for(int i = 0; i < n; i++)
-		avg += vectors[i];
-	avg /= (float)n;
+	tf::Quaternion qMin = qv[0];
+	tf::Vector3 tMin = tv[0];
 
-	return avg;
+	for(auto q : qv)
+	{
+		float dot = R.dot(q);
+
+		if(dot < minDot)
+		{
+			minDot = dot;
+			qMin = q;
+		}
+	}
+
+	for(auto t : tv)
+	{
+		float dis = T.distance(t);
+
+		if(dis < minDis)
+		{
+			minDis = dis;
+			tMin = t;
+		}
+	}
+
+	float dot = qMin.dot(camera->R);
+	float dis = tMin.distance(camera->T);
+
+	if(dot < transform_confidence_tresh && dis < transform_confidence_tresh) 
+	{
+		camera->R = qMin;
+		camera->T = tMin;
+	}
 }
