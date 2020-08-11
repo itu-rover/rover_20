@@ -121,8 +121,7 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
-  ${catkin_INCLUDE_DIRS}
+  include ${catkin_INCLUDE_DIRS}
   include_directories(/usr/local/cuda-9.1/include)
   include_directories(/usr/local/zed/include)
   
@@ -135,7 +134,7 @@ include_directories(
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
-## either from message generation or dynamic reconfigure
+## either from message generatWion or dynamic reconfigure
 # add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Declare a C++ executable
@@ -162,8 +161,11 @@ include_directories(
 add_executable(artag_detection src/artag_detection.cpp)
 target_link_libraries(artag_detection ${catkin_LIBRARIES} ${OpenCV_LIBS})
 
-add_executable(localization_aruco src/localization_aruco.cpp)
-target_link_libraries(localization_aruco ${catkin_LIBRARIES} ${OpenCV_LIBS})
+add_executable(aruco_slam src/aruco_slam.cpp)
+target_link_libraries(aruco_slam ${catkin_LIBRARIES} ${OpenCV_LIBS})
+
+add_executable(feature_analizer src/feature_analizer.cpp)
+target_link_libraries(feature_analizer ${catkin_LIBRARIES} ${OpenCV_LIBS})
 
 
 #############
