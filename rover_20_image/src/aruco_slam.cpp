@@ -1,3 +1,4 @@
+#include <iostream>
 #include "ar_tracker.h"
 
 int main(int argc, char **argv)
