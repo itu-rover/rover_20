@@ -20,7 +20,7 @@ namespace ArTracker
 #define PI 3.14159265358979323846
 #define FIXED_FRAME "artracker_world"
 
-void run(VideoCapture cap, Mat mtx, Mat dist);
+void run(VideoCapture cap, Mat mtx, Mat dist, parameters* p);
 void relocalize_marker(slam_obj* marker, slam_obj* camera, tf::Quaternion R_cm, tf::Vector3 T_cm);
 void broadcast_tf(tf::TransformBroadcaster br, slam_obj *obj);
 void update_camera_transform(slam_obj* camera, std::vector<tf::Quaternion> qv, std::vector<tf::Vector3> tv, float tresh);
