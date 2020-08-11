@@ -9,30 +9,36 @@
 #include <tf/transform_broadcaster.h>
 #include <tf2/LinearMath/Quaternion.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
-#include "definitions.h"
-
-#define PI 3.14159265358979323846
-#define FIXED_FRAME "aruco_slam_world"
+#include "slam_tree.h"
+#include "params.h"
 
 using namespace cv;
 using namespace aruco;
 
-class ArTracker
+namespace ArTracker
 {
-public:
 
+#define PI 3.14159265358979323846
+#define FIXED_FRAME "artracker_world"
+
+void run(VideoCapture cap, Mat mtx, Mat dist);
+void relocalize_marker(slam_obj* marker, slam_obj* camera, tf::Quaternion R_cm, tf::Vector3 T_cm);
+void broadcast_tf(tf::TransformBroadcaster br, slam_obj *obj);
+void update_camera_transform(slam_obj* camera, std::vector<tf::Quaternion> qv, std::vector<tf::Vector3> tv, float tresh);
+std::tuple<tf::Quaternion, tf::Vector3> estimate_cam_transform(tf::Quaternion R_cm, tf::Vector3 T_cm ,slam_obj *camera, slam_obj *marker);
+slam_obj *create_marker_obj(tf::Quaternion R_cm, tf::Vector3 T_cm, int id, slam_obj* camera);
+slam_obj *create_camera();
+
+
+void run(VideoCapture cap, Mat mtx, Mat dist, parameters* p)
+{
 	//aruco stoff
-	Ptr<DetectorParameters> params;
-	Ptr<Dictionary> dictionary;
+	std::vector<std::vector<Point2f>> corners;
+	std::vector<int> ids;
+	std::vector<Vec3d> rvecs, tvecs;
 
-	//opencv stuff
-	VideoCapture cap;
-	Mat_<double> mtx(3,3);
-	Mat_<double> dist(1,5);
-	dist << 0.020436355102596344, -0.11407839179793304, 0.004229887050454093, -0.01709654130034178, 0.13991605472148272;
-	mtx << 627.2839475395182, 0.0, 295.0153571445745,
-		   0.0, 630.6046803340988, 237.10098847214766,
-		   0.0, 0.0, 1.0;
+	//opencv stuff	
+	Mat frame;
 
 	//ros stuff
 	ros::NodeHandle n;
@@ -40,47 +46,28 @@ public:
 
 	//tree stuff
 	slam_tree tree;
-
-	//custom stuff
-	int iter;
-	bool showFrame;
-
-	//functions
-	ArTracker();
-
-	void step();
-	void relocalize_marker(slam_obj* marker, slam_obj* camera, tf::Quaternion R_cm, tf::Vector3 T_cm);
-	void broadcast_tf(tf::TransformBroadcaster br, slam_obj *obj);
-	void update_camera_transform(slam_obj* camera, std::vector<tf::Quaternion> qv, std::vector<tf::Vector3> tv);
-
-	std::tuple<tf::Quaternion, tf::Vector3> estimate_cam_transform(tf::Quaternion R_cm, tf::Vector3 T_cm ,slam_obj *camera, slam_obj *marker);
-	slam_obj *create_marker_obj(tf::Quaternion R_cm, tf::Vector3 T_cm, int id, slam_obj* camera);
-	slam_obj *create_camera();	
-};
-
-ArTracker::ArTracker()
-{
-	dictionary = getPredefinedDictionary(DICT_5X5_250);
-	params = DetectorParameters::create();
 	tree.add(create_camera());
-	iter = 0;
-	showFrame = true;
-}
 
+	//other stuff
+	int iter = 0;
 
-void ArTracker::step()
-{
-	Mat frame;
-	std::vector<std::vector<Point2f>> corners;
-	std::vector<int> ids;
-	std::vector<Vec3d> rvecs, tvecs;
-
-	cap.read(frame);
-
-	cv::aruco::detectMarkers(frame, dictionary, corners, ids ,params);
-
-	if(ids.size() > 0)
+	while(ros::ok())
 	{
+		int x = waitKey(1);
+		ros::spinOnce();
+		tree.traverse(br, broadcast_tf);
+		iter++;
+
+		cap.read(frame);
+
+		detectMarkers(frame, p->dictionary, corners, ids ,p->aruco_params);
+
+		if(ids.size() == 0)
+		{
+			imshow("frame", frame);	
+			continue;
+		}
+
 		slam_obj *cam = tree.search_id(-1);
 
 		estimatePoseSingleMarkers(corners, 0.2, mtx, dist, rvecs, tvecs);
@@ -125,19 +112,16 @@ void ArTracker::step()
 		}
 
 		//Update camera 
-		if(iter % 3 == 0)
-			update_camera_transform(cam, cam_orientations, cam_locations);
-	}
+		if(iter % p->update_cam_interval == 0)
+		{
+			update_camera_transform(cam, cam_orientations, cam_locations, p->transform_confidence_tresh);
+		}
 
-	tree.traverse(br, broadcast_tf);
-	iter++;
-	if(showFrame)
 		imshow("frame", frame);
-	waitKey(1);
+	}
 }
 
-
-void ArTracker::relocalize_marker(slam_obj* marker, slam_obj* camera, tf::Quaternion R_cm, tf::Vector3 T_cm)
+void relocalize_marker(slam_obj* marker, slam_obj* camera, tf::Quaternion R_cm, tf::Vector3 T_cm)
 {
 	tf::Quaternion R_wc = camera->R;
 	tf::Quaternion R_wm = R_wc * R_cm;
@@ -149,7 +133,7 @@ void ArTracker::relocalize_marker(slam_obj* marker, slam_obj* camera, tf::Quater
 	marker->R = R_wm;
 }
 
-slam_obj* ArTracker::create_marker_obj(tf::Quaternion R_cm, tf::Vector3 T_cm, int id, slam_obj* camera)
+slam_obj *create_marker_obj(tf::Quaternion R_cm, tf::Vector3 T_cm, int id, slam_obj* camera)
 {
 	tf::Quaternion R_wc = camera->R;
 	tf::Quaternion R_wm = R_wc * R_cm;
@@ -170,7 +154,7 @@ slam_obj* ArTracker::create_marker_obj(tf::Quaternion R_cm, tf::Vector3 T_cm, in
 	return marker;
 }
 
-std::tuple<tf::Quaternion, tf::Vector3>  ArTracker::estimate_cam_transform(tf::Quaternion R_cm, tf::Vector3 T_cm ,slam_obj *camera, slam_obj *marker)
+std::tuple<tf::Quaternion, tf::Vector3>  estimate_cam_transform(tf::Quaternion R_cm, tf::Vector3 T_cm ,slam_obj *camera, slam_obj *marker)
 {
 	tf::Vector3 T_wm = marker->T, T_wc = camera->T;
 	tf::Quaternion R_wm = marker->R, R_wc = camera->R;
@@ -181,7 +165,7 @@ std::tuple<tf::Quaternion, tf::Vector3>  ArTracker::estimate_cam_transform(tf::Q
 	return std::make_tuple(R_wc, T_wc);
 }
 
-slam_obj* ArTracker::create_camera()
+slam_obj *create_camera()
 {
 	slam_obj *camera = new slam_obj;
 	//we assumed that all markers have positive id.
@@ -195,11 +179,14 @@ slam_obj* ArTracker::create_camera()
 	camera->T = tf::Vector3(0, 0, 0);
 	camera->left = NULL;
 	camera->right = NULL;
+	//Wont be used with camera but lets initialize 
+	//for not getting error
+	//camera->relocalization_cooldown_counter = RELOCALIZATION_COOLDOWN;
 	
 	return camera;
 }
 
-void ArTracker::broadcast_tf(tf::TransformBroadcaster br, slam_obj *obj)
+void broadcast_tf(tf::TransformBroadcaster br, slam_obj *obj)
 {
 	tf::Transform transform;
 	transform.setOrigin(obj->T);
@@ -207,7 +194,7 @@ void ArTracker::broadcast_tf(tf::TransformBroadcaster br, slam_obj *obj)
 	br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), FIXED_FRAME, obj->name));
 }
 
-void ArTracker::update_camera_transform(slam_obj* camera, std::vector<tf::Quaternion> qv, std::vector<tf::Vector3> tv)
+void update_camera_transform(slam_obj* camera, std::vector<tf::Quaternion> qv, std::vector<tf::Vector3> tv, float tresh)
 {	
 	tf::Quaternion R = camera->R;
 	tf::Vector3 T = camera->T;
@@ -224,7 +211,6 @@ void ArTracker::update_camera_transform(slam_obj* camera, std::vector<tf::Quater
 		return;
 	}
 
-	float confidenseTreshold = 0.1f;
 	float minDot = R.dot(qv[0]);
 	float minDis = T.distance(tv[0]);
 
@@ -256,9 +242,11 @@ void ArTracker::update_camera_transform(slam_obj* camera, std::vector<tf::Quater
 	float dot = qMin.dot(camera->R);
 	float dis = tMin.distance(camera->T);
 
-	if(dot < confidenseTreshold && dis < confidenseTreshold) 
+	if(dot < tresh && dis < tresh) 
 	{
 		camera->R = qMin;
 		camera->T = tMin;
 	}
+}
+
 }
