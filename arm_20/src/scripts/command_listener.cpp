@@ -1,3 +1,5 @@
+/*Bu kod, 6dof_konum.cpp kodundaki command dinlemenin temelinii oluşturur. Eklem kontrolcülerine giden açı emirlerini nasıl dinlendiğini anlamak için idealdir.*/
+
 #include <iostream>
 #include <sstream>
 #include <string>
