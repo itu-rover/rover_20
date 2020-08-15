@@ -1,3 +1,5 @@
+// Kodun çalışma mantığı için: https://drive.google.com/drive/folders/10Jx3R2WmaSRwj1mYTVzVz-0sIhBbL4JL
+
 #include <iostream>
 #include <sstream>
 #include <string>
