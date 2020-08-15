@@ -1,3 +1,5 @@
+// Algoritmanın çalışma mantığı için: https://drive.google.com/drive/folders/10Jx3R2WmaSRwj1mYTVzVz-0sIhBbL4JL 
+
 #include <iostream>
 #include <vector>
 #include <sstream>
@@ -226,6 +228,4 @@ int main(int argc, char **argv){
 	}
 
 	return 0;
-
-
 }
