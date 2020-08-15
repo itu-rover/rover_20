@@ -1,12 +1,12 @@
 #include <iostream>
-#include "ar_tracker.h"
+#include "ar_tracker/ar_tracker.h"
 
 int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "aruco_slam");
 
 	VideoCapture cap;
-	cap.open(1);
+	cap.open(0);
 
 	if(!cap.isOpened())
 	{
@@ -27,7 +27,11 @@ int main(int argc, char **argv)
 		   0.0, 0.0, 1.0;
 
 	ArTracker::parameters *params = ArTracker::create_parameters();
-	ArTracker::run(cap, mtx, dist, params);
+
+	params->dist = dist;
+	params->mtx = mtx;
+
+	ArTracker::run(cap, params);
 
 	return 0;
 }

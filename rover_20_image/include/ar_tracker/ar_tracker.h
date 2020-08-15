@@ -1,3 +1,30 @@
+/*
+	READ ME:
+	Dear coder friend i strongly recommend you to read following section for 
+	your better understanding in rest of the code
+	
+	Rotations represented as tf::Quaternion (x,y,z,w) and will be showed as "R" 
+	Translation vector represented as tf::Vector3 and will be showed as "T"
+	
+	I also recommend you to take a look a bit to math of transformations in 3d, quaternions, vectors
+	and some linear algebra
+	
+	naming notations:
+	w - world (worlds orijin in 0 and its rotation is I)
+	m - marker (artag)
+	c - camera
+	
+	R_cm means markers rotation respect to the camera 
+	T_wm means markers translation respect to the world
+	R_wc means cameras rotation respect to the world
+	and ect you got the thing
+
+	This systems uses its own parameter system.
+	You will need to initialize params first before using it
+	This system also uses binary tree for tracking markers faster
+	These datatypes detailed in their respective header file
+*/
+
 #include <string>
 #include <vector>
 #include <tuple>
@@ -17,19 +44,95 @@ using namespace aruco;
 namespace ArTracker
 {
 
+// define section
 #define PI 3.14159265358979323846
 #define FIXED_FRAME "artracker_world"
 
-void run(VideoCapture cap, Mat mtx, Mat dist);
+
+/*
+	Main funtion to run the system.
+	inputs:
+	- cap: videocapturer object for reading frames from camera
+	(make sure cap is opened)
+	- p: parameters for system
+	
+	code runs the algorithm and publishes tf. tf's fixed 
+	frame can be seen in "define" section you can view it 
+	in rviz
+*/
+void run(VideoCapture cap, parameters* p);
+
+
+/*
+	not used yet. will be detailed later
+*/
 void relocalize_marker(slam_obj* marker, slam_obj* camera, tf::Quaternion R_cm, tf::Vector3 T_cm);
+
+
+/*
+	function that publishes our tf
+	inputs:
+	- br: object that publihes tf
+	- obj: slam obj that contains our tf elements 
+*/
 void broadcast_tf(tf::TransformBroadcaster br, slam_obj *obj);
+
+
+/*
+	updates cameras tf based on multiple mesaurements 
+	inputs:
+	- camera: camera that will be updated
+	- qv: cameras mesaured rotations (std::vector)
+	- tv: cameras mesaured translations (std::vector)
+	- tresh: minimum limit of update. if amount of change between 
+	current and new camera transform is in bellow limit we will 
+	ignore new transform
+*/
 void update_camera_transform(slam_obj* camera, std::vector<tf::Quaternion> qv, std::vector<tf::Vector3> tv, float tresh);
+
+
+/*
+	estimate cameras new transform with "known" marker
+	inputs:
+	- camere: camera object being estimated
+	- marker: known marker object
+	- R_cm: markers rotation relative to camera
+	- T_cm: markers translation relative to camere
+	outputs:
+	Tuple<R, T>
+	- R: cameras estimated rotation
+	- T: cameras estimated trasnlation
+*/
 std::tuple<tf::Quaternion, tf::Vector3> estimate_cam_transform(tf::Quaternion R_cm, tf::Vector3 T_cm ,slam_obj *camera, slam_obj *marker);
+
+
+/*
+	when we found unknown marker we must create marker 
+	object and initialize its values based on estimated 
+	values
+	inputs:
+	- R_cm: markers rotation relative to camera
+	- T_cm: narkers translation relative to camera
+	- id: 
+	- camera: camera object that found the marker
+	- marker: marker that found by camera
+	outputs:
+	- marker object
+*/
 slam_obj *create_marker_obj(tf::Quaternion R_cm, tf::Vector3 T_cm, int id, slam_obj* camera);
+
+
+/*
+	initialize camera object with default params
+	you can change those parameters in inside of
+	function
+	outputs:
+	- camera object
+*/
 slam_obj *create_camera();
 
 
-void run(VideoCapture cap, Mat mtx, Mat dist, parameters* p)
+void run(VideoCapture cap, parameters* p)
 {
 	//aruco stoff
 	std::vector<std::vector<Point2f>> corners;
@@ -59,7 +162,7 @@ void run(VideoCapture cap, Mat mtx, Mat dist, parameters* p)
 
 		cap.read(frame);
 
-		detectMarkers(frame, p->dictionary, corners, ids ,p->aruco_params);
+		detectMarkers(frame, p->aruco_dictionary, corners, ids ,p->aruco_params);
 
 		if(ids.size() == 0)
 		{
@@ -69,7 +172,7 @@ void run(VideoCapture cap, Mat mtx, Mat dist, parameters* p)
 
 		slam_obj *cam = tree.search_id(-1);
 
-		estimatePoseSingleMarkers(corners, 0.2, mtx, dist, rvecs, tvecs);
+		estimatePoseSingleMarkers(corners, 0.2, p->mtx, p->dist, rvecs, tvecs);
 		drawDetectedMarkers(frame, corners);
 
 		std::vector<tf::Quaternion> cam_orientations;
@@ -81,7 +184,7 @@ void run(VideoCapture cap, Mat mtx, Mat dist, parameters* p)
 			Vec3d r = rvecs[i];
 			Vec3d t = tvecs[i];
 
-			drawAxis(frame, mtx, dist, r, t, 0.1);
+			drawAxis(frame, p->mtx, p->dist, r, t, 0.1);
 
 			tf::Vector3 T_cm;
 			tf::Quaternion R_cm;
