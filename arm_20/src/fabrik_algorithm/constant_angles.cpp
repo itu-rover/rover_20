@@ -1,5 +1,5 @@
 /*Bu kod da FABRIK algoritması dosyalarındaki gibi kontrolcülere açı basar lakin sabit açı değerleri basmaktadır ve hiçbir ters kinematik hesabı yapmaz. Gazeboya eklem açılarını
-göndermenin mantığını anlamak ve eklem açılarının sınırlarını test etmek isteyen biri için ideal bir kod.
+göndermenin mantığını anlamak ve eklem açılarının sınırlarını test etmek isteyen biri için ideal bir kod.*/
 
 #include <iostream>
 #include <vector>
