@@ -2,7 +2,13 @@
 namespace ArTracker
 {
 /*
-	Main data structure of slam system
+	Main data structure of slam system 
+	- id: in aruco every marker in dictionary has uniqe id(>0) hence
+	every marker can be identical we use arucos id for searching operation
+	- name: object name for ros tf system
+	- R: its rotation relative to "world"
+	- T: its translation relative to "world"
+	- left & right: pointers for sub trees
 */
 struct slam_obj
 {
@@ -17,7 +23,7 @@ struct slam_obj
 };
 
 /*
-	Interface class between algorithm and data structure
+	Interface class between system and data structure
 */
 class slam_tree
 {
@@ -39,6 +45,11 @@ slam_tree::slam_tree()
 }
 
 
+/*
+	bellow three functions are serve as interface
+	between class and respective main opearion 
+	function 
+*/ 
 void slam_tree::add(slam_obj* obj)
 {
 	root = add_(root, obj);
@@ -49,7 +60,16 @@ slam_obj* slam_tree::search_id(int id)
 	return search_id_(root, id);
 }
 
+void slam_tree::traverse(tf::TransformBroadcaster br, void (*action)(tf::TransformBroadcaster br, slam_obj *obj))
+{
+	if (root != NULL)
+		traverse_(root, br, action);
+}
 
+
+/*
+	bellow three functions are main binary tree operation functions 
+*/
 slam_obj* slam_tree::add_(slam_obj* root, slam_obj* new_object){
 
 	if(root == NULL) return new_object;
@@ -72,12 +92,9 @@ slam_obj* slam_tree::search_id_(slam_obj* root, int id){
 	else return search_id_(root->right, id);
 }
 
-void slam_tree::traverse(tf::TransformBroadcaster br, void (*action)(tf::TransformBroadcaster br, slam_obj *obj))
-{
-	if (root != NULL)
-		traverse_(root, br, action);
-}
-
+/*
+	action function pointer determines what action to be taken by objects in tree
+*/
 void slam_tree::traverse_(slam_obj* root, tf::TransformBroadcaster br, void (*action)(tf::TransformBroadcaster br, slam_obj *obj))
 {
 	if(root->right != NULL)

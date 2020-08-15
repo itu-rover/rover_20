@@ -2,11 +2,11 @@ import cv2
 import numpy as np
 
 kamera= cv2.VideoCapture(0)
-buton_cascade=cv2.CascadeClassifier('rot_main.xml')
-switch_cascade= cv2.CascadeClassifier('rot_switch.xml')
-switch2_cascade= cv2.CascadeClassifier('rot_switch2.xml')
-red_cascade= cv2.CascadeClassifier('indicator_red.xml')
-socket_cascade= cv2.CascadeClassifier('socket.xml')
+buton_cascade=cv2.CascadeClassifier('detection_models/rot_main.xml')
+switch_cascade= cv2.CascadeClassifier('detection_models/rot_switch.xml')
+switch2_cascade= cv2.CascadeClassifier('detection_models/rot_switch2.xml')
+red_cascade= cv2.CascadeClassifier('detection_models/indicator_red.xml')
+socket_cascade= cv2.CascadeClassifier('detection_models/socket.xml')
 
 while(1):
     ret, frame=kamera.read()
