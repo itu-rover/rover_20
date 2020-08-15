@@ -1,3 +1,6 @@
+/*Bu kod, FABRIK algoritması kodunun temeli kullanılarak yazılmıştır fakat hiçbir ters kinematik hesabı yapmaz. Aksine ileri kinematik kodudur. f310 butonlarından gelen
+veriler küçültülerek direk açı olarak kontrolcülere verilir. Ters kinematik hesaplarından önce robot kolun urdf ve gazebo testleri için ideal bir koddur.*/
+
 #include <iostream>
 #include <vector>
 #include <sstream>
