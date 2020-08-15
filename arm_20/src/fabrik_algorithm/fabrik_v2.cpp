@@ -1,6 +1,7 @@
 // v2 FABRIK algorithm for 20' Rover
 // v2 basically ignores the 4th joint, finds the angle of 1st joint by making the plane (which consists of other joints) turn towards the target
-// FABRIK algorithm is applied to the joints in the same plane (Joints 2,3,5 and the target. Algorithm is applied for 2D space) 
+// FABRIK algorithm is applied to the joints in the same plane (Joints 2,3,5 and the target. Algorithm is applied for 2D space)
+// Algoritmanın çalışma mantığı için: https://drive.google.com/drive/folders/10Jx3R2WmaSRwj1mYTVzVz-0sIhBbL4JL 
 #include <iostream>
 #include <vector>
 #include <sstream>
