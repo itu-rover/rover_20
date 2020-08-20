@@ -49,7 +49,7 @@ parameters *create_parameters()
 {
 	parameters *p = new parameters;
 
-	p->update_cam_interval = 3;
+	p->update_cam_interval = 5;
 	p->transform_confidence_tresh = 0.3;
 	p->aruco_params = DetectorParameters::create();
 	p->aruco_dictionary = getPredefinedDictionary(DICT_5X5_250);

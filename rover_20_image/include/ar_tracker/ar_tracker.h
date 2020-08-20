@@ -62,6 +62,20 @@ namespace ArTracker
 */
 void run(VideoCapture cap, parameters* p);
 
+/*
+	it is second main function. Instead of 
+	run() function this will only process 
+	the given frame and updates tree object 
+	which stores every object in world
+	(look "slam_tree.h" for details of "tree")
+
+	inputs:
+	- frame: image from camera to be proceed
+	- p: main parameters	
+	- tree: tree that will be updated
+	- iter: system iter counter
+*/
+void run_frame(Mat frame, parameters* p, slam_tree* tree, int iter);
 
 /*
 	not used yet. will be detailed later
@@ -134,16 +148,10 @@ slam_obj *create_camera();
 
 void run(VideoCapture cap, parameters* p)
 {
-	//aruco stoff
-	std::vector<std::vector<Point2f>> corners;
-	std::vector<int> ids;
-	std::vector<Vec3d> rvecs, tvecs;
-
 	//opencv stuff	
 	Mat frame;
 
 	//ros stuff
-	ros::NodeHandle n;
 	tf::TransformBroadcaster br;
 
 	//tree stuff
@@ -157,70 +165,77 @@ void run(VideoCapture cap, parameters* p)
 	{
 		int x = waitKey(1);
 		ros::spinOnce();
-		tree.traverse(br, broadcast_tf);
 		iter++;
-
+		tree.traverse(br, broadcast_tf);
 		cap.read(frame);
 
-		detectMarkers(frame, p->aruco_dictionary, corners, ids ,p->aruco_params);
-
-		if(ids.size() == 0)
-		{
-			imshow("frame", frame);	
-			continue;
-		}
-
-		slam_obj *cam = tree.search_id(-1);
-
-		estimatePoseSingleMarkers(corners, 0.2, p->mtx, p->dist, rvecs, tvecs);
-		drawDetectedMarkers(frame, corners);
-
-		std::vector<tf::Quaternion> cam_orientations;
-		std::vector<tf::Vector3>    cam_locations;
-
-		for (int i = 0, n = ids.size(); i < n; i++)
-		{
-			int id = ids[i];
-			Vec3d r = rvecs[i];
-			Vec3d t = tvecs[i];
-
-			drawAxis(frame, p->mtx, p->dist, r, t, 0.1);
-
-			tf::Vector3 T_cm;
-			tf::Quaternion R_cm;
-			T_cm = tf::Vector3(t[0],t[1],t[2]);
-			R_cm.setRPY(r[0], r[1], r[2]);
-
-			slam_obj *marker = tree.search_id(id);
-
-			// If marker is not exist in map(slam system) we will add it
-			// otherwise estimate cam transform with it 
-			// Note: Markers are assumed to be static
-			if(marker == NULL)
-			{
-				marker = create_marker_obj(R_cm, T_cm, id, cam);
-				tree.add(marker);
-			}
-			else
-			{
-				tf::Quaternion R;
-				tf::Vector3 T;
-
-				std::tie(R, T) = estimate_cam_transform(R_cm, T_cm, cam, marker);
-
-				cam_orientations.push_back(R);
-				cam_locations.push_back(T);
-			}
-		}
-
-		//Update camera 
-		if(iter % p->update_cam_interval == 0)
-		{
-			update_camera_transform(cam, cam_orientations, cam_locations, p->transform_confidence_tresh);
-		}
+		//main function that proceeds only once
+		run_frame(frame, p, &tree, iter);
 
 		imshow("frame", frame);
 	}
+}
+
+void run_frame(Mat frame, parameters* p, slam_tree* tree, int iter)
+{
+	//aruco stoff
+	std::vector<std::vector<Point2f>> corners;
+	std::vector<int> ids;
+	std::vector<Vec3d> rvecs, tvecs;
+
+	detectMarkers(frame, p->aruco_dictionary, corners, ids ,p->aruco_params);
+
+	if(ids.size() == 0)
+		return;
+
+	slam_obj *cam = tree->search_id(-1);
+
+	estimatePoseSingleMarkers(corners, 0.2, p->mtx, p->dist, rvecs, tvecs);
+	drawDetectedMarkers(frame, corners);
+
+	std::vector<tf::Quaternion> cam_orientations;
+	std::vector<tf::Vector3>    cam_locations;
+
+	for (int i = 0, n = ids.size(); i < n; i++)
+	{
+		int id = ids[i];
+		Vec3d r = rvecs[i];
+		Vec3d t = tvecs[i];
+
+		drawAxis(frame, p->mtx, p->dist, r, t, 0.1);
+
+		tf::Vector3 T_cm;
+		tf::Quaternion R_cm;
+		T_cm = tf::Vector3(t[0],t[1],t[2]);
+		R_cm.setRPY(r[0], r[1], r[2]);
+
+		slam_obj *marker = tree->search_id(id);
+
+		// If marker is not exist in map(slam system) we will add it
+		// otherwise estimate cam transform with it 
+		// Note: Markers are assumed to be static
+		if(marker == NULL)
+		{
+			marker = create_marker_obj(R_cm, T_cm, id, cam);
+			tree->add(marker);
+		}
+		else
+		{
+			tf::Quaternion R;
+			tf::Vector3 T;
+
+			std::tie(R, T) = estimate_cam_transform(R_cm, T_cm, cam, marker);
+
+			cam_orientations.push_back(R);
+			cam_locations.push_back(T);
+		}
+	}
+
+	//Update camera 
+	if(iter % p->update_cam_interval == 0)
+	{
+		update_camera_transform(cam, cam_orientations, cam_locations, p->transform_confidence_tresh);
+	}	
 }
 
 void relocalize_marker(slam_obj* marker, slam_obj* camera, tf::Quaternion R_cm, tf::Vector3 T_cm)
