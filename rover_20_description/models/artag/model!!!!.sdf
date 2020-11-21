@@ -1,0 +1,32 @@
+<!--?xml version="1.0" ?>
+<sdf version="1.5">
+  <model name="artag">
+    <static>true</static>
+    <link name="link">
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>.4 .2 .1</size>
+            <uri>model://artag/meshes/artag.dae</uri>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <cast_shadows>false</cast_shadows>
+        <geometry>
+          <box>
+            <size>.4 .2 .1</size>
+	    <uri>model://artag/meshes/artag.dae</uri>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://artag/materials/scripts</uri>
+            <uri>model://artag/materials/textures</uri>
+            <name>vrc/artag</name>
+          </script>
+        </material>
+      </visual>
+    </link>
+  </model>
+</sdf-->

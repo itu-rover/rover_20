@@ -1,0 +1,46 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <model name="kitchen_spatula">
+    <static>true</static>
+    <link name="link">
+      <pose>0 0 0 0 0 0</pose>
+      <inertial>
+  <pose>0.13606 0.00000 0.02002 0 0 0</pose>
+  <inertia>
+    <ixx>0.00016</ixx>
+    <ixy>0</ixy>
+    <ixz>0.00030</ixz>
+    <iyy>0.00113</iyy>
+    <iyz>0</iyz>
+    <izz>0.00106</izz>
+  </inertia>
+  <mass>0.14867</mass>
+</inertial>
+      <visual name="visual">
+    <pose>0 0 0 0 0 0</pose>
+    <geometry>
+      <mesh>
+        <uri>model://artag/meshes/artag.dae</uri>
+        <scale>0.0001 0.0001 0.0001</scale>
+      </mesh>
+    </geometry>
+    <material>
+      <script>
+        <uri>model://artag/materials/scripts</uri>
+        <uri>model://artag/materials/textures</uri>
+        <name>Gazebo/ARTAG</name>
+      </script>
+    </material>
+      </visual>
+      <collision name="collision">
+    <pose>0 0 0 0 0 0</pose>
+    <geometry>
+      <mesh>
+        <uri>model://artag/meshes/artag.dae</uri>
+        <scale>0.0001 0.0001 0.0001</scale>
+      </mesh>
+    </geometry>
+      </collision>
+    </link>
+  </model>
+</sdf>

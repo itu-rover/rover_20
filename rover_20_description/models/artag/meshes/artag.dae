@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="utf-8"?>
+<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <asset>
+    <contributor>
+      <author>Blender User</author>
+      <authoring_tool>Blender 2.81.16 commit date:2019-12-04, commit time:11:32, hash:f1aa4d18d49d</authoring_tool>
+    </contributor>
+    <created>2019-12-07T12:43:55</created>
+    <modified>2019-12-07T12:43:55</modified>
+    <unit name="meter" meter="30"/>
+    <up_axis>Z_UP</up_axis>
+  </asset>
+  <library_cameras>
+    <camera id="Camera-camera" name="Camera">
+      <optics>
+        <technique_common>
+          <perspective>
+            <xfov sid="xfov">39.59775</xfov>
+            <aspect_ratio>1.777778</aspect_ratio>
+            <znear sid="znear">0.1</znear>
+            <zfar sid="zfar">100</zfar>
+          </perspective>
+        </technique_common>
+      </optics>
+      <extra>
+        <technique profile="blender">
+          <shiftx sid="shiftx" type="float">0</shiftx>
+          <shifty sid="shifty" type="float">0</shifty>
+          <dof_distance sid="dof_distance" type="float">10</dof_distance>
+        </technique>
+      </extra>
+    </camera>
+  </library_cameras>
+  <library_lights>
+    <light id="Light-light" name="Light">
+      <technique_common>
+        <point>
+          <color sid="color">1000 1000 1000</color>
+          <constant_attenuation>1</constant_attenuation>
+          <linear_attenuation>0</linear_attenuation>
+          <quadratic_attenuation>0.00111109</quadratic_attenuation>
+        </point>
+      </technique_common>
+      <extra>
+        <technique profile="blender">
+          <type sid="type" type="int">0</type>
+          <flag sid="flag" type="int">0</flag>
+          <mode sid="mode" type="int">1</mode>
+          <gamma sid="blender_gamma" type="float">1</gamma>
+          <red sid="red" type="float">1</red>
+          <green sid="green" type="float">1</green>
+          <blue sid="blue" type="float">1</blue>
+          <shadow_r sid="blender_shadow_r" type="float">0</shadow_r>
+          <shadow_g sid="blender_shadow_g" type="float">0</shadow_g>
+          <shadow_b sid="blender_shadow_b" type="float">0</shadow_b>
+          <energy sid="blender_energy" type="float">1000</energy>
+          <dist sid="blender_dist" type="float">29.99998</dist>
+          <spotsize sid="spotsize" type="float">75</spotsize>
+          <spotblend sid="spotblend" type="float">0.15</spotblend>
+          <att1 sid="att1" type="float">0</att1>
+          <att2 sid="att2" type="float">1</att2>
+          <falloff_type sid="falloff_type" type="int">2</falloff_type>
+          <clipsta sid="clipsta" type="float">0.04999995</clipsta>
+          <clipend sid="clipend" type="float">30.002</clipend>
+          <bias sid="bias" type="float">1</bias>
+          <soft sid="soft" type="float">3</soft>
+          <bufsize sid="bufsize" type="int">2880</bufsize>
+          <samp sid="samp" type="int">3</samp>
+          <buffers sid="buffers" type="int">1</buffers>
+          <area_shape sid="area_shape" type="int">1</area_shape>
+          <area_size sid="area_size" type="float">0.01</area_size>
+          <area_sizey sid="area_sizey" type="float">0.01</area_sizey>
+          <area_sizez sid="area_sizez" type="float">0.1</area_sizez>
+        </technique>
+      </extra>
+    </light>
+  </library_lights>
+  <library_effects>
+    <effect id="ARgates_0000_Layer-1_003-effect">
+      <profile_COMMON>
+        <newparam sid="ARpng_003-surface">
+          <surface type="2D">
+            <init_from>ARpng_003</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="ARpng_003-sampler">
+          <sampler2D>
+            <source>ARpng_003-surface</source>
+          </sampler2D>
+        </newparam>
+        <technique sid="common">
+          <lambert>
+            <emission>
+              <color sid="emission">0 0 0 1</color>
+            </emission>
+            <diffuse>
+              <texture texture="ARpng_003-sampler" texcoord="UVMap"/>
+            </diffuse>
+            <index_of_refraction>
+              <float sid="ior">1.45</float>
+            </index_of_refraction>
+          </lambert>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="ARgates_0000_Layer-1_002-effect">
+      <profile_COMMON>
+        <newparam sid="ARpng_002-surface">
+          <surface type="2D">
+            <init_from>ARpng_002</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="ARpng_002-sampler">
+          <sampler2D>
+            <source>ARpng_002-surface</source>
+          </sampler2D>
+        </newparam>
+        <technique sid="common">
+          <lambert>
+            <emission>
+              <color sid="emission">0 0 0 1</color>
+            </emission>
+            <diffuse>
+              <texture texture="ARpng_002-sampler" texcoord="UVMap"/>
+            </diffuse>
+            <index_of_refraction>
+              <float sid="ior">1.45</float>
+            </index_of_refraction>
+          </lambert>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="ARgates_0000_Layer-1_001-effect">
+      <profile_COMMON>
+        <newparam sid="ARpng-surface">
+          <surface type="2D">
+            <init_from>ARpng</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="ARpng-sampler">
+          <sampler2D>
+            <source>ARpng-surface</source>
+          </sampler2D>
+        </newparam>
+        <technique sid="common">
+          <lambert>
+            <emission>
+              <color sid="emission">0 0 0 1</color>
+            </emission>
+            <diffuse>
+              <texture texture="ARpng-sampler" texcoord="UVMap"/>
+            </diffuse>
+            <index_of_refraction>
+              <float sid="ior">1.45</float>
+            </index_of_refraction>
+          </lambert>
+        </technique>
+      </profile_COMMON>
+    </effect>
+  </library_effects>
+  <library_images>
+    <image id="ARpng" name="ARpng">
+      <init_from>ARpng.png</init_from>
+    </image>
+    <image id="ARpng_002" name="ARpng_002">
+      <init_from>ARpng2.png</init_from>
+    </image>
+    <image id="ARpng_003" name="ARpng_003">
+      <init_from>ARpng3.png</init_from>
+    </image>
+  </library_images>
+  <library_materials>
+    <material id="ARgates_0000_Layer-1_003-material" name="ARgates_0000_Layer-1.003">
+      <instance_effect url="#ARgates_0000_Layer-1_003-effect"/>
+    </material>
+    <material id="ARgates_0000_Layer-1_002-material" name="ARgates_0000_Layer-1.002">
+      <instance_effect url="#ARgates_0000_Layer-1_002-effect"/>
+    </material>
+    <material id="ARgates_0000_Layer-1_001-material" name="ARgates_0000_Layer-1.001">
+      <instance_effect url="#ARgates_0000_Layer-1_001-effect"/>
+    </material>
+  </library_materials>
+  <library_geometries>
+    <geometry id="ARgates_0000_Layer-1_006-mesh" name="ARgates_0000_Layer-1.006">
+      <mesh>
+        <source id="ARgates_0000_Layer-1_006-mesh-positions">
+          <float_array id="ARgates_0000_Layer-1_006-mesh-positions-array" count="12">124.5079 57.16612 121.0738 123.6626 55.77823 -6.366177 -0.4332771 57.00963 120.6778 -1.278645 55.62175 -6.762211</float_array>
+          <technique_common>
+            <accessor source="#ARgates_0000_Layer-1_006-mesh-positions-array" count="4" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="ARgates_0000_Layer-1_006-mesh-normals">
+          <float_array id="ARgates_0000_Layer-1_006-mesh-normals-array" count="6">-0.001217901 0.99994 -0.01088172 -0.001217842 0.99994 -0.01088172</float_array>
+          <technique_common>
+            <accessor source="#ARgates_0000_Layer-1_006-mesh-normals-array" count="2" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="ARgates_0000_Layer-1_006-mesh-map-0">
+          <float_array id="ARgates_0000_Layer-1_006-mesh-map-0-array" count="12">1 0 0 1 0 0 1 0 1 1 0 1</float_array>
+          <technique_common>
+            <accessor source="#ARgates_0000_Layer-1_006-mesh-map-0-array" count="6" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="ARgates_0000_Layer-1_006-mesh-vertices">
+          <input semantic="POSITION" source="#ARgates_0000_Layer-1_006-mesh-positions"/>
+        </vertices>
+        <triangles material="ARgates_0000_Layer-1_003-material" count="2">
+          <input semantic="VERTEX" source="#ARgates_0000_Layer-1_006-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#ARgates_0000_Layer-1_006-mesh-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#ARgates_0000_Layer-1_006-mesh-map-0" offset="2" set="0"/>
+          <p>1 0 0 2 0 1 0 0 2 1 1 3 3 1 4 2 1 5</p>
+        </triangles>
+      </mesh>
+    </geometry>
+    <geometry id="ARgates_0000_Layer-1_005-mesh" name="ARgates_0000_Layer-1.005">
+      <mesh>
+        <source id="ARgates_0000_Layer-1_005-mesh-positions">
+          <float_array id="ARgates_0000_Layer-1_005-mesh-positions-array" count="12">124.5079 57.16612 121.0738 123.6626 55.77823 -6.366177 -0.4332771 57.00963 120.6778 -1.278645 55.62175 -6.762211</float_array>
+          <technique_common>
+            <accessor source="#ARgates_0000_Layer-1_005-mesh-positions-array" count="4" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="ARgates_0000_Layer-1_005-mesh-normals">
+          <float_array id="ARgates_0000_Layer-1_005-mesh-normals-array" count="6">-0.001217901 0.99994 -0.01088172 -0.001217842 0.99994 -0.01088172</float_array>
+          <technique_common>
+            <accessor source="#ARgates_0000_Layer-1_005-mesh-normals-array" count="2" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="ARgates_0000_Layer-1_005-mesh-map-0">
+          <float_array id="ARgates_0000_Layer-1_005-mesh-map-0-array" count="12">1 0 0 1 0 0 1 0 1 1 0 1</float_array>
+          <technique_common>
+            <accessor source="#ARgates_0000_Layer-1_005-mesh-map-0-array" count="6" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="ARgates_0000_Layer-1_005-mesh-vertices">
+          <input semantic="POSITION" source="#ARgates_0000_Layer-1_005-mesh-positions"/>
+        </vertices>
+        <triangles material="ARgates_0000_Layer-1_002-material" count="2">
+          <input semantic="VERTEX" source="#ARgates_0000_Layer-1_005-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#ARgates_0000_Layer-1_005-mesh-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#ARgates_0000_Layer-1_005-mesh-map-0" offset="2" set="0"/>
+          <p>1 0 0 2 0 1 0 0 2 1 1 3 3 1 4 2 1 5</p>
+        </triangles>
+      </mesh>
+    </geometry>
+    <geometry id="ARgates_0000_Layer-1_004-mesh" name="ARgates_0000_Layer-1.004">
+      <mesh>
+        <source id="ARgates_0000_Layer-1_004-mesh-positions">
+          <float_array id="ARgates_0000_Layer-1_004-mesh-positions-array" count="12">124.5079 57.16612 121.0738 123.6626 55.77823 -6.366177 -0.4332771 57.00963 120.6778 -1.278645 55.62175 -6.762211</float_array>
+          <technique_common>
+            <accessor source="#ARgates_0000_Layer-1_004-mesh-positions-array" count="4" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="ARgates_0000_Layer-1_004-mesh-normals">
+          <float_array id="ARgates_0000_Layer-1_004-mesh-normals-array" count="6">-0.001217901 0.99994 -0.01088172 -0.001217842 0.99994 -0.01088172</float_array>
+          <technique_common>
+            <accessor source="#ARgates_0000_Layer-1_004-mesh-normals-array" count="2" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="ARgates_0000_Layer-1_004-mesh-map-0">
+          <float_array id="ARgates_0000_Layer-1_004-mesh-map-0-array" count="12">1 0 0 1 0 0 1 0 1 1 0 1</float_array>
+          <technique_common>
+            <accessor source="#ARgates_0000_Layer-1_004-mesh-map-0-array" count="6" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="ARgates_0000_Layer-1_004-mesh-vertices">
+          <input semantic="POSITION" source="#ARgates_0000_Layer-1_004-mesh-positions"/>
+        </vertices>
+        <triangles material="ARgates_0000_Layer-1_001-material" count="2">
+          <input semantic="VERTEX" source="#ARgates_0000_Layer-1_004-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#ARgates_0000_Layer-1_004-mesh-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#ARgates_0000_Layer-1_004-mesh-map-0" offset="2" set="0"/>
+          <p>1 0 0 2 0 1 0 0 2 1 1 3 3 1 4 2 1 5</p>
+        </triangles>
+      </mesh>
+    </geometry>
+    <geometry id="Artag_V0-mesh" name="Artag V0">
+      <mesh>
+        <source id="Artag_V0-mesh-positions">
+          <float_array id="Artag_V0-mesh-positions-array" count="510">70.35159 -62.31451 -300 70.35159 -62.31451 -200 70 -57.73503 -300 70 -57.73503 -200 70.35159 -53.15555 -300 70.35159 -53.15555 -200 71.39811 -48.68341 -300 71.39811 -48.68341 -200 73.11504 -44.42343 -300 73.11504 -44.42343 -200 75.46212 -40.47547 -300 75.46212 -40.47547 -200 78.38436 -36.93205 -300 78.38436 -36.93205 -200 81.81324 -33.87624 -300 81.81324 -33.87624 -200 85.66841 -31.37966 -300 85.66841 -31.37966 -200 89.8595 -29.50083 -300 89.8595 -29.50083 -200 94.28827 -28.28378 -300 94.28827 -28.28378 -200 98.85092 -27.75704 -300 98.85092 -27.75704 -200 103.4405 -27.93297 -300 103.4405 -27.93297 -200 107.9495 -28.80742 -300 107.9495 -28.80742 -200 112.2721 -30.35992 -300 112.2721 -30.35992 -200 116.307 -32.55406 -300 116.307 -32.55406 -200 119.9598 -35.33843 -300 119.9598 -35.33843 -200 123.1447 -38.64775 -300 123.1447 -38.64775 -200 125.7871 -42.40446 -300 125.7871 -42.40446 -200 127.8251 -46.52051 -300 127.8251 -46.52051 -200 129.2109 -50.89942 -300 129.2109 -50.89942 -200 129.912 -55.43855 -300 129.912 -55.43855 -200 129.912 -60.0315 -300 129.912 -60.0315 -200 129.2109 -64.57064 -300 129.2109 -64.57064 -200 127.8251 -68.94954 -300 127.8251 -68.94954 -200 125.7871 -73.06559 -300 125.7871 -73.06559 -200 123.1447 -76.82231 -300 123.1447 -76.82231 -200 119.9598 -80.13162 -300 119.9598 -80.13162 -200 116.307 -82.916 -300 116.307 -82.916 -200 112.2721 -85.11014 -300 112.2721 -85.11014 -200 107.9495 -86.66263 -300 107.9495 -86.66263 -200 103.4405 -87.53709 -300 103.4405 -87.53709 -200 98.85092 -87.71302 -300 98.85092 -87.71302 -200 94.28827 -87.18628 -300 94.28827 -87.18628 -200 89.8595 -85.96923 -300 89.8595 -85.96923 -200 85.66841 -84.0904 -300 85.66841 -84.0904 -200 81.81324 -81.59381 -300 81.81324 -81.59381 -200 78.38436 -78.538 -300 78.38436 -78.538 -200 75.46212 -74.99459 -300 75.46212 -74.99459 -200 73.11504 -71.04663 -300 73.11504 -71.04663 -200 71.39811 -66.78665 -300 71.39811 -66.78665 -200 70.35159 -53.15555 0 70.35159 -53.15555 -100 70 -57.73503 0 70 -57.73503 -100 70.35159 -62.31451 0 70.35159 -62.31451 -100 71.39811 -66.78665 0 71.39811 -66.78665 -100 73.11504 -71.04663 0 73.11504 -71.04663 -100 75.46212 -74.99459 0 75.46212 -74.99459 -100 78.38436 -78.538 0 78.38436 -78.538 -100 81.81324 -81.59381 0 81.81324 -81.59381 -100 85.66841 -84.0904 0 85.66841 -84.0904 -100 89.8595 -85.96923 0 89.8595 -85.96923 -100 94.28827 -87.18628 0 94.28827 -87.18628 -100 98.85092 -87.71302 0 98.85092 -87.71302 -100 103.4405 -87.53709 0 103.4405 -87.53709 -100 107.9495 -86.66263 0 107.9495 -86.66263 -100 112.2721 -85.11014 0 112.2721 -85.11014 -100 116.307 -82.916 0 116.307 -82.916 -100 119.9598 -80.13162 0 119.9598 -80.13162 -100 123.1447 -76.82231 0 123.1447 -76.82231 -100 125.7871 -73.06559 0 125.7871 -73.06559 -100 127.8251 -68.94954 0 127.8251 -68.94954 -100 129.2109 -64.57064 0 129.2109 -64.57064 -100 129.912 -60.0315 0 129.912 -60.0315 -100 129.912 -55.43855 0 129.912 -55.43855 -100 129.2109 -50.89942 0 129.2109 -50.89942 -100 127.8251 -46.52051 0 127.8251 -46.52051 -100 125.7871 -42.40446 0 125.7871 -42.40446 -100 123.1447 -38.64775 0 123.1447 -38.64775 -100 119.9598 -35.33843 0 119.9598 -35.33843 -100 116.307 -32.55406 0 116.307 -32.55406 -100 112.2721 -30.35992 0 112.2721 -30.35992 -100 107.9495 -28.80742 0 107.9495 -28.80742 -100 103.4405 -27.93297 0 103.4405 -27.93297 -100 98.85092 -27.75704 0 98.85092 -27.75704 -100 94.28827 -28.28378 0 94.28827 -28.28378 -100 89.8595 -29.50083 0 89.8595 -29.50083 -100 85.66841 -31.37966 0 85.66841 -31.37966 -100 81.81324 -33.87624 0 81.81324 -33.87624 -100 78.38436 -36.93205 0 78.38436 -36.93205 -100 75.46212 -40.47547 0 75.46212 -40.47547 -100 73.11504 -44.42343 0 73.11504 -44.42343 -100 71.39811 -48.68341 0 71.39811 -48.68341 -100 200 0 0 0 0 0 200 0 200 0 0 200 100 -173.2051 0 100 -173.2051 200</float_array>
+          <technique_common>
+            <accessor source="#Artag_V0-mesh-positions-array" count="170" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Artag_V0-mesh-normals">
+          <float_array id="Artag_V0-mesh-normals-array" count="489">-0.997066 -0.07654809 0 -0.9970659 -0.07655024 0 -0.9970659 0.07655018 0 -0.997066 0.07654809 0 -0.9736953 0.2278541 0 -0.9736953 0.227854 0 -0.9275019 0.3738186 0 -0.9275034 0.3738148 0 -0.8595702 0.5110177 0 -0.8595691 0.5110195 0 -0.77149 0.6362416 0 -0.7714878 0.6362441 0 -0.6653258 0.7465532 0 -0.6653257 0.7465533 0 -0.5435686 0.8393648 0 -0.5435665 0.8393661 0 -0.4090698 0.9125031 0 -0.4090682 0.9125039 0 -0.2649807 0.9642537 0 -0.2649818 0.9642535 0 -0.1146832 0.9934022 0 -0.1146836 0.9934021 0 0.0383026 0.9992663 0 0.1903911 0.9817084 0 0.1903918 0.9817082 0 0.3380165 0.9411402 0 0.4777206 0.8785119 0 0.477719 0.8785127 0 0.606226 0.7952924 0 0.72052 0.6934342 0 0.7205221 0.693432 0 0.8179304 0.5753173 0 0.8179282 0.5753204 0 0.8961671 0.4437168 0 0.8961637 0.4437235 0 0.9533957 0.301723 0 0.9533982 0.3017152 0 0.9882804 0.1526497 0 0.9882804 0.1526497 0 1 0 0 0.9882804 -0.1526497 0 0.9882804 -0.1526497 0 0.9533982 -0.3017152 0 0.9533957 -0.301723 0 0.8961637 -0.4437236 0 0.8961672 -0.4437167 0 0.8179286 -0.5753199 0 0.8179305 -0.575317 0 0.7205213 -0.6934329 0 0.7205193 -0.693435 0 0.6062272 -0.7952916 0 0.6062271 -0.7952917 0 0.4777184 -0.878513 0 0.4777204 -0.878512 0 0.3380155 -0.9411406 0 0.1903918 -0.9817082 0 0.1903911 -0.9817084 0 0.03830343 -0.9992662 0 -0.1146832 -0.9934021 0 -0.1146827 -0.9934023 0 -0.2649819 -0.9642535 0 -0.2649806 -0.9642537 0 -0.4090687 -0.9125036 0 -0.4090706 -0.9125029 0 -0.5435669 -0.839366 0 -0.5435688 -0.8393647 0 -0.6653252 -0.7465537 0 -0.6653254 -0.7465535 0 -0.7714881 -0.6362439 0 -0.7714902 -0.6362412 0 -0.859569 -0.5110199 0 -0.8595699 -0.5110182 0 -0.9275034 -0.373815 0 -0.9275019 -0.3738184 0 -0.9736953 -0.2278541 0 -0.9736953 -0.227854 0 -0.9970659 0.07654809 0 -0.9970659 0.07655018 0 -0.9970659 -0.07655018 0 -0.9970659 -0.07654809 0 -0.9736953 -0.2278541 0 -0.9275019 -0.3738185 0 -0.9275034 -0.3738148 0 -0.8595699 -0.5110182 0 -0.859569 -0.5110198 0 -0.7714903 -0.6362413 0 -0.7714881 -0.6362438 0 -0.6653254 -0.7465536 0 -0.4090704 -0.9125029 0 -0.4090689 -0.9125036 0 -0.2649807 -0.9642537 0 -0.2649818 -0.9642535 0 0.4777203 -0.878512 0 0.4777185 -0.878513 0 0.6062271 -0.7952916 0 0.7205192 -0.693435 0 0.7205213 -0.6934328 0 0.8961671 -0.4437167 0 0.8961638 -0.4437236 0 0.9882804 -0.1526497 0 0.9882804 0.1526497 0 0.8961638 0.4437236 0 0.8961671 0.4437167 0 0.8179283 0.5753203 0 0.8179304 0.5753175 0 0.4777188 0.8785128 0 0.4777206 0.8785119 0 0.3380166 0.9411402 0 -0.1146836 0.9934021 0 -0.1146832 0.9934022 0 -0.2649818 0.9642535 0 -0.2649807 0.9642537 0 -0.4090682 0.9125039 0 -0.4090697 0.9125031 0 -0.5435666 0.8393661 0 -0.5435686 0.8393649 0 -0.7714878 0.6362442 0 -0.7714899 0.6362417 0 -0.8595692 0.5110194 0 -0.8595702 0.5110179 0 -0.9275034 0.3738148 0 -0.9275019 0.3738185 0 -0.9736953 0.2278541 0 -0.9970659 0.07654809 0 -0.7714899 0.6362417 0 -0.6653259 0.7465531 0 -0.6653258 0.7465533 0 -0.4090698 0.9125033 0 -0.4090682 0.9125039 0 -0.1146832 0.9934022 0 -0.1146836 0.9934021 0 0.3380166 0.9411402 0 0.4777189 0.8785128 0 0.8961672 0.4437167 0 0.8961638 0.4437236 0 0.8961637 -0.4437235 0 0.8961671 -0.4437168 0 0.7205214 -0.6934328 0 0.7205192 -0.6934351 0 0.6062272 -0.7952916 0 0.4777186 -0.878513 0 0.4777203 -0.878512 0 -0.409069 -0.9125036 0 -0.4090704 -0.9125028 0 -0.6653253 -0.7465536 0 -0.7714881 -0.6362437 0 -0.7714902 -0.6362413 0 -0.859569 -0.5110198 0 -0.8595699 -0.5110183 0 -0.9970658 -0.07655018 0 0 0 -1 -6.00713e-7 0 -1 -5.02006e-7 0 -1 -1.33526e-6 0 -1 5.52566e-7 0 -1 -6.63574e-7 0 -1 1.50668e-6 0 -1 -9.76767e-7 0 -1 1.59194e-6 0 -1 0 1 0 0.8660254 -0.5 0 -0.8660254 -0.5 0 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Artag_V0-mesh-normals-array" count="163" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="Artag_V0-mesh-vertices">
+          <input semantic="POSITION" source="#Artag_V0-mesh-positions"/>
+        </vertices>
+        <triangles count="336">
+          <input semantic="VERTEX" source="#Artag_V0-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#Artag_V0-mesh-normals" offset="1"/>
+          <p>0 0 1 0 2 0 2 1 1 1 3 1 2 2 3 2 4 2 4 3 3 3 5 3 4 4 5 4 6 4 6 5 5 5 7 5 6 6 7 6 8 6 8 7 7 7 9 7 8 8 9 8 10 8 10 9 9 9 11 9 10 10 11 10 12 10 12 11 11 11 13 11 12 12 13 12 14 12 14 13 13 13 15 13 14 14 15 14 16 14 16 15 15 15 17 15 16 16 17 16 18 16 18 17 17 17 19 17 18 18 19 18 20 18 20 19 19 19 21 19 20 20 21 20 22 20 22 21 21 21 23 21 22 22 23 22 24 22 24 22 23 22 25 22 24 23 25 23 26 23 26 24 25 24 27 24 26 25 27 25 28 25 28 25 27 25 29 25 28 26 29 26 30 26 30 27 29 27 31 27 30 28 31 28 32 28 32 28 31 28 33 28 32 29 33 29 34 29 34 30 33 30 35 30 34 31 35 31 36 31 36 32 35 32 37 32 36 33 37 33 38 33 38 34 37 34 39 34 38 35 39 35 40 35 40 36 39 36 41 36 40 37 41 37 42 37 42 38 41 38 43 38 42 39 43 39 44 39 44 39 43 39 45 39 44 40 45 40 46 40 46 41 45 41 47 41 46 42 47 42 48 42 48 43 47 43 49 43 48 44 49 44 50 44 50 45 49 45 51 45 50 46 51 46 52 46 52 47 51 47 53 47 52 48 53 48 54 48 54 49 53 49 55 49 54 50 55 50 56 50 56 51 55 51 57 51 56 52 57 52 58 52 58 53 57 53 59 53 58 54 59 54 60 54 60 54 59 54 61 54 60 55 61 55 62 55 62 56 61 56 63 56 62 57 63 57 64 57 64 57 63 57 65 57 64 58 65 58 66 58 66 59 65 59 67 59 66 60 67 60 68 60 68 61 67 61 69 61 68 62 69 62 70 62 70 63 69 63 71 63 70 64 71 64 72 64 72 65 71 65 73 65 72 66 73 66 74 66 74 67 73 67 75 67 74 68 75 68 76 68 76 69 75 69 77 69 76 70 77 70 78 70 78 71 77 71 79 71 78 72 79 72 80 72 80 73 79 73 81 73 80 74 81 74 0 74 0 75 81 75 1 75 82 76 83 76 84 76 84 77 83 77 85 77 84 78 85 78 86 78 86 79 85 79 87 79 86 80 87 80 88 80 88 80 87 80 89 80 88 81 89 81 90 81 90 82 89 82 91 82 90 83 91 83 92 83 92 84 91 84 93 84 92 85 93 85 94 85 94 86 93 86 95 86 94 87 95 87 96 87 96 87 95 87 97 87 96 65 97 65 98 65 98 64 97 64 99 64 98 88 99 88 100 88 100 89 99 89 101 89 100 90 101 90 102 90 102 91 101 91 103 91 102 59 103 59 104 59 104 58 103 58 105 58 104 57 105 57 106 57 106 57 105 57 107 57 106 56 107 56 108 56 108 55 107 55 109 55 108 54 109 54 110 54 110 54 109 54 111 54 110 92 111 92 112 92 112 93 111 93 113 93 112 94 113 94 114 94 114 94 113 94 115 94 114 95 115 95 116 95 116 96 115 96 117 96 116 47 117 47 118 47 118 46 117 46 119 46 118 97 119 97 120 97 120 98 119 98 121 98 120 43 121 43 122 43 122 42 121 42 123 42 122 99 123 99 124 99 124 99 123 99 125 99 124 39 125 39 126 39 126 39 125 39 127 39 126 100 127 100 128 100 128 100 127 100 129 100 128 36 129 36 130 36 130 35 129 35 131 35 130 101 131 101 132 101 132 102 131 102 133 102 132 103 133 103 134 103 134 104 133 104 135 104 134 30 135 30 136 30 136 29 135 29 137 29 136 28 137 28 138 28 138 28 137 28 139 28 138 105 139 105 140 105 140 106 139 106 141 106 140 107 141 107 142 107 142 107 141 107 143 107 142 24 143 24 144 24 144 23 143 23 145 23 144 22 145 22 146 22 146 22 145 22 147 22 146 108 147 108 148 108 148 109 147 109 149 109 148 110 149 110 150 110 150 111 149 111 151 111 150 112 151 112 152 112 152 113 151 113 153 113 152 114 153 114 154 114 154 115 153 115 155 115 154 12 155 12 156 12 156 12 155 12 157 12 156 116 157 116 158 116 158 117 157 117 159 117 158 118 159 118 160 118 160 119 159 119 161 119 160 120 161 120 162 120 162 121 161 121 163 121 162 122 163 122 82 122 82 122 163 122 83 122 3 2 85 2 5 2 5 123 85 123 83 123 5 122 83 122 7 122 7 122 83 122 163 122 7 121 163 121 9 121 9 120 163 120 161 120 9 119 161 119 11 119 11 118 161 118 159 118 11 124 159 124 13 124 13 11 159 11 157 11 13 125 157 125 15 125 15 126 157 126 155 126 15 115 155 115 17 115 17 114 155 114 153 114 17 127 153 127 19 127 19 128 153 128 151 128 19 111 151 111 21 111 21 110 151 110 149 110 21 129 149 129 23 129 23 130 149 130 147 130 23 22 147 22 25 22 25 22 147 22 145 22 25 23 145 23 27 23 27 24 145 24 143 24 27 131 143 131 29 131 29 25 143 25 141 25 29 26 141 26 31 26 31 132 141 132 139 132 31 28 139 28 33 28 33 28 139 28 137 28 33 29 137 29 35 29 35 30 137 30 135 30 35 104 135 104 37 104 37 103 135 103 133 103 37 133 133 133 39 133 39 134 133 134 131 134 39 35 131 35 41 35 41 36 131 36 129 36 41 100 129 100 43 100 43 100 129 100 127 100 43 39 127 39 45 39 45 39 127 39 125 39 45 99 125 99 47 99 47 99 125 99 123 99 47 42 123 42 49 42 49 43 123 43 121 43 49 135 121 135 51 135 51 136 121 136 119 136 51 46 119 46 53 46 53 47 119 47 117 47 53 137 117 137 55 137 55 138 117 138 115 138 55 51 115 51 57 51 57 139 115 139 113 139 57 140 113 140 59 140 59 141 113 141 111 141 59 54 111 54 61 54 61 54 111 54 109 54 61 55 109 55 63 55 63 56 109 56 107 56 63 57 107 57 65 57 65 57 107 57 105 57 65 58 105 58 67 58 67 59 105 59 103 59 67 91 103 91 69 91 69 90 103 90 101 90 69 142 101 142 71 142 71 143 101 143 99 143 71 64 99 64 73 64 73 65 99 65 97 65 73 67 97 67 75 67 75 144 97 144 95 144 75 145 95 145 77 145 77 146 95 146 93 146 77 147 93 147 79 147 79 148 93 148 91 148 79 82 91 82 81 82 81 81 91 81 89 81 81 80 89 80 1 80 1 80 89 80 87 80 1 0 87 0 3 0 3 149 87 149 85 149 4 150 42 150 2 150 2 150 42 150 44 150 2 150 44 150 0 150 0 150 44 150 46 150 0 150 46 150 80 150 80 150 46 150 48 150 80 150 48 150 78 150 78 150 48 150 50 150 78 151 50 151 76 151 76 150 50 150 52 150 76 150 52 150 74 150 74 150 52 150 54 150 74 152 54 152 72 152 72 150 54 150 56 150 72 150 56 150 70 150 70 150 56 150 58 150 70 153 58 153 68 153 68 150 58 150 60 150 68 150 60 150 66 150 66 150 60 150 62 150 66 150 62 150 64 150 42 150 4 150 40 150 40 150 4 150 6 150 40 150 6 150 38 150 38 150 6 150 8 150 38 154 8 154 36 154 36 150 8 150 10 150 36 155 10 155 34 155 34 150 10 150 12 150 34 150 12 150 32 150 32 150 12 150 14 150 32 150 14 150 30 150 30 156 14 156 16 156 30 157 16 157 28 157 28 150 16 150 18 150 28 150 18 150 26 150 26 150 18 150 20 150 26 158 20 158 24 158 24 150 20 150 22 150 164 159 165 159 166 159 166 159 165 159 167 159 168 160 164 160 169 160 169 160 164 160 166 160 165 161 168 161 167 161 167 161 168 161 169 161 167 162 169 162 166 162 82 150 84 150 165 150 165 150 84 150 86 150 165 150 86 150 88 150 88 150 90 150 165 150 165 150 90 150 92 150 165 150 92 150 168 150 168 150 92 150 94 150 168 150 94 150 96 150 96 150 98 150 168 150 168 150 98 150 100 150 168 150 100 150 102 150 102 150 104 150 168 150 168 150 104 150 106 150 168 150 106 150 108 150 108 150 110 150 168 150 168 150 110 150 112 150 168 150 112 150 114 150 114 150 116 150 168 150 168 150 116 150 118 150 168 150 118 150 164 150 164 150 118 150 120 150 164 150 120 150 122 150 122 150 124 150 164 150 164 150 124 150 126 150 164 150 126 150 128 150 128 150 130 150 164 150 164 150 130 150 132 150 164 150 132 150 134 150 134 150 136 150 164 150 164 150 136 150 138 150 164 150 138 150 140 150 140 150 142 150 164 150 164 150 142 150 144 150 164 150 144 150 146 150 164 150 146 150 165 150 165 150 146 150 148 150 165 150 148 150 150 150 150 150 152 150 165 150 165 150 152 150 154 150 165 150 154 150 156 150 156 150 158 150 165 150 165 150 158 150 160 150 165 150 160 150 162 150 162 150 82 150 165 150</p>
+        </triangles>
+      </mesh>
+    </geometry>
+  </library_geometries>
+  <library_visual_scenes>
+    <visual_scene id="Scene" name="Scene">
+      <node id="ARtag_002" name="ARtag.002" type="NODE">
+        <matrix sid="transform">-0.0221722 -0.8639511 0.5502586 21.16977 -0.02935011 -0.5027321 -0.9448528 34.87534 1.163886 -0.02913596 -0.01334416 128.3421 0 0 0 1</matrix>
+        <instance_geometry url="#ARgates_0000_Layer-1_006-mesh" name="ARtag.002">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="ARgates_0000_Layer-1_003-material" target="#ARgates_0000_Layer-1_003-material">
+                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
+              </instance_material>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
+      <node id="ARtag_001" name="ARtag.001" type="NODE">
+        <matrix sid="transform">-0.001846149 0.8660247 0.5467411 2.845113 0.005699911 -0.4999866 0.9469791 -74.74564 1.164452 0.003820416 -0.003768582 125.8736 0 0 0 1</matrix>
+        <instance_geometry url="#ARgates_0000_Layer-1_005-mesh" name="ARtag.001">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="ARgates_0000_Layer-1_002-material" target="#ARgates_0000_Layer-1_002-material">
+                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
+              </instance_material>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
+      <node id="Empty" name="Empty" type="NODE">
+        <matrix sid="transform">-0.7024087 -0.4930713 0.5133252 76.67264 0.7117675 -0.4835245 0.5095008 17.35999 -0.003014926 0.723246 0.6905839 206.1588 0 0 0 1</matrix>
+      </node>
+      <node id="ARtag" name="ARtag" type="NODE">
+        <matrix sid="transform">-0.004015259 4.53144e-4 -1.093478 105.681 -0.004446903 0.9999926 5.09904e-4 -37.03237 1.164452 0.003820416 -0.003768581 125.8736 0 0 0 1</matrix>
+        <instance_geometry url="#ARgates_0000_Layer-1_004-mesh" name="ARtag">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="ARgates_0000_Layer-1_001-material" target="#ARgates_0000_Layer-1_001-material">
+                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
+              </instance_material>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
+      <node id="Artag_tam_model" name="Artag tam model" type="NODE">
+        <matrix sid="transform">0.7524495 0 0 -32.78074 0 0.7524495 0 16.95653 0 0 0.7524495 123.0572 0 0 0 1</matrix>
+        <instance_geometry url="#Artag_V0-mesh" name="Artag tam model"/>
+      </node>
+      <node id="Camera" name="Camera" type="NODE">
+        <matrix sid="transform">0.6859207 -0.3240135 0.6515582 7.358891 0.7276763 0.3054208 -0.6141704 -6.925791 0 0.8953956 0.4452714 4.958309 0 0 0 1</matrix>
+        <instance_camera url="#Camera-camera"/>
+      </node>
+      <node id="Light" name="Light" type="NODE">
+        <matrix sid="transform">-0.2908646 -0.7711008 0.5663932 4.076245 0.9551712 -0.1998834 0.2183912 1.005454 -0.05518906 0.6045247 0.7946723 5.903862 0 0 0 1</matrix>
+        <instance_light url="#Light-light"/>
+      </node>
+    </visual_scene>
+  </library_visual_scenes>
+  <scene>
+    <instance_visual_scene url="#Scene"/>
+  </scene>
+</COLLADA>
