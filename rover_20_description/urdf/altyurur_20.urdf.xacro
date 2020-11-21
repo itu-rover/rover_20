@@ -262,12 +262,12 @@
       xyz="0 0 -1" />
   </joint>
 
-  <vlp16 prefix="base" topic="/velodyne_points" hz="10" samples="440" gpu="false"/>
+  <vlp16 prefix="base" topic="/velodyne_points" hz="10" samples="440" gpu="false" max_range="5.0" min_range="0.1" min_angle="-2.39982772" max_angle="2.39982772"/>
 
   <joint name="base_laser_joint" type="fixed">
-    <origin xyz="0.325 -0.775 -0.035" rpy="0 0 0" />
+    <origin xyz="0.325 -0.775 -0.035" rpy="0 0 0" /><!-- 0.325 -0.775 -0.035-->
     <parent link="base_link"/>
-    <child link="base_laser_mount"/>
+    <child link="velodyne"/>
   </joint>
 
   <link name="camera">
