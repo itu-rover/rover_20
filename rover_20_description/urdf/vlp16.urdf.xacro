@@ -6,7 +6,7 @@
 
 	<xacro:macro name="vlp16" params="prefix:=base topic:=/velodyne_points hz:=10 lasers:=16 samples:=1875 collision_range:=0.3 min_range:=0.9 max_range:=200.0 noise:=0.008 min_angle:=-${M_PI} max_angle:=${M_PI} gpu:=true">
 
-		<link name="base_laser_mount">
+		<link name="velodyne">
 			<inertial>
         <mass value="0.83"/>
 	        <origin xyz="0 0 0.03585"/>
@@ -36,7 +36,7 @@
 
 		<joint name="vlp16_base_scan_joint" type="fixed">
 			<origin xyz="0 0 0.0377" rpy="0 0 0" />
-      <parent link="base_laser_mount" />
+      <parent link="velodyne" />
       <child link="vlp16_scan"/>
 		</joint>
 
@@ -54,7 +54,7 @@
       </visual>
     </link>
 
-		<gazebo reference="base_laser_mount">
+		<gazebo reference="velodyne">
       <sensor type="ray" name="vlp16_sensor">
         <pose>0 0 0 0 0 0</pose>
         <visualize>false</visualize>
